@@ -1,0 +1,18 @@
+sudo: false
+dist: trusty
+language: rust
+
+before_install:
+  - cargo install mdbook --vers '0.2.2' --debug --force
+
+script:
+  - mdbook build
+
+deploy:
+  provider: pages
+  skip-cleanup: true
+  github-token: $GITHUB_TOKEN  # Set in travis-ci.org dashboard, marked secure
+  local-dir: book
+  keep-history: false
+  on:
+    branch: master
