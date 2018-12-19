@@ -18,7 +18,7 @@ an executor in order for anything to happen:
 
 ```rust
 // `block_on` blocks the current thread until the provided future has run to
-// completion. Other executors provide more complex behavior, like scheudling
+// completion. Other executors provide more complex behavior, like scheduling
 // multiple futures onto the same thread.
 use futures::executor::block_on;
 
