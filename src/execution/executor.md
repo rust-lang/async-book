@@ -1,7 +1,7 @@
 # Applied: Build an Executor
 
-`Future`s are lazy and must be actively driven to completion in order to do
-anything. A common way to drive a future to completion is to `await!` it inside
+`Future`s are lazy. To do anything, they must be actively driven to completion.
+A common way to drive a future to completion is to `await!` it inside
 an `async` function, but that just pushes the problem one level up: who will
 run the futures returned from the top-level `async` functions? The answer is
 that we need a `Future` executor.
@@ -16,9 +16,9 @@ completed.
 In this section, we'll write our own simple executor capable of running a large
 number of top-level futures to completion concurrently.
 
-For this one, we're going to have to include the `futures` crate in order to
-get the `FutureObj` type, which is a dynamically-dispatched `Future`, similar
-to `Box<dyn Future<Output = T>>`. `Cargo.toml` should look something like this:
+For this one, to get the `FutureObj` type, a dynamically-dispatched `Future`,
+similar to `Box<dyn Future<Output = T>>`, we have to include the `futures` crate.
+Your `Cargo.toml` should look something like this:
 
 ```toml
 [package]
@@ -80,9 +80,9 @@ struct Task {
     //
     // The `Mutex` is not necessary for correctness, since we only have
     // one thread executing tasks at once. However, `rustc` isn't smart
-    // enough to know that `future` is only mutated from one thread,
-    // so we use it in order to provide safety. A production executor would
-    // not need this, and could use `UnsafeCell` instead.
+    // enough to know that `future` is only mutated from one thread.
+    // Therefore, `Mutex` is used to ensure safety. A production executor
+    // would not need this, and could use `UnsafeCell` instead.
     future: Mutex<Option<FutureObj<'static, ()>>>,
 
     // Handle to spawn tasks onto the task queue
@@ -117,8 +117,8 @@ impl Spawner {
 }
 ```
 
-In order poll futures, we'll also need to create a `LocalWaker` to provide to
-poll. As discussed in the [task wakeups section], `LocalWaker`s are responsible
+To poll futures, we'll also need to create a `LocalWaker` to provide to `Poll`.
+As discussed in the [task wakeups section], `LocalWaker`s are responsible
 for scheduling a task to be polled again once `wake` is called. Remember that
 `LocalWaker`s tell the executor exactly which task has become ready, allowing
 them to poll just the futures that are ready to make progress. The easiest way

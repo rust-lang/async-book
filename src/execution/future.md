@@ -174,8 +174,8 @@ The first change you'll notice is that our `self` type is no longer `&mut self`,
 but has changed to `Pin<&mut Self>`. We'll talk more about pinning in [a later 
 section][pinning], but for now know that it allows us to create futures that
 are immovable. Immovable objects can store pointers between their fields,
-e.g. `struct MyFut { a: i32, ptr_to_a: *const i32 }`. This feature is necessary
-in order to enable async/await.
+e.g. `struct MyFut { a: i32, ptr_to_a: *const i32 }`. Pinning is necessary
+to enable async/await.
 
 Secondly, `wake: fn()` has changed to `LocalWaker`. In `SimpleFuture`, we used
 a call to a function pointer (`fn()`) to tell the future executor that the

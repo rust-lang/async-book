@@ -1,6 +1,6 @@
 # Pinning
 
-In order to poll futures, they must be pinned using a special type called
+To poll futures, they must be pinned using a special type called
 `Pin<T>`. If you read the explanation of [the `Future` trait] in the
 previous section ["Executing `Future`s and Tasks"], you'll recognise
 `Pin` from the `self: Pin<&mut Self>` in the `Future:poll` method's definition.

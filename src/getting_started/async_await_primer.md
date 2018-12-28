@@ -13,8 +13,8 @@ To create an asynchronous function, you can use the `async fn` syntax:
 async fn do_something() { ... }
 ```
 
-The value returned by `async fn` is a `Future` that needs to be run on
-an executor in order for anything to happen:
+The value returned by `async fn` is a `Future`.
+For anything to happen, the `Future` needs to be run on an executor:
 
 ```rust
 // `block_on` blocks the current thread until the provided future has run to

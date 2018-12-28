@@ -96,8 +96,8 @@ async fn run_server(addr: SocketAddr) {
         // `serve` takes a closure which returns a type implementing the
         // `Service` trait. `service_fn` returns a value implementing the
         // `Service` trait, and accepts a closure which goes from request
-        // to a future of the response. In order to use our `serve_req`
-        // function with Hyper, we have to box it and put it in a compatability
+        // to a future of the response. To use our `serve_req` function
+        // with Hyper, we have to box it and put it in a compatability
         // wrapper to go from a futures 0.3 future (the kind returned by
         // `async fn`) to a futures 0.1 future (the kind used by Hyper).
         .serve(|| service_fn(|req|
@@ -115,11 +115,11 @@ fn main() {
     // Set the address to run our socket on.
     let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
 
-    // Call our run_server function, which returns a future.
-    // As with every `async fn`, we need to run that future in order for
-    // `run_server` to do anything. Additionally, since `run_server` is an
-    // `async fn`, we need to convert it from a futures 0.3 future into a
-    // futures 0.1 future.
+    // Call our `run_server` function, which returns a future.
+    // As with every `async fn`, for `run_server` to do anything,
+    // the returned future needs to be run. Additionally, since `run_server`
+    // is an `async fn`, we need to convert it from a futures 0.3 future
+    // into a futures 0.1 future.
     let futures_03_future = run_server(addr);
     let futures_01_future =
         futures_03_future.unit_error().boxed().compat(TokioDefaultSpawner);
