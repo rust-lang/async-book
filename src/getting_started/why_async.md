@@ -20,7 +20,7 @@ fn get_two_sites() {
 }
 ```
 
-This works fine for many applications-- after, all threads were designed
+This works fine for many applications-- after all, threads were designed
 to do just this: run multiple different tasks at once. However, they also
 come with some limitations. There's a lot of overhead involved in the
 process of switching between different threads and sharing data between
