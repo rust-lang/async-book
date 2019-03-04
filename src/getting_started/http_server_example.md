@@ -61,10 +61,6 @@ use {
         rt::run,
     },
     futures::{
-        // `TokioDefaultSpawner` tells futures 0.3 futures how to spawn tasks
-        // onto the Tokio runtime.
-        compat::TokioDefaultSpawner,
-
         // Extension traits providing additional methods on futures.
         // `FutureExt` adds methods that work for all futures, whereas
         // `TryFutureExt` adds methods to futures that return `Result` types.
@@ -101,7 +97,7 @@ async fn run_server(addr: SocketAddr) {
         // wrapper to go from a futures 0.3 future (the kind returned by
         // `async fn`) to a futures 0.1 future (the kind used by Hyper).
         .serve(|| service_fn(|req|
-            serve_req(req).boxed().compat(TokioDefaultSpawner)
+            serve_req(req).boxed().compat()
         ));
 
     // Wait for the server to complete serving or exit with an error.
@@ -122,7 +118,7 @@ fn main() {
     // futures 0.1 future.
     let futures_03_future = run_server(addr);
     let futures_01_future =
-        futures_03_future.unit_error().boxed().compat(TokioDefaultSpawner);
+        futures_03_future.unit_error().boxed().compat();
 
     // Finally, we can run the future to completion using the `run` function
     // provided by Hyper.
