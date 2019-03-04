@@ -1,0 +1,25 @@
+[package]
+name = "async_await_hyper"
+version = "0.1.0"
+authors = ["Your Name <email@example.com>"]
+edition = "2018"
+
+
+[dependencies]
+
+# The latest version of the "futures" library, which has lots of utilities
+# for writing async code. Enable the "tokio-compat" feature to include the
+# functions for using futures 0.3 and async/await with the Tokio library.
+futures-preview = { version = "0.3.0-alpha.13", features = ["compat"] }
+
+# Hyper is an asynchronous HTTP library. We'll use it to power our HTTP
+# server and to make HTTP requests.
+hyper = "0.12.25"
+
+# Tokio is a runtime for asynchronous I/O applications. Hyper uses
+# it for the default server runtime. The `tokio` crate also provides an
+# an `await!` macro similar to the one in `std`, but it supports `await!`ing
+# both futures 0.1 futures (the kind used by Hyper and Tokio) and
+# futures 0.3 futures (the kind produced by the new `async`/`await!` language
+# feature).
+tokio = { version = "0.1.16", features = ["async-await-preview"] }
