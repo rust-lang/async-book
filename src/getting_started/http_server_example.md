@@ -16,11 +16,11 @@ Let's add some dependencies to the `Cargo.toml` file:
 # The latest version of the "futures" library, which has lots of utilities
 # for writing async code. Enable the "tokio-compat" feature to include the
 # functions for using futures 0.3 and async/await with the Tokio library.
-futures-preview = { version = "0.3.0-alpha.9", features = ["tokio-compat"] }
+futures-preview = { version = "0.3.0-alpha.13", features = ["compat"] }
 
 # Hyper is an asynchronous HTTP library. We'll use it to power our HTTP
 # server and to make HTTP requests.
-hyper = "0.12.9"
+hyper = "0.12.25"
 
 # Tokio is a runtime for asynchronous I/O applications. Hyper uses
 # it for the default server runtime. The `tokio` crate also provides an
@@ -28,7 +28,7 @@ hyper = "0.12.9"
 # both futures 0.1 futures (the kind used by Hyper and Tokio) and
 # futures 0.3 futures (the kind produced by the new `async`/`await!` language
 # feature).
-tokio = { version = "0.1.11", features = ["async-await-preview"] }
+tokio = { version = "0.1.16", features = ["async-await-preview"] }
 ```
 
 Now that we've got our dependencies out of the way, let's start writing some
