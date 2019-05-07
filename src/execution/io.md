@@ -73,13 +73,13 @@ impl IoBlocker {
         io_object: &IoObject,
 
         /// A set of signals that may appear on the `io_object` for
-        /// which an event should be triggered, paried with
+        /// which an event should be triggered, paired with
         /// an ID to give to events that result from this interest.
         event: Event,
     ) { ... }
 
     /// Block until one of the events occurs.
-    /// This will only trigget
+    /// This will only trigger ...
     fn block(&self) -> Event { ... }
 }
 
