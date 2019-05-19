@@ -11,7 +11,7 @@ struct SocketRead<'a> {
 impl SimpleFuture for SocketRead<'_> {
     type Output = Vec<u8>;
 
-    fn poll(self: Pin<&mut Self>, lw: &LocalWaker) -> Poll<Self::Output> {
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
         if self.socket.has_data_to_read() {
             // The socket has data-- read it into a buffer and return it.
             Poll::Ready(self.socket.read_buf())
@@ -22,7 +22,7 @@ impl SimpleFuture for SocketRead<'_> {
             // When data becomes available, `wake` will be called, and the
             // user of this `Future` will know to call `poll` again and
             // receive data.
-            self.socket.set_readable_callback(lw);
+            self.socket.set_readable_callback(cx);
             Poll::Pending
         }
     }
@@ -33,7 +33,7 @@ This future will read available data on a socket, and if no data is available,
 it will yield to the executor, requesting that its task be awoken when the
 socket becomes readable again. However, it's not clear from this example how
 the `Socket` type is implemented, and in particular it isn't obvious how the
-`set_readable_callback` function works. How can we arrange for `lw.wake()`
+`set_readable_callback` function works. How can we arrange for `cx.waker.wake_by_ref()`
 to be called once the socket becomes readable? One option would be to have
 a thread that continually checks whether `socket` is readable, calling
 `wake()` when appropriate. However, this would be quite inefficient, requiring
@@ -105,7 +105,7 @@ event occurs. In the case of our `SocketRead` example above, the
 
 ```rust
 impl Socket {
-    fn set_readable_callback(&self, lw: &LocalWaker) {
+    fn set_readable_callback(&self, cx: &mut Context<'_>) {
         // `local_executor` is a reference to the local executor.
         // this could be provided at creation of the socket, but in practice
         // many executor implementations pass it down through thread local
@@ -117,7 +117,7 @@ impl Socket {
 
         // Store the local waker in the executor's map so that it can be called
         // once the IO event arrives.
-        local_executor.event_map.insert(id, lw.clone());
+        local_executor.event_map.insert(id, cx.waker().clone());
         local_executor.add_io_event_interest(
             &self.socket_file_descriptor,
             Event { id, signals: READABLE },
@@ -127,9 +127,9 @@ impl Socket {
 ```
 
 We can now have just one executor thread which can receive and dispatch any
-IO event to the appropriate `LocalWaker`, which will wake up the corresponding
+IO event to the appropriate `Waker`, which will wake up the corresponding
 task, allowing the executor to drive more tasks to completion before returning
 to check for more IO events (and the cycle continues...).
 
-[The `Future` Trait]: TODO
-[`mio`]: https://github.com/carllerche/mio
+[The `Future` Trait]: future.md
+[`mio`]: https://github.com/tokio-rs/mio

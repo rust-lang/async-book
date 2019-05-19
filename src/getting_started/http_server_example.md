@@ -1,6 +1,6 @@
 # Applied: Simple HTTP Server
 
-Let's use `async`/`await!` to build an echo server!
+Let's use `async`/`.await` to build an echo server!
 
 To start, run `rustup update nightly` to make sure you've got the latest and
 greatest copy of Rust-- we're working with bleeding-edge features, so it's
@@ -14,21 +14,21 @@ Let's add some dependencies to the `Cargo.toml` file:
 [dependencies]
 
 # The latest version of the "futures" library, which has lots of utilities
-# for writing async code. Enable the "tokio-compat" feature to include the
+# for writing async code. Enable the "compat" feature to include the
 # functions for using futures 0.3 and async/await with the Tokio library.
-futures-preview = { version = "0.3.0-alpha.9", features = ["tokio-compat"] }
+futures-preview = { version = "0.3.0-alpha.16", features = ["compat", "async-await", "nightly"] }
 
 # Hyper is an asynchronous HTTP library. We'll use it to power our HTTP
 # server and to make HTTP requests.
-hyper = "0.12.9"
+hyper = "0.12.28"
 
 # Tokio is a runtime for asynchronous I/O applications. Hyper uses
 # it for the default server runtime. The `tokio` crate also provides an
-# an `await!` macro similar to the one in `std`, but it supports `await!`ing
+# an `async_wait` macro similar to the `.await` syntax, but it supports `.await`ing
 # both futures 0.1 futures (the kind used by Hyper and Tokio) and
-# futures 0.3 futures (the kind produced by the new `async`/`await!` language
+# futures 0.3 futures (the kind produced by the new `async`/`.await` language
 # feature).
-tokio = { version = "0.1.11", features = ["async-await-preview"] }
+tokio = { version = "0.2.0", features = ["async-await-preview"], git = "https://github.com/tokio-rs/tokio" }
 ```
 
 Now that we've got our dependencies out of the way, let's start writing some
@@ -36,13 +36,10 @@ code. Open up `src/main.rs` and enable the following features at the top of
 the file:
 
 ```rust
-#![feature(async_await, await_macro, futures_api)]
+#![feature(async_await)]
 ```
 
 - `async_await` adds support for the `async fn` syntax.
-- `await_macro` adds support for the `await!` macro.
-- `futures_api` adds support for the nightly `std::future` and `std::task`
-modules which define the core `Future` trait and dependent types.
 
 Additionally, we have some imports to add:
 
@@ -61,10 +58,6 @@ use {
         rt::run,
     },
     futures::{
-        // `TokioDefaultSpawner` tells futures 0.3 futures how to spawn tasks
-        // onto the Tokio runtime.
-        compat::TokioDefaultSpawner,
-
         // Extension traits providing additional methods on futures.
         // `FutureExt` adds methods that work for all futures, whereas
         // `TryFutureExt` adds methods to futures that return `Result` types.
@@ -72,10 +65,10 @@ use {
     },
     std::net::SocketAddr,
 
-    // This is the redefinition of the await! macro which supports both
+    // This is the redefinition of the `.await` syntax which supports both
     // futures 0.1 (used by Hyper and Tokio) and futures 0.3 (the new API
     // exposed by `std::future` and implemented by `async fn` syntax).
-    tokio::await,
+    tokio::async_wait,
 };
 ```
 
@@ -101,12 +94,12 @@ async fn run_server(addr: SocketAddr) {
         // wrapper to go from a futures 0.3 future (the kind returned by
         // `async fn`) to a futures 0.1 future (the kind used by Hyper).
         .serve(|| service_fn(|req|
-            serve_req(req).boxed().compat(TokioDefaultSpawner)
+            serve_req(req).boxed().compat()
         ));
 
     // Wait for the server to complete serving or exit with an error.
     // If an error occurred, print it to stderr.
-    if let Err(e) = await!(serve_future) {
+    if let Err(e) = async_wait!(serve_future) {
         eprintln!("server error: {}", e);
     }
 }
@@ -121,8 +114,7 @@ fn main() {
     // `async fn`, we need to convert it from a futures 0.3 future into a
     // futures 0.1 future.
     let futures_03_future = run_server(addr);
-    let futures_01_future =
-        futures_03_future.unit_error().boxed().compat(TokioDefaultSpawner);
+    let futures_01_future = futures_03_future.unit_error().boxed().compat();
 
     // Finally, we can run the future to completion using the `run` function
     // provided by Hyper.
@@ -173,7 +165,7 @@ Then we can create a new `hyper::Client` and use it to make a `GET` request,
 returning the response to the user:
 
 ```rust
-let res = await!(Client::new().get(url));
+let res = async_wait!(Client::new().get(url));
 // Return the result of the request directly to the user
 println!("request finished --returning response");
 res
@@ -182,7 +174,7 @@ res
 `Client::get` returns a `hyper::client::FutureResponse`, which implements
 `Future<Output = Result<Response, Error>>`
 (or `Future<Item = Response, Error = Error>` in futures 0.1 terms).
-When we `await!` that future, an HTTP request is sent out, the current task
+When we `.await` that future, an HTTP request is sent out, the current task
 is suspended, and the task is queued to be continued once a response has
 become available.
 

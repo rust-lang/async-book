@@ -1,31 +1,22 @@
-# Task Wakeups with `LocalWaker` and `Waker`
+# Task Wakeups with `Waker`
 
 It's common that futures aren't able to complete the first time they are
 `poll`ed. When this happens, the future needs to ensure that it is polled
 again once it is ready to make more progress. This is done with the
-`LocalWaker` and `Waker` types.
+`Waker` type.
 
 Each time a future is polled, it is polled as part of a "task". Tasks are
 the top-level futures that have been submitted to an executor.
 
-`LocalWaker` and `Waker` each provide a `wake()` method that can be used to
+`Waker` provides a `wake()` method that can be used to
 tell the executor that their associated task should be awoken. When `wake()` is
 called, the executor knows that the task associated with the `Waker` is ready to
 make progress, and its future should be polled again.
 
-`LocalWaker` and `Waker` also implement `clone()` so that
-they can be copied around and stored. The difference between the two is
-thread-safety: `LocalWaker` is `!Send` and `!Sync`, and so cannot be used from
-threads other than the one it was created from. This allows `LocalWaker`
-implementations to perform special optimized behavior for the current thread.
-`Waker`s, on the other hand, are `Send` and `Sync`, and so can be used across
-multiple threads. A `LocalWaker` can be turned into a thread-safe `Waker` using
-the `into_waker()` function. This function is free to call-- it doesn't
-allocate at runtime or anything similar, but calling `wake()` on the resulting
-`Waker` may be less performant than calling `wake()` on the original
-`LocalWaker`.
+`Waker` also implement `clone()` so that they can be copied around and stored.
+`Waker`s are `Send` and `Sync`, and so can be used across multiple threads.
 
-Let's try implementing a simple timer future using `Waker` and `LocalWaker`.
+Let's try implementing a simple timer future using `Waker`.
 
 ## Applied: Build a Timer
 
@@ -36,13 +27,11 @@ when the time window has elapsed.
 Here are the imports we'll need to get started:
 
 ```rust
-#![feature(arbitrary_self_types, futures_api, pin)]
-
 use std::{
     future::Future,
-    pin::{Pin, Unpin},
+    pin::Pin,
     sync::{Arc, Mutex},
-    task::{LocalWaker, Poll, Waker},
+    task::{Context, Poll, Waker},
     thread,
     time::Duration,
 };
@@ -80,7 +69,7 @@ Now, let's actually write the `Future` implementation!
 ```rust
 impl Future for TimerFuture {
     type Output = ();
-    fn poll(self: Pin<&mut Self>, lw: &LocalWaker)
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>)
         -> Poll<Self::Output>
     {
         // Look at the shared state to see if the timer has already completed.
@@ -91,7 +80,7 @@ impl Future for TimerFuture {
             // Set waker so that the thread can wake up the current task
             // when the timer has completed, ensuring that the future is polled
             // again and sees that `completed = true`.
-            shared_state.waker = Some(lw.clone().into_waker());
+            shared_state.waker = Some(cx.waker().clone());
             Poll::Pending
         }
     }
@@ -99,8 +88,8 @@ impl Future for TimerFuture {
 ```
 
 Pretty simple, right? If the thread has set `shared_state.completed = true`,
-we're done! Otherwise, we clone the `LocalWaker` for the current task,
-convert it into a `Waker`, and pass it to `shared_state.waker` so that the
+we're done! Otherwise, we clone the `Waker` for the current task,
+and pass it to `shared_state.waker` so that the
 thread can wake the task back up.
 
 Importantly, we have to update the `Waker` every time the future is polled
@@ -129,7 +118,7 @@ impl TimerFuture {
             // task on which the future was polled, if one exists.
             shared_state.completed = true;
             if let Some(waker) = &shared_state.waker {
-                waker.wake();
+                waker.wake_by_ref();
             }
         });
 

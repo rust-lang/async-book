@@ -164,26 +164,26 @@ trait Future {
     type Output;
     fn poll(
         // note the change from `&mut self` to `Pin<&mut Self>`
-        self: Pin<&mut Self>, 
-        lw: &LocalWaker, // note the change from `wake: fn()`
+        self: Pin<&mut Self>,
+        cx: &mut Context<'_>, // note the change from `wake: fn()`
     ) -> Poll<Self::Output>;
 }
 ```
 
 The first change you'll notice is that our `self` type is no longer `&mut self`,
-but has changed to `Pin<&mut Self>`. We'll talk more about pinning in [a later 
+but has changed to `Pin<&mut Self>`. We'll talk more about pinning in [a later
 section][pinning], but for now know that it allows us to create futures that
 are immovable. Immovable objects can store pointers between their fields,
 e.g. `struct MyFut { a: i32, ptr_to_a: *const i32 }`. This feature is necessary
 in order to enable async/await.
 
-Secondly, `wake: fn()` has changed to `LocalWaker`. In `SimpleFuture`, we used
+Secondly, `wake: fn()` has changed to `Context<'_>`. In `SimpleFuture`, we used
 a call to a function pointer (`fn()`) to tell the future executor that the
 future in question should be polled. However, since `fn()` is zero-sized, it
 can't store any data about *which* `Future` called `wake`.
 In a real-world scenario, a complex application like a web server may have
 thousands of different connections whose wakeups should all be
-managed separately. This is where `LocalWaker` and its sibling type `Waker`
+managed separately. This is where `Context<'_>` and `Waker`
 come in.
 
-[pinning]: TODO
+[pinning]: ../pinning/chapter.md

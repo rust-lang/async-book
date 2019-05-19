@@ -1,11 +1,11 @@
-# `async`/`await!`
+# `async`/`.await`
 
-In [the first chapter], we took a brief look at `async`/`await!` and used
-it to build a simple server. This chapter will discuss `async`/`await!` in
+In [the first chapter], we took a brief look at `async`/`.await` and used
+it to build a simple server. This chapter will discuss `async`/`.await` in
 greater detail, explaining how it works and how `async` code differs from
 traditional Rust programs.
 
-`async`/`await!` are special pieces of Rust syntax that make it possible to
+`async`/`.await` are special pieces of Rust syntax that make it possible to
 yield control of the current thread rather than blocking, allowing other
 code to make progress while waiting on an operation to complete.
 
@@ -14,14 +14,14 @@ There are three main ways to use `async`: `async fn`, `async` blocks, and
 
 ```rust
 // `foo()` returns a type that implements `Future<Output = u8>`.
-// `await!(foo())` will result in a value of type `u8`.
+// `foo().await` will result in a value of type `u8`.
 async fn foo() -> u8 { 5 }
 
 fn bar() -> impl Future<Output = u8> {
     // This `async` block results in a type that implements
     // `Future<Output = u8>`.
     async {
-        let x: u8 = await!(foo());
+        let x: u8 = foo().await;
         x + 5
     }
 }
@@ -30,7 +30,7 @@ fn baz() -> impl Future<Output = u8> {
     // This `async` closure, when called, returns a type that
     // implements `Future<Output = u8>`
     let closure = async |x: u8| {
-        await!(bar()) + x
+        bar().await + x
     };
     closure(5)
 }
@@ -38,10 +38,10 @@ fn baz() -> impl Future<Output = u8> {
 
 As we saw in the first chapter, `async` bodies and other futures are lazy:
 they do nothing until they are run. The most common way to run a `Future`
-is to `await!` it. When `await!` is called on a `Future`, it will attempt
+is to `.await` it. When `.await` is called on a `Future`, it will attempt
 to run it to completion. If the `Future` is blocked, it will yield control
 of the current thread. When more progress can be made, the `Future` will be picked
-up by the executor and will resume running, allowing the `await!` to resolve.
+up by the executor and will resume running, allowing the `.await` to resolve.
 
 ## `async` Lifetimes
 
@@ -59,10 +59,10 @@ fn foo<'a>(x: &'a u8) -> impl Future<Output = ()> + 'a {
 }
 ```
 
-This means that the future returned from an `async fn` must be `await!`ed
+This means that the future returned from an `async fn` must be `.await`ed
 while its non-`'static` arguments are still valid. In the common
-case of `await!`ing the future immediately after calling the function
-(like `await!(foo(&x))`) this is not an issue. However, if storing the future
+case of `.await`ing the future immediately after calling the function
+(like `foo(&x).await`) this is not an issue. However, if storing the future
 or sending it over to another task or thread, this may be an issue.
 
 One common workaround for turning an `async fn` with references-as-arguments
@@ -80,7 +80,7 @@ fn bad() -> impl Future<Output = ()> {
 fn good() -> impl Future<Output = ()> {
     async {
         let x = 5;
-        await!(foo(&x))
+        foo(&x).await
     }
 }
 ```
@@ -112,7 +112,7 @@ async fn foo() {
         ...
         println!("{}", my_string);
     };
- 
+
     // Run both futures to completion, printing "foo" twice
     let ((), ()) = join!(future_one, future_two);
 }
@@ -131,11 +131,11 @@ fn foo() -> impl Future<Output = ()> {
 }
 ```
 
-## `await!`ing on a Multithreaded Executor
+## `.await`ing on a Multithreaded Executor
 
 Note that, when using a multithreaded `Future` executor, a `Future` may move
 between threads, so any variables used in `async` bodies must be able to travel
-between threads, as any `await!` can potentially result in a switch to a new
+between threads, as any `.await` can potentially result in a switch to a new
 thread.
 
 This means that it is not safe to use `Rc`, `&RefCell` or any other types
@@ -143,11 +143,11 @@ that don't implement the `Send` trait, including references to types that don't
 implement the `Sync` trait.
 
 (Caveat: it is possible to use these types so long as they aren't in scope
-during a call to `await!`.)
+during a call to `.await`.)
 
 Similarly, it isn't a good idea to hold a traditional non-futures-aware lock
-across an `await!`, as it can cause the threadpool to lock up: one task could
-take out a lock, `await!` and yield to the executor, allowing another task to
+across an `.await`, as it can cause the threadpool to lock up: one task could
+take out a lock, `.await` and yield to the executor, allowing another task to
 attempt to take the lock and cause a deadlock. To avoid this, use the `Mutex`
 in `futures::lock` rather than the one from `std::sync`.
 

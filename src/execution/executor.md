@@ -1,7 +1,7 @@
 # Applied: Build an Executor
 
 `Future`s are lazy and must be actively driven to completion in order to do
-anything. A common way to drive a future to completion is to `await!` it inside
+anything. A common way to drive a future to completion is to `.await` it inside
 an `async` function, but that just pushes the problem one level up: who will
 run the futures returned from the top-level `async` functions? The answer is
 that we need a `Future` executor.
@@ -28,25 +28,25 @@ authors = ["XYZ Author"]
 edition = "2018"
 
 [dependencies]
-futures-preview = "0.3.0-alpha.9"
+futures-preview = "0.3.0-alpha.16"
 ```
 
 Next, we need the following imports at the top of `src/main.rs`:
 
 ```rust
-#![feature(arbitrary_self_types, async_await, await_macro, futures_api, pin)]
+#![feature(async_await)]
 
 use {
-    futures::future::FutureObj,
+    futures::{
+        future::FutureObj,
+        task::ArcWake,
+    },
     std::{
         future::Future,
         pin::Pin,
         sync::{Arc, Mutex},
         sync::mpsc::{sync_channel, SyncSender, Receiver},
-        task::{
-            local_waker_from_nonlocal,
-            Poll, Wake,
-        },
+        task::{Context, Poll},
     },
 };
 ```
@@ -117,19 +117,19 @@ impl Spawner {
 }
 ```
 
-In order poll futures, we'll also need to create a `LocalWaker` to provide to
-poll. As discussed in the [task wakeups section], `LocalWaker`s are responsible
+In order poll futures, we'll also need to create a `Waker` to provide to
+poll. As discussed in the [task wakeups section], `Waker`s are responsible
 for scheduling a task to be polled again once `wake` is called. Remember that
-`LocalWaker`s tell the executor exactly which task has become ready, allowing
+`Waker`s tell the executor exactly which task has become ready, allowing
 them to poll just the futures that are ready to make progress. The easiest way
-to create a new `LocalWaker` is by implementing the `Wake` trait and then using
-the `local_waker_from_nonlocal` or `local_waker` functions to turn a `Arc<T: Wake>`
-into a `LocalWaker`. Let's implement `Wake` for our tasks to allow them to be
-turned into `LocalWaker`s and awoken:
+to create a new `Waker` is by implementing the `ArcWake` trait and then using
+the `into_waker` method to turn a `Arc<T: Wake>` into a `Waker`.
+Let's implement `ArcWake` for our tasks to allow them to be
+turned into `Waker`s and awoken:
 
 ```rust
-impl Wake for Task {
-    fn wake(arc_self: &Arc<Self>) {
+impl ArcWake for Task {
+    fn wake_by_ref(arc_self: &Arc<Self>) {
         // Implement `wake` by sending this task back onto the task channel
         // so that it will be polled again by the executor.
         let cloned = arc_self.clone();
@@ -138,7 +138,7 @@ impl Wake for Task {
 }
 ```
 
-When a `LocalWaker` is created from an `Arc<Task>`, calling `wake()` on it will
+When a `Waker` is created from an `Arc<Task>`, calling `wake()` on it will
 cause a copy of the `Arc` to be sent onto the task channel. Our executor then
 needs to pick up the task and poll it. Let's implement that:
 
@@ -150,9 +150,10 @@ impl Executor {
             // Take the future, and if it has not yet completed (is still Some),
             // poll it in an attempt to complete it.
             if let Some(mut future) = future_slot.take() {
-                // Create a `LocalWaker` from the task itself
-                let lw = local_waker_from_nonlocal(task.clone());
-                if let Poll::Pending = Pin::new(&mut future).poll(&lw) {
+                // Create a `Waker` from the task itself
+                let waker = task.clone().into_waker();
+                let mut cx = Context::from_waker(&waker);
+                if let Poll::Pending = Pin::new(&mut future).poll(&mut cx) {
                     // We're not done processing the future, so put it
                     // back in its task to be run again in the future.
                     *future_slot = Some(future);
@@ -173,11 +174,11 @@ fn main() {
     spawner.spawn(async {
         println!("howdy!");
         // Wait for our timer future to complete after two seconds.
-        await!(TimerFuture::new(Duration::new(2, 0)));
+        TimerFuture::new(Duration::new(2, 0)).await;
         println!("done!");
     });
     executor.run();
 }
 ```
 
-[task wakeups section]: TODO
+[task wakeups section]: wakeups.md

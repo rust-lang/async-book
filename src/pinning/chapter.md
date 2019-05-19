@@ -9,13 +9,13 @@ But what does it mean, and why do we need it?
 ## Why Pinning
 
 Pinning makes it possible to guarantee that an object won't ever be moved.
-To understand why this is necessary, we need to remember how `async`/`await!`
+To understand why this is necessary, we need to remember how `async`/`.await`
 works. Consider the following code:
 
 ```rust
 async {
-    await!(fut_one);
-    await!(fut_two);
+    fut_one.await;
+    fut_two.await;
 }
 ```
 
@@ -69,7 +69,7 @@ For example:
 async {
     let mut x = [0; 128];
     let read_into_buf_fut = read_into_buf(&mut x);
-    await!(read_into_buf_fut);
+    read_into_buf_fut.await;
     println!("{:?}", x);
 }
 ```
@@ -108,7 +108,7 @@ a normal `&mut T`.
 Some functions require the futures they work with to be `Unpin`. To use a
 `Future` or `Stream` that isn't `Unpin` with a function that requires
 `Unpin` types, you'll first have to pin the value using either
-`Box::pinned` (to create a `Pin<Box<T>>`) or the `pin_utils::pin_mut!` macro
+`Box::pin` (to create a `Pin<Box<T>>`) or the `pin_utils::pin_mut!` macro
 (to create a `Pin<&mut T>`). `Pin<Box<Fut>>` and `Pin<&mut Fut>` can both be
 used as futures, and both implement `Unpin`.
 
@@ -125,7 +125,7 @@ execute_unpin_future(fut); // Error: `fut` does not implement `Unpin` trait
 
 // Pinning with `Box`:
 let fut = async { ... };
-let fut = Box::pinned(fut);
+let fut = Box::pin(fut);
 execute_unpin_future(fut); // OK
 
 // Pinning with `pin_mut!`:
@@ -134,5 +134,5 @@ pin_mut!(fut);
 execute_unpin_future(fut); // OK
 ```
 
-["Executing `Future`s and Tasks"]: TODO
-[the `Future` trait]: TODO
+["Executing `Future`s and Tasks"]: ../execution/chapter.md
+[the `Future` trait]: ../execution/future.md

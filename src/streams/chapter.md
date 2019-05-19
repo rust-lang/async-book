@@ -11,7 +11,7 @@ trait Stream {
     /// Attempt to resolve the next item in the stream.
     /// Returns `Poll::Pending` if not ready, `Poll::Ready(Some(x))` if a value
     /// is ready, and `Poll::Ready(None)` if the stream has completed.
-    fn poll_next(self: Pin<&mut Self>, lw: &LocalWaker)
+    fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>)
         -> Poll<Option<Self::Item>>;
 }
 ```
@@ -27,15 +27,15 @@ use futures::prelude::*;
 
 let fut = async {
     let (tx, rx) = mpsc::channel(BUFFER_SIZE);
-    await!(tx.send(1)).unwrap();
-    await!(tx.send(2)).unwrap();
+    tx.send(1).await.unwrap();
+    tx.send(2).await.unwrap();
     drop(tx);
 
     // `StreamExt::next` is similar to `Iterator::next`, but returns a
     // type that implements `Future<Output = Option<T>>`.
-    assert_eq!(Some(1), await!(rx.next()));
-    assert_eq!(Some(2), await!(rx.next()));
-    assert_eq!(None, await!(rx.next()));
+    assert_eq!(Some(1), rx.next().await);
+    assert_eq!(Some(2), rx.next().await);
+    assert_eq!(None, rx.next().await);
 };
 ```
 
@@ -56,13 +56,13 @@ let fut = async {
     let mut stream: impl Stream<Item = Result<i32, io::Error>> = ...;
 
     // processing with `try_for_each`:
-    await!(stream.try_for_each(async |item| {
+    stream.try_for_each(async |item| {
         // handle `item`
         Ok(())
-    }))?;
+    }).await?;
 
     // processing with `while let`:
-    while let Some(item) = await!(stream.try_next())? {
+    while let Some(item) = stream.try_next().await? {
         // handle `item`
     }
 
@@ -84,11 +84,11 @@ use futures::prelude::*;
 let fut = async {
     let mut stream: impl Stream<Item = Result<i32, io::Error>> = ...;
 
-    await!(stream.try_for_each_concurrent(MAX_CONCURRENT_JUMPERS, async |num| {
-        await!(jump_n_times(num))?;
-        await!(report_jumps(num))?;
+    stream.try_for_each_concurrent(MAX_CONCURRENT_JUMPERS, async |num| {
+        jump_n_times(num).await?;
+        report_jumps(num).await?;
         Ok(())
-    })?;
+    }).await?;
 
     ...
     Ok(())

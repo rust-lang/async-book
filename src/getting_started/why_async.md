@@ -27,7 +27,7 @@ process of switching between different threads and sharing data between
 threads. Even a thread which just sits and does nothing uses up valuable
 system resources. These are the costs that asynchronous code is designed
 to eliminate. We can rewrite the function above using Rust's
-`async`/`await!` notation, which will allow us to run multiple tasks at
+`async`/`.await` notation, which will allow us to run multiple tasks at
 once without creating multiple threads:
 
 ```rust
