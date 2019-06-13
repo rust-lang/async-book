@@ -1,0 +1,22 @@
+[package]
+name = "01_05_http_server"
+version = "0.1.0"
+authors = ["Taylor Cramer <cramertj@google.com>"]
+edition = "2018"
+
+[lib]
+
+[dependencies]
+# The latest version of the "futures" library, which has lots of utilities
+# for writing async code. Enable the "compat" feature to include the
+# functions for using futures 0.3 and async/await with the Hyper library,
+# which use futures 0.1.
+futures-preview = { version = "=0.3.0-alpha.16", features = ["compat"] }
+
+# Hyper is an asynchronous HTTP library. We'll use it to power our HTTP
+# server and to make HTTP requests.
+hyper = "0.12.9"
+
+# (only for testing)
+failure = "0.1.5"
+reqwest = "0.9.18"

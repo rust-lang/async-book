@@ -9,15 +9,7 @@ different webpages at the same time, you would spread the work across two
 different threads, like this:
 
 ```rust
-fn get_two_sites() {
-    // Spawn two threads to do work.
-    let thread_one = thread::spawn(|| download("https:://www.foo.com"));
-    let thread_two = thread::spawn(|| download("https:://www.bar.com"));
-
-    // Wait for both threads to complete.
-    thread_one.join();
-    thread_two.join();
-}
+{{#include ../../examples/01_02_why_async/src/lib.rs:17:25}}
 ```
 
 This works fine for many applications-- after all, threads were designed
@@ -27,19 +19,11 @@ process of switching between different threads and sharing data between
 threads. Even a thread which just sits and does nothing uses up valuable
 system resources. These are the costs that asynchronous code is designed
 to eliminate. We can rewrite the function above using Rust's
-`async`/`await!` notation, which will allow us to run multiple tasks at
+`async`/`.await` notation, which will allow us to run multiple tasks at
 once without creating multiple threads:
 
 ```rust
-async fn get_two_sites() {
-    // Create a two different "futures" which, when run to completion,
-    // will asynchronously download the webpages.
-    let future_one = download_async("https:://www.foo.com");
-    let future_two = download_async("https:://www.bar.com");
-
-    // Run both futures to completion at the same time.
-    join!(future_one, future_two);
-}
+{{#include ../../examples/01_02_why_async/src/lib.rs:31:39}}
 ```
 
 Overall, asynchronous applications have the potential to be much faster and
