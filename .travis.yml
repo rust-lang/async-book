@@ -13,6 +13,6 @@ script:
   - cargo test --all --manifest-path=./examples/Cargo.toml --target-dir ./target
 
 env:
-  RUSTINFRA_DEPLOY_DIR: book
+  RUSTINFRA_DEPLOY_DIR: book/html
 import:
   - rust-lang/simpleinfra/travis-configs/static-websites.yml
