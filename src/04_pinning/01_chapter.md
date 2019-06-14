@@ -13,9 +13,11 @@ To understand why this is necessary, we need to remember how `async`/`await!`
 works. Consider the following code:
 
 ```rust
-async {
-    await!(fut_one);
-    await!(fut_two);
+let fut_one = ...;
+let fut_two = ...;
+async move {
+    fut_one.await;
+    fut_two.await;
 }
 ```
 
@@ -37,8 +39,8 @@ enum State {
     Done,
 }
 
-impl AsyncFuture {
-    fn poll(...) -> Poll<()> {
+impl Future for AsyncFuture {
+    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<()> {
         loop {
             match self.state {
                 State::AwaitingFutOne => match self.fut_one.poll(..) {
@@ -69,7 +71,7 @@ For example:
 async {
     let mut x = [0; 128];
     let read_into_buf_fut = read_into_buf(&mut x);
-    await!(read_into_buf_fut);
+    read_into_buf_fut.await;
     println!("{:?}", x);
 }
 ```
@@ -108,7 +110,7 @@ a normal `&mut T`.
 Some functions require the futures they work with to be `Unpin`. To use a
 `Future` or `Stream` that isn't `Unpin` with a function that requires
 `Unpin` types, you'll first have to pin the value using either
-`Box::pinned` (to create a `Pin<Box<T>>`) or the `pin_utils::pin_mut!` macro
+`Box::pin` (to create a `Pin<Box<T>>`) or the `pin_utils::pin_mut!` macro
 (to create a `Pin<&mut T>`). `Pin<Box<Fut>>` and `Pin<&mut Fut>` can both be
 used as futures, and both implement `Unpin`.
 
@@ -125,7 +127,7 @@ execute_unpin_future(fut); // Error: `fut` does not implement `Unpin` trait
 
 // Pinning with `Box`:
 let fut = async { ... };
-let fut = Box::pinned(fut);
+let fut = Box::pin(fut);
 execute_unpin_future(fut); // OK
 
 // Pinning with `pin_mut!`:
@@ -134,5 +136,5 @@ pin_mut!(fut);
 execute_unpin_future(fut); // OK
 ```
 
-["Executing `Future`s and Tasks"]: TODO
-[the `Future` trait]: TODO
+["Executing `Future`s and Tasks"]: ../02_execution/01_chapter.md
+[the `Future` trait]: ../02_execution/02_future.md

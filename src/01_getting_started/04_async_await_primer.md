@@ -1,6 +1,6 @@
-# `async`/`await!` Primer
+# `async`/`.await` Primer
 
-`async`/`await!` is Rust's built-in tool for writing asynchronous functions
+`async`/`.await` is Rust's built-in tool for writing asynchronous functions
 that look like synchronous code. `async` transforms a block of code into a
 state machine that implements a trait called `Future`. Whereas calling a
 blocking function in a synchronous method would block the whole thread,
@@ -17,24 +17,12 @@ The value returned by `async fn` is a `Future` that needs to be run on
 an executor in order for anything to happen:
 
 ```rust
-// `block_on` blocks the current thread until the provided future has run to
-// completion. Other executors provide more complex behavior, like scheduling
-// multiple futures onto the same thread.
-use futures::executor::block_on;
-
-async fn hello_world() {
-    println!("hello, world!");
-}
-
-fn main() {
-    let future = hello_world(); // Nothing is printed
-    block_on(future); // `future` is run and "hello, world!" is printed
-}
+{{#include ../../examples/01_04_async_await_primer/src/lib.rs:7:19}}
 ```
 
-Inside an `async fn`, you can use `await!` to wait for the completion of
+Inside an `async fn`, you can use `.await` to wait for the completion of
 another type that implements the `Future` trait, such as the output of
-another `async fn`. Unlike `block_on`, `await!` doesn't block the current
+another `async fn`. Unlike `block_on`, `.await` doesn't block the current
 thread, but instead asynchronously waits for the future to complete, allowing
 other tasks to run if the future is currently unable to make progress.
 
@@ -51,11 +39,7 @@ One way to do learn, sing, and dance would be to block on each of these
 individually:
 
 ```rust
-fn main() {
-  let song = block_on(learn_song());
-  block_on(sing_song(song));
-  block_on(dance);
-}
+{{#include ../../examples/01_04_async_await_primer/src/lib.rs:32:36}}
 ```
 
 However, we're not giving the best performance possible this way-- we're
@@ -65,39 +49,17 @@ singing the song. To do this, we can create two separate `async fn` which
 can be run concurrently:
 
 ```rust
-async fn learn_and_sing() {
-    // Wait until the song has been learned before singing it.
-    // We use `await!` here rather than `block_on` to prevent blocking the
-    // thread, which makes it possible to `dance` at the same time.
-    let song = await!(learn_song());
-    await!(sing_song(song));
-}
-
-async fn async_main() {
-    let f1 = learn_and_sing(); 
-    let f2 = dance();
-
-    // `join!` is like `await!` but can wait for multiple futures concurrently.
-    // If we're temporarily blocked in the `learn_and_sing` future, the `dance`
-    // future will take over the current thread. If `dance` becomes blocked,
-    // `learn_and_sing` can take back over. If both futures are blocked, then
-    // `async_main` is blocked and will yield to the executor.
-    join!(f1, f2) 
-}
-
-fn main() {
-    block_on(async_main());
-}
+{{#include ../../examples/01_04_async_await_primer/src/lib.rs:44:66}}
 ```
 
 In this example, learning the song must happen before singing the song, but
 both learning and singing can happen at the same time as dancing. If we used
-`block_on(learn_song())` rather than `await!(learn_song())` in `learn_and_sing`,
+`block_on(learn_song())` rather than `learn_song().await` in `learn_and_sing`,
 the thread wouldn't be able to do anything else while `learn_song` was running.
-This would make it impossible to dance at the same time. By `await!`ing
+This would make it impossible to dance at the same time. By `.await`-ing
 the `learn_song` future, we allow other tasks to take over the current thread
 if `learn_song` is blocked. This makes it possible to run multiple futures
 to completion concurrently on the same thread.
 
-Now that you've learned the basics of `async`/`await!`, let's try out an
+Now that you've learned the basics of `async`/`await`, let's try out an
 example.

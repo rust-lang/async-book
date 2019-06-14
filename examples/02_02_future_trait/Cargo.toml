@@ -1,0 +1,7 @@
+[package]
+name = "02_02_future_trait"
+version = "0.1.0"
+authors = ["Taylor Cramer <cramertj@google.com>"]
+edition = "2018"
+
+[lib]
