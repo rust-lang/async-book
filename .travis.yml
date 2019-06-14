@@ -11,11 +11,7 @@ script:
   - mdbook build
   - cargo test --all --manifest-path=./examples/Cargo.toml
 
-deploy:
-  provider: pages
-  skip-cleanup: true
-  github-token: $GITHUB_TOKEN  # Set in travis-ci.org dashboard, marked secure
-  local-dir: book
-  keep-history: false
-  on:
-    branch: master
+env:
+  RUSTINFRA_DEPLOY_DIR: book
+import:
+  - rust-lang/simpleinfra/travis-configs/static-websites.yml
