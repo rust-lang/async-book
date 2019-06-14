@@ -1,1 +1,3 @@
 /book/
+/examples/target/
+/examples/Cargo.lock

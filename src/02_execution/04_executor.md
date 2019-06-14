@@ -1,7 +1,7 @@
 # Applied: Build an Executor
 
-`Future`s are lazy and must be actively driven to completion in order to do
-anything. A common way to drive a future to completion is to `.await` it inside
+Rust's `Future`s are lazy: they won't do anything unless actively driven to
+completion. One way to drive a future to completion is to `.await` it inside
 an `async` function, but that just pushes the problem one level up: who will
 run the futures returned from the top-level `async` functions? The answer is
 that we need a `Future` executor.
@@ -16,8 +16,8 @@ completed.
 In this section, we'll write our own simple executor capable of running a large
 number of top-level futures to completion concurrently.
 
-For this one, we're going to have to include the `futures` crate in order to
-get the `ArcWake` trait, which provides an easy way to construct a `Waker`.
+For this example, we depend on the `futures` crate for the `ArcWake` trait,
+which provides an easy way to construct a `Waker`.
 
 ```toml
 [package]
@@ -60,7 +60,7 @@ executor.
 {{#include ../../examples/02_04_executor/src/lib.rs:55:64}}
 ```
 
-In order poll futures, we'll also need to create a `Waker`.
+To poll futures, we'll need to create a `Waker`.
 As discussed in the [task wakeups section], `Waker`s are responsible
 for scheduling a task to be polled again once `wake` is called. Remember that
 `Waker`s tell the executor exactly which task has become ready, allowing
