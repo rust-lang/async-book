@@ -32,10 +32,10 @@ there is a cost. Threads are natively supported by the operating system,
 and using them doesn't require any special programming model-- any function
 can create a thread, and calling a function that uses threads is usually
 just as easy as calling any normal function. However, asynchronous functions
-require special support from the language or libraries in order to work.
-In Rust, `async fn` creates an asynchronous function which, when called,
-will return a future which needs to be run to completion in order for the
-body of the function to execute.
+require special support from the language or libraries.
+In Rust, `async fn` creates an asynchronous function which returns a `Future`.
+To execute the body of the function, the returned `Future` must be run to
+completion.
 
 It's important to remember that traditional threaded applications can be quite
 effective, and that Rust's small memory footprint and predictability mean that
