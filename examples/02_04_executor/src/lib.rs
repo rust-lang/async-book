@@ -39,7 +39,7 @@ struct Task {
     /// one thread executing tasks at once. However, Rust isn't smart
     /// enough to know that `future` is only mutated from one thread,
     /// so we need use the `Mutex` to prove thread-safety. A production
-    /// executor wouild not need this, and could use `UnsafeCell` instead.
+    /// executor would not need this, and could use `UnsafeCell` instead.
     future: Mutex<Option<BoxFuture<'static, ()>>>,
 
     /// Handle to place the task itself back onto the task queue.
