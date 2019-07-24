@@ -10,6 +10,7 @@ use {
     },
 };
 
+// ANCHOR: stream_trait
 trait Stream {
     /// The type of the value yielded by the stream.
     type Item;
@@ -20,6 +21,7 @@ trait Stream {
     fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>)
         -> Poll<Option<Self::Item>>;
 }
+// ANCHOR_END: stream_trait
 
 // assert that `Stream` matches `RealStream`:
 impl<I> Stream for dyn RealStream<Item = I> {
@@ -40,6 +42,7 @@ use {
     },
 };
 
+// ANCHOR: channels
 async fn send_recv() {
     const BUFFER_SIZE: usize = 10;
     let (mut tx, mut rx) = mpsc::channel::<i32>(BUFFER_SIZE);
@@ -54,6 +57,7 @@ async fn send_recv() {
     assert_eq!(Some(2), rx.next().await);
     assert_eq!(None, rx.next().await);
 }
+// ANCHOR_END: channels
 
 #[test]
 fn run_send_recv() { futures::executor::block_on(send_recv()) }

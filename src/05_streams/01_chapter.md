@@ -4,7 +4,7 @@ The `Stream` trait is similar to `Future` but can yield multiple values before
 completing, similar to the `Iterator` trait from the standard library:
 
 ```rust
-{{#include ../../examples/05_01_streams/src/lib.rs:13:22}}
+{{#include ../../examples/05_01_streams/src/lib.rs:stream_trait}}
 ```
 
 One common example of a `Stream` is the `Receiver` for the channel type from
@@ -13,5 +13,5 @@ from the `Sender` end, and will yield `None` once the `Sender` has been
 dropped and all pending messages have been received:
 
 ```rust
-{{#include ../../examples/05_01_streams/src/lib.rs:43:56}}
+{{#include ../../examples/05_01_streams/src/lib.rs:channels}}
 ```

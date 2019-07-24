@@ -9,7 +9,7 @@ different webpages at the same time, you would spread the work across two
 different threads, like this:
 
 ```rust
-{{#include ../../examples/01_02_why_async/src/lib.rs:17:25}}
+{{#include ../../examples/01_02_why_async/src/lib.rs:get_two_sites}}
 ```
 
 This works fine for many applications-- after all, threads were designed
@@ -23,7 +23,7 @@ to eliminate. We can rewrite the function above using Rust's
 once without creating multiple threads:
 
 ```rust
-{{#include ../../examples/01_02_why_async/src/lib.rs:31:39}}
+{{#include ../../examples/01_02_why_async/src/lib.rs:get_two_sites_async}}
 ```
 
 Overall, asynchronous applications have the potential to be much faster and

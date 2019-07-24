@@ -12,6 +12,7 @@ use {
     },
 };
 
+// ANCHOR: nexts
 async fn sum_with_next(mut stream: Pin<&mut dyn Stream<Item = i32>>) -> i32 {
     use futures::stream::StreamExt; // for `next`
     let mut sum = 0;
@@ -31,6 +32,7 @@ async fn sum_with_try_next(
     }
     Ok(sum)
 }
+// ANCHOR_END: nexts
 
 #[test]
 fn run_sum_with_next() {
@@ -47,6 +49,7 @@ fn run_sum_with_try_next() {
 }
 
 #[allow(unused)]
+// ANCHOR: try_for_each_concurrent
 async fn jump_around(
     mut stream: Pin<&mut dyn Stream<Item = Result<u8, io::Error>>>,
 ) -> Result<(), io::Error> {
@@ -61,6 +64,7 @@ async fn jump_around(
 
     Ok(())
 }
+// ANCHOR_END: try_for_each_concurrent
 
 async fn jump_n_times(_: u8) -> Result<(), io::Error> { Ok(()) }
 async fn report_n_jumps(_: u8) -> Result<(), io::Error> { Ok(()) }

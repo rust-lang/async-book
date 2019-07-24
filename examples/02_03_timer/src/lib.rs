@@ -1,5 +1,6 @@
 #![feature(async_await)]
 
+// ANCHOR: imports
 use {
     std::{
         future::Future,
@@ -10,7 +11,9 @@ use {
         time::Duration,
     },
 };
+// ANCHOR_END: imports
 
+// ANCHOR: timer_decl
 pub struct TimerFuture {
     shared_state: Arc<Mutex<SharedState>>,
 }
@@ -26,7 +29,9 @@ struct SharedState {
     /// move forward.
     waker: Option<Waker>,
 }
+// ANCHOR_END: timer_decl
 
+// ANCHOR: future_for_timer
 impl Future for TimerFuture {
     type Output = ();
     fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
@@ -52,7 +57,9 @@ impl Future for TimerFuture {
         }
     }
 }
+// ANCHOR_END: future_for_timer
 
+// ANCHOR: timer_new
 impl TimerFuture {
     /// Create a new `TimerFuture` which will complete after the provided
     /// timeout.
@@ -78,6 +85,7 @@ impl TimerFuture {
         TimerFuture { shared_state }
     }
 }
+// ANCHOR_END: timer_new
 
 #[test]
 fn block_on_timer() {

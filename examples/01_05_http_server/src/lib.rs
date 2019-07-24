@@ -1,6 +1,7 @@
 #![cfg(test)]
 #![feature(async_await)]
 
+// ANCHOR: imports
 use {
     hyper::{
         // Miscellaneous types from Hyper for working with HTTP.
@@ -25,7 +26,9 @@ use {
     },
     std::net::SocketAddr,
 };
+// ANCHOR_END: imports
 
+// ANCHOR: boilerplate
 async fn serve_req(_req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
     // Always return successfully with a response containing a body with
     // a friendly greeting ;)
@@ -70,6 +73,7 @@ fn main() {
     // provided by Hyper.
     run(futures_01_future);
 }
+// ANCHOR_END: boilerplate
 
 #[test]
 fn run_main_and_query_http() -> Result<(), failure::Error> {
@@ -87,12 +91,16 @@ mod proxy {
     use super::*;
     #[allow(unused)]
     async fn serve_req(_req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
-        let url_str = "http://www.rust-lang.org/en-US/";
-        let url = url_str.parse::<Uri>().expect("failed to parse URL");
+// ANCHOR: parse_url
+let url_str = "http://www.rust-lang.org/en-US/";
+let url = url_str.parse::<Uri>().expect("failed to parse URL");
+// ANCHOR_END: parse_url
 
-        let res = Client::new().get(url).compat().await;
-        // Return the result of the request directly to the user
-        println!("request finished-- returning response");
-        res
+// ANCHOR: get_request
+let res = Client::new().get(url).compat().await;
+// Return the result of the request directly to the user
+println!("request finished-- returning response");
+res
+// ANCHOR_END: get_request
     }
 }

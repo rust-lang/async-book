@@ -17,7 +17,7 @@ The value returned by `async fn` is a `Future`. For anything to happen,
 the `Future` needs to be run on an executor.
 
 ```rust
-{{#include ../../examples/01_04_async_await_primer/src/lib.rs:7:19}}
+{{#include ../../examples/01_04_async_await_primer/src/lib.rs:hello_world}}
 ```
 
 Inside an `async fn`, you can use `.await` to wait for the completion of
@@ -39,7 +39,7 @@ One way to do learn, sing, and dance would be to block on each of these
 individually:
 
 ```rust
-{{#include ../../examples/01_04_async_await_primer/src/lib.rs:32:36}}
+{{#include ../../examples/01_04_async_await_primer/src/lib.rs:block_on_each}}
 ```
 
 However, we're not giving the best performance possible this way-- we're
@@ -49,7 +49,7 @@ singing the song. To do this, we can create two separate `async fn` which
 can be run concurrently:
 
 ```rust
-{{#include ../../examples/01_04_async_await_primer/src/lib.rs:44:66}}
+{{#include ../../examples/01_04_async_await_primer/src/lib.rs:block_on_main}}
 ```
 
 In this example, learning the song must happen before singing the song, but

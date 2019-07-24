@@ -10,7 +10,7 @@ imperative-style code, `while let` and the `next`/`try_next` functions can
 be used:
 
 ```rust
-{{#include ../../examples/05_02_iteration_and_concurrency/src/lib.rs:15:33}}
+{{#include ../../examples/05_02_iteration_and_concurrency/src/lib.rs:nexts}}
 ```
 
 However, if we're just processing one element at a time, we're potentially
@@ -20,5 +20,5 @@ concurrently, use the `for_each_concurrent` and `try_for_each_concurrent`
 methods:
 
 ```rust
-{{#include ../../examples/05_02_iteration_and_concurrency/src/lib.rs:50:63}}
+{{#include ../../examples/05_02_iteration_and_concurrency/src/lib.rs:try_for_each_concurrent}}
 ```
