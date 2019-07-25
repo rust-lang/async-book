@@ -33,7 +33,7 @@ futures-preview = "=0.3.0-alpha.16"
 Next, we need the following imports at the top of `src/main.rs`:
 
 ```rust
-{{#include ../../examples/02_04_executor/src/lib.rs:2:18}}
+{{#include ../../examples/02_04_executor/src/lib.rs:imports}}
 ```
 
 Our executor will work by sending tasks to run over a channel. The executor
@@ -48,7 +48,7 @@ store them as a future paired with a sender that the task can use to requeue
 itself.
 
 ```rust
-{{#include ../../examples/02_04_executor/src/lib.rs:20:53}}
+{{#include ../../examples/02_04_executor/src/lib.rs:executor_decl}}
 ```
 
 Let's also add a method to spawner to make it easy to spawn new futures.
@@ -57,7 +57,7 @@ and create a new `Arc<Task>` with it inside which can be enqueued onto the
 executor.
 
 ```rust
-{{#include ../../examples/02_04_executor/src/lib.rs:55:64}}
+{{#include ../../examples/02_04_executor/src/lib.rs:spawn_fn}}
 ```
 
 To poll futures, we'll need to create a `Waker`.
@@ -71,7 +71,7 @@ into a `Waker`. Let's implement `ArcWake` for our tasks to allow them to be
 turned into `Waker`s and awoken:
 
 ```rust
-{{#include ../../examples/02_04_executor/src/lib.rs:66:73}}
+{{#include ../../examples/02_04_executor/src/lib.rs:arcwake_for_task}}
 ```
 
 When a `Waker` is created from an `Arc<Task>`, calling `wake()` on it will
@@ -79,7 +79,7 @@ cause a copy of the `Arc` to be sent onto the task channel. Our executor then
 needs to pick up the task and poll it. Let's implement that:
 
 ```rust
-{{#include ../../examples/02_04_executor/src/lib.rs:75:97}}
+{{#include ../../examples/02_04_executor/src/lib.rs:executor_run}}
 ```
 
 Congratulations! We now have a working futures executor. We can even use it
@@ -87,7 +87,7 @@ to run `async/.await` code and custom futures, such as the `TimerFuture` we
 wrote earlier:
 
 ```rust
-{{#include ../../examples/02_04_executor/src/lib.rs:99:117}}
+{{#include ../../examples/02_04_executor/src/lib.rs:main}}
 ```
 
 [task wakeups section]: ./03_wakeups.md

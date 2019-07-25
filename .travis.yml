@@ -5,8 +5,8 @@ cache: cargo
 rust: nightly-2019-05-09 # minimum required version for async/await
 
 before_install:
-  - cargo install mdbook --vers '0.2.3' --debug --force
-  - cargo install mdbook-linkcheck --vers '0.2.4' --debug --force
+  - cargo install mdbook --vers '0.3.1' --debug --force
+  - cargo install mdbook-linkcheck --vers '0.3.1' --debug --force
 
 script:
   - mdbook build

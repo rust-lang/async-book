@@ -1,6 +1,7 @@
 #![cfg(test)]
 #![feature(async_await)]
 
+// ANCHOR: imports
 use {
     futures::{
         future::{FutureExt, BoxFuture},
@@ -16,7 +17,9 @@ use {
     // The timer we wrote in the previous section:
     timer_future::TimerFuture,
 };
+// ANCHOR_END: imports
 
+// ANCHOR: executor_decl
 /// Task executor that receives tasks off of a channel and runs them.
 struct Executor {
     ready_queue: Receiver<Arc<Task>>,
@@ -51,7 +54,9 @@ fn new_executor_and_spawner() -> (Executor, Spawner) {
     let (task_sender, ready_queue) = sync_channel(MAX_QUEUED_TASKS);
     (Executor { ready_queue }, Spawner { task_sender})
 }
+// ANCHOR_END: executor_decl
 
+// ANCHOR: spawn_fn
 impl Spawner {
     fn spawn(&self, future: impl Future<Output = ()> + 'static + Send) {
         let future = future.boxed();
@@ -62,7 +67,9 @@ impl Spawner {
         self.task_sender.send(task).expect("too many tasks queued");
     }
 }
+// ANCHOR_END: spawn_fn
 
+// ANCHOR: arcwake_for_task
 impl ArcWake for Task {
     fn wake_by_ref(arc_self: &Arc<Self>) {
         // Implement `wake` by sending this task back onto the task channel
@@ -71,7 +78,9 @@ impl ArcWake for Task {
         arc_self.task_sender.send(cloned).expect("too many tasks queued");
     }
 }
+// ANCHOR_END: arcwake_for_task
 
+// ANCHOR: executor_run
 impl Executor {
     fn run(&self) {
         while let Ok(task) = self.ready_queue.recv() {
@@ -95,7 +104,9 @@ impl Executor {
         }
     }
 }
+// ANCHOR_END: executor_run
 
+// ANCHOR: main
 fn main() {
     let (executor, spawner) = new_executor_and_spawner();
 
@@ -115,6 +126,7 @@ fn main() {
     // This will print "howdy!", pause, and then print "done!".
     executor.run();
 }
+// ANCHOR_END: main
 
 #[test]
 fn run_main() { main() }

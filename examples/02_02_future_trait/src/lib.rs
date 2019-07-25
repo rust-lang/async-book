@@ -1,3 +1,4 @@
+// ANCHOR: simple_future
 trait SimpleFuture {
     type Output;
     fn poll(&mut self, wake: fn()) -> Poll<Self::Output>;
@@ -7,6 +8,7 @@ enum Poll<T> {
     Ready(T),
     Pending,
 }
+// ANCHOR_END: simple_future
 
 struct Socket;
 impl Socket {
@@ -25,6 +27,7 @@ impl Socket {
     }
 }
 
+// ANCHOR: socket_read
 pub struct SocketRead<'a> {
     socket: &'a Socket,
 }
@@ -48,7 +51,9 @@ impl SimpleFuture for SocketRead<'_> {
         }
     }
 }
+// ANCHOR_END: socket_read
 
+// ANCHOR: join
 /// A SimpleFuture that runs two other futures to completion concurrently.
 ///
 /// Concurrency is achieved via the fact that calls to `poll` each future
@@ -93,7 +98,9 @@ where
         }
     }
 }
+// ANCHOR_END: join
 
+// ANCHOR: and_then
 /// A SimpleFuture that runs two futures to completion, one after another.
 //
 // Note: for the purposes of this simple example, `AndThenFut` assumes both
@@ -125,6 +132,7 @@ where
         self.second.poll(wake)
     }
 }
+// ANCHOR_END: and_then
 
 mod real_future {
 use std::{
@@ -133,6 +141,7 @@ use std::{
     task::{Context, Poll},
 };
 
+// ANCHOR: real_future
 trait Future {
     type Output;
     fn poll(
@@ -142,6 +151,7 @@ trait Future {
         cx: &mut Context<'_>,
     ) -> Poll<Self::Output>;
 }
+// ANCHOR_END: real_future
 
 // ensure that `Future` matches `RealFuture`:
 impl<O> Future for dyn RealFuture<Output = O> {

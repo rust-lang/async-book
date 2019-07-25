@@ -26,7 +26,7 @@ when the time window has elapsed.
 Here are the imports we'll need to get started:
 
 ```rust
-{{#include ../../examples/02_03_timer/src/lib.rs:3:12}}
+{{#include ../../examples/02_03_timer/src/lib.rs:imports}}
 ```
 
 Let's start by defining the future type itself. Our future needs a way for the
@@ -35,13 +35,13 @@ We'll use a shared `Arc<Mutex<..>>` value to communicate between the thread and
 the future.
 
 ```rust
-{{#include ../../examples/02_03_timer/src/lib.rs:14:28}}
+{{#include ../../examples/02_03_timer/src/lib.rs:timer_decl}}
 ```
 
 Now, let's actually write the `Future` implementation!
 
 ```rust
-{{#include ../../examples/02_03_timer/src/lib.rs:30:54}}
+{{#include ../../examples/02_03_timer/src/lib.rs:future_for_timer}}
 ```
 
 Pretty simple, right? If the thread has set `shared_state.completed = true`,
@@ -56,7 +56,7 @@ being polled.
 Finally, we need the API to actually construct the timer and start the thread:
 
 ```rust
-{{#include ../../examples/02_03_timer/src/lib.rs:56:80}}
+{{#include ../../examples/02_03_timer/src/lib.rs:timer_new}}
 ```
 
 Woot! That's all we need to build a simple timer future. Now, if only we had

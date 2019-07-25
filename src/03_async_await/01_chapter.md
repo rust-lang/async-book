@@ -13,7 +13,7 @@ There are two main ways to use `async`: `async fn` and `async` blocks.
 Each returns a value that implements the `Future` trait:
 
 ```rust
-{{#include ../../examples/03_01_async_await/src/lib.rs:6:19}}
+{{#include ../../examples/03_01_async_await/src/lib.rs:async_fn_and_block_examples}}
 ```
 
 As we saw in the first chapter, `async` bodies and other futures are lazy:
@@ -30,7 +30,7 @@ non-`'static` arguments return a `Future` which is bounded by the lifetime of
 the arguments:
 
 ```rust
-{{#include ../../examples/03_01_async_await/src/lib.rs:24:32}}
+{{#include ../../examples/03_01_async_await/src/lib.rs:lifetimes_expanded}}
 ```
 
 This means that the future returned from an `async fn` must be `.await`ed
@@ -44,7 +44,7 @@ into a `'static` future is to bundle the arguments with the call to the
 `async fn` inside an `async` block:
 
 ```rust
-{{#include ../../examples/03_01_async_await/src/lib.rs:34:47}}
+{{#include ../../examples/03_01_async_await/src/lib.rs:static_future_with_borrow}}
 ```
 
 By moving the argument into the `async` block, we extend its lifetime to match
@@ -58,7 +58,7 @@ references, allowing it to outlive the current scope, but giving up the ability
 to share those variables with other code:
 
 ```rust
-{{#include ../../examples/03_01_async_await/src/lib.rs:52:87}}
+{{#include ../../examples/03_01_async_await/src/lib.rs:async_move_examples}}
 ```
 
 ## `.await`ing on a Multithreaded Executor
