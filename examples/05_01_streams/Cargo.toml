@@ -7,4 +7,4 @@ edition = "2018"
 [lib]
 
 [dev-dependencies]
-futures-preview = { version = "=0.3.0-alpha.16", features = ["async-await", "nightly"] }
+futures-preview = { version = "=0.3.0-alpha.17", features = ["async-await", "nightly"] }
