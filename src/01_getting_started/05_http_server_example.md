@@ -40,7 +40,7 @@ boilerplate to allow us to serve requests:
 ```
 
 If you `cargo run` now, you should see the message "Listening on
-http://127.0.0.1:300" printed on your terminal. If you open that URL in your
+http://127.0.0.1:3000" printed on your terminal. If you open that URL in your
 browser of choice, you'll see "hello, world!" appear in your browser.
 Congratulations! You just wrote your first asynchronous webserver in Rust.
 
