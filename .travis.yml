@@ -10,6 +10,7 @@ before_install:
 
 script:
   - rm -rf ./src
+  - mv ./src_zh ./src
   - mdbook build
   - cargo test --all --manifest-path=./examples/Cargo.toml --target-dir ./target
 
