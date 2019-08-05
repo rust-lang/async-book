@@ -1,0 +1,10 @@
+[package]
+name = "06_02_join"
+version = "0.1.0"
+authors = ["Taylor Cramer <cramertj@google.com>"]
+edition = "2018"
+
+[lib]
+
+[dev-dependencies]
+futures-preview = { version = "=0.3.0-alpha.17", features = ["async-await", "nightly"] }
