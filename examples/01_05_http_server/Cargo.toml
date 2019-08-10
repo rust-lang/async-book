@@ -11,7 +11,7 @@ edition = "2018"
 # for writing async code. Enable the "compat" feature to include the
 # functions for using futures 0.3 and async/await with the Hyper library,
 # which use futures 0.1.
-futures-preview = { version = "=0.3.0-alpha.16", features = ["compat"] }
+futures-preview = { version = "=0.3.0-alpha.17", features = ["compat"] }
 
 # Hyper is an asynchronous HTTP library. We'll use it to power our HTTP
 # server and to make HTTP requests.
