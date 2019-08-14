@@ -8,7 +8,7 @@
 ```
 
 Future能通过调用`poll`的方式推进，这会尽可能地推进future到完成状态。如果future完成了，
-那就会返回`poll::Ready(result)`。如果future尚未完成，别返回`poll::Ready`，并且安排
+那就会返回`poll::Ready(result)`。如果future尚未完成，则返回`poll::Pending`，并且安排
 `wake()`函数在`Future`准备好进一步执行时调用（译者注：注册回调函数）。当`wake()`调用
 时，驱动`Future`的执行器会再次`poll`使得`Future`有所进展。
 
