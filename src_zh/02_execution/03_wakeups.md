@@ -1,9 +1,9 @@
 # 用`Waker`唤醒任务
 
 future第一次轮询时没有执行完这事很常见。此时，future需要保证会被再次轮询以进展（make 
-progress）。这事由`Waker`类型负责。
+progress），而这由`Waker`类型负责。
 
-每次future被轮询了， 它是作为一个“任务”的一部分轮询的。任务（Task）是能提交到执行器上
+每次future被轮询时， 它是作为一个“任务”的一部分轮询的。任务（Task）是能提交到执行器上
 的顶级future。
 
 `Waker`提供`wake()`方法来告诉执行器哪个关联任务应该要唤醒。当`wake()`函数被调用时，
@@ -31,7 +31,6 @@ progress）。这事由`Waker`类型负责。
 {{#include ../../examples/02_03_timer/src/lib.rs:timer_decl}}
 ```
 
-Now, let's actually write the `Future` implementation!
 现在，我们来实现`Future`吧！
 
 ```rust,no_run
@@ -41,8 +40,8 @@ Now, let's actually write the `Future` implementation!
 很简单，对吧？如果线程已经设置成`shared_state.completed = true`，我们就搞定了！否则，
 我们从当前任务克隆`Waker`并把它传到`shared_state.waker`，这样线程就能回头再唤醒这个任务。
 
-重要的是，每次future轮询后，我们西部更新`Waker`，这是因为这个future可能会移动到不同的
-任务去，带着不同的`Waker`。这会在future在轮询后跨任务传递时。
+重要的是，每次future轮询后，我们必须更新`Waker`，这是因为这个future可能会移动到不同的
+任务去，带着不同的`Waker`。这会在future轮询后在不同任务间移动时发生。
 
 最后，我们需要API来构造计时器并启动线程：
 
@@ -50,5 +49,5 @@ Now, let's actually write the `Future` implementation!
 {{#include ../../examples/02_03_timer/src/lib.rs:timer_new}}
 ```
 
-哇！这些就是我们构建一个简单计时器future所需的内容了。现在，如果我们能有一个执行器执行
-这个future...
+哇！这些就是我们构建一个简单计时器future所需的内容了。现在，只要一个执行器（Executor）
+执行这个future...

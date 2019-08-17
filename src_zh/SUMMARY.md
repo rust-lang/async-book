@@ -5,7 +5,7 @@
   - [异步Rust目前状态](01_getting_started/03_state_of_async_rust.md)
   - [`async`/`.await`初步](01_getting_started/04_async_await_primer.md)
   - [应用: HTTP服务器](01_getting_started/05_http_server_example.md)
-- [揭秘： 执行`Future`与任务（task](02_execution/01_chapter.md)
+- [揭秘： 执行`Future`与任务（task）](02_execution/01_chapter.md)
   - [`Future`特质](02_execution/02_future.md)
   - [用`Waker`唤醒任务](02_execution/03_wakeups.md)
   - [Applied: Build an Executor](02_execution/04_executor.md)
