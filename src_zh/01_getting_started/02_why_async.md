@@ -12,7 +12,7 @@
 系统资源。这其中可以通过异步代码设计来减少多余的开销"我们可以用Rust的`async`/`.await`语法
 重写上面的代码，这样我们就可以一次性运行多任务而不需创建多个线程：
 
-```rust
+```rust,no_run
 {{#include ../../examples/01_02_why_async/src/lib.rs:get_two_sites_async}}
 ```
 

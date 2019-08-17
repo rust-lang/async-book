@@ -32,7 +32,7 @@ futures-preview = "=0.3.0-alpha.17"
 
 Next, we need the following imports at the top of `src/main.rs`:
 
-```rust
+```rust,no_run
 {{#include ../../examples/02_04_executor/src/lib.rs:imports}}
 ```
 
@@ -47,7 +47,7 @@ Tasks themselves are just futures that can reschedule themselves, so we'll
 store them as a future paired with a sender that the task can use to requeue
 itself.
 
-```rust
+```rust,no_run
 {{#include ../../examples/02_04_executor/src/lib.rs:executor_decl}}
 ```
 
@@ -56,7 +56,7 @@ This method will take a future type, box it and put it in a FutureObj,
 and create a new `Arc<Task>` with it inside which can be enqueued onto the
 executor.
 
-```rust
+```rust,no_run
 {{#include ../../examples/02_04_executor/src/lib.rs:spawn_fn}}
 ```
 
@@ -70,7 +70,7 @@ the `waker_ref` or `.into_waker()` functions to turn an `Arc<impl ArcWake>`
 into a `Waker`. Let's implement `ArcWake` for our tasks to allow them to be
 turned into `Waker`s and awoken:
 
-```rust
+```rust,no_run
 {{#include ../../examples/02_04_executor/src/lib.rs:arcwake_for_task}}
 ```
 
@@ -78,7 +78,7 @@ When a `Waker` is created from an `Arc<Task>`, calling `wake()` on it will
 cause a copy of the `Arc` to be sent onto the task channel. Our executor then
 needs to pick up the task and poll it. Let's implement that:
 
-```rust
+```rust,no_run
 {{#include ../../examples/02_04_executor/src/lib.rs:executor_run}}
 ```
 
@@ -86,7 +86,7 @@ Congratulations! We now have a working futures executor. We can even use it
 to run `async/.await` code and custom futures, such as the `TimerFuture` we
 wrote earlier:
 
-```rust
+```rust,no_run
 {{#include ../../examples/02_04_executor/src/lib.rs:main}}
 ```
 

@@ -15,7 +15,7 @@
 现在我们搞定了依赖，让我们开始写代码。打开`src/main.rs`并在文件开头启用`async_await`
 特性:
 
-```rust
+```rust,no_run
 #![feature(async_await)]
 ```
 
@@ -24,13 +24,13 @@
 
 此外，我们还要加些导入（import）：
 
-```rust
+```rust,no_run
 {{#include ../../examples/01_05_http_server/src/lib.rs:imports}}
 ```
 
 导入之后，我们就能开始拼模板写服务了：
 
-```rust
+```rust,no_run
 {{#include ../../examples/01_05_http_server/src/lib.rs:boilerplate}}
 ```
 
@@ -41,7 +41,7 @@
 你也可以检查请求，里面包含了很多信息，像请求URI，HTTP版本，报文头和其他元数据。例如，
 我们可以输出请求URI，像这样：
 
-```rust
+```rust,no_run
 println!("Got request at {:?}", req.uri());
 ```
 
@@ -51,13 +51,13 @@ println!("Got request at {:?}", req.uri());
 
 我们从解析我们想要发送请求的URL开始：
 
-```rust
+```rust,no_run
 {{#include ../../examples/01_05_http_server/src/lib.rs:parse_url}}
 ```
 
 然后我们创建一个`hyper::Client`，并用它发送`Get`请求，并返回响应给用户： 
 
-```rust
+```rust,no_run
 {{#include ../../examples/01_05_http_server/src/lib.rs:get_request}}
 ```
 
