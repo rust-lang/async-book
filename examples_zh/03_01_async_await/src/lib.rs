@@ -6,13 +6,12 @@ mod async_fn_and_block_examples {
 use std::future::Future;
 // ANCHOR: async_fn_and_block_examples
 
-// `foo()` returns a type that implements `Future<Output = u8>`.
-// `foo().await` will result in a value of type `u8`.
+// `foo()` 返回一个实现了 `Future<Output = u8>` 的类型.
+// `foo().await` 将返回类型为 `u8` 的值.
 async fn foo() -> u8 { 5 }
 
 fn bar() -> impl Future<Output = u8> {
-    // This `async` block results in a type that implements
-    // `Future<Output = u8>`.
+    // 这个 `async` 区域返回一个实现了 `Future<Output = u8>` 的类型.
     async {
         let x: u8 = foo().await;
         x + 5
@@ -24,10 +23,10 @@ fn bar() -> impl Future<Output = u8> {
 mod async_lifetimes_examples {
 use std::future::Future;
 // ANCHOR: lifetimes_expanded
-// This function:
+// 这是一个 `async` 函数:
 async fn foo(x: &u8) -> u8 { *x }
 
-// Is equivalent to this function:
+// 相当于这个普通函数:
 fn foo_expanded<'a>(x: &'a u8) -> impl Future<Output = u8> + 'a {
     async move { *x }
 }

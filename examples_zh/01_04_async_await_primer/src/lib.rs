@@ -14,7 +14,7 @@ async fn hello_world() {
 }
 
 fn main() {
-    let future = hello_world(); // 没有输入.
+    let future = hello_world(); // 没有输出.
     block_on(future); // `future` 运行，输出 "hello, world!".
 }
 // ANCHOR_END: hello_world

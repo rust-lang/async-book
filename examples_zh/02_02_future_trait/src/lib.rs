@@ -17,7 +17,7 @@ impl Socket {
         true
     }
     fn read_buf(&self) -> Vec<u8> {
-        // 从 `socket` 中读取数据
+        // 从 `socket` 中读取数据.
         vec![]
     }
     fn set_readable_callback(&self, _wake: fn()) {
@@ -100,8 +100,8 @@ where
 // ANCHOR: and_then
 /// 这是一个 `SimpleFuture`，依次运行直到两个 `future` 都完成.
 //
-// 提示: 这只是一个简单的示例, `AndThenFut` 假设两个 `future` 在创建的时候都可用. 
-// 真正 `AndThen` 允许基于第一个 `future` 输出并创建第二个 `future`, 比
+// 提示: 这只是一个简单的示例, `AndThenFut` 是假设两个 `future` 在创建的时候都可用. 
+// 真正的 `AndThen` 允许基于第一个 `future` 输出并创建第二个 `future`, 比
 // 如 `get_breakfast.and_then(|food| eat(food))`.
 pub struct AndThenFut<FutureA, FutureB> {
     first: Option<FutureA>,
@@ -124,8 +124,8 @@ where
                 Poll::Pending => return Poll::Pending,
             };
         }
-        // 现在，第一个 `future` 已经完成，那么就尝试完成
-        // 第二个.
+        // 现在，第一个 `future` 已经完成，
+        // 那么就尝试完成第二个.
         self.second.poll(wake)
     }
 }
@@ -142,7 +142,7 @@ use std::{
 trait Future {
     type Output;
     fn poll(
-        // 注意这个 `&mut self` to `Pin<&mut Self>` 的变化:
+        // 注意这个 `&mut self` 到 `Pin<&mut Self>` 的变化:
         self: Pin<&mut Self>,
         // 以及从 `wake: fn()` 到 `cx: &mut Context<'_>` 的变化:
         cx: &mut Context<'_>,
