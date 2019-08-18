@@ -46,8 +46,8 @@ impl Future for TimerFuture {
             // 可以在执行器之间移动, 这可能会导致旧的 `waker` 指向错误的 `waker`, 这会阻止 
             // `TimerFuture` 被正确得唤醒.
             //
-            // N.B. it's possible to check for this using the `Waker::will_wake`
-            // function, but we omit that here to keep things simple.
+            // 注意：可以使用 `Waker::will_wake` 函数来做检查, 但是
+            // 为了简单起见，我们忽略了他.
             shared_state.waker = Some(cx.waker().clone());
             Poll::Pending
         }
@@ -57,21 +57,20 @@ impl Future for TimerFuture {
 
 // ANCHOR: timer_new
 impl TimerFuture {
-    /// Create a new `TimerFuture` which will complete after the provided
-    /// timeout.
+    /// 船舰一个新的 `TimerFuture`，它将在提供的超时之后完成.
     pub fn new(duration: Duration) -> Self {
         let shared_state = Arc::new(Mutex::new(SharedState {
             completed: false,
             waker: None,
         }));
 
-        // Spawn the new thread
+        // 创建一个新的线程.
         let thread_shared_state = shared_state.clone();
         thread::spawn(move || {
             thread::sleep(duration);
             let mut shared_state = thread_shared_state.lock().unwrap();
-            // Signal that the timer has completed and wake up the last
-            // task on which the future was polled, if one exists.
+            // 设置状态表示定时器已经完成，并唤醒轮询 `future` 中的最后一个
+            // 任务 (如果存在的话).
             shared_state.completed = true;
             if let Some(waker) = shared_state.waker.take() {
                 waker.wake()
