@@ -1,5 +1,5 @@
 [package]
-name = "05_01_streams"
+name = "06_03_select"
 version = "0.1.0"
 authors = ["Taylor Cramer <cramertj@google.com>"]
 edition = "2018"
