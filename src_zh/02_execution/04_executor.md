@@ -1,23 +1,16 @@
-# Applied: Build an Executor
+# 应用：构建执行器
 
-Rust's `Future`s are lazy: they won't do anything unless actively driven to
-completion. One way to drive a future to completion is to `.await` it inside
-an `async` function, but that just pushes the problem one level up: who will
-run the futures returned from the top-level `async` functions? The answer is
-that we need a `Future` executor.
+Rust的`Future`是惰性的：它们不会干任何事，除非它们是被驱动执行。一个驱动future类型的
+方法是在`async`函数中使用`.await`调用，但这只是将问题抛到上一层：谁来跑在顶层`async`
+函数返回的future类型呢？因此，我们需要执行`Future`的执行器。
 
-`Future` executors take a set of top-level `Future`s and run them to completion
-by calling `poll` whenever the `Future` can make progress. Typically, an
-executor will `poll` a future once to start off. When `Future`s indicate that
-they are ready to make progress by calling `wake()`, they are placed back
-onto a queue and `poll` is called again, repeating until the `Future` has
-completed.
+`Future`执行器会拿一组顶层`Future`去跑`poll`方法，无论这些`Future`能否进展。通常，
+执行器会`poll`一个future实例来启动。当`Future`通过调用`wake()`方法来指示他们准备好继续
+进展，执行器就会把它们放入队列并再一次`poll`，重复这一过程直到`Future`完成。
 
-In this section, we'll write our own simple executor capable of running a large
-number of top-level futures to completion concurrently.
+在这一小节，我们要写一个我们的简单执行器，能够并发地运行大量的顶层future实例。
 
-For this example, we depend on the `futures` crate for the `ArcWake` trait,
-which provides an easy way to construct a `Waker`.
+为此，我们需要依赖`futures`库的`ArcWake`特质，这个特质提供了构造`Waker`的简易方法。
 
 ```toml
 [package]
@@ -30,64 +23,53 @@ edition = "2018"
 futures-preview = "=0.3.0-alpha.17"
 ```
 
-Next, we need the following imports at the top of `src/main.rs`:
+然后，我们在`src/main.rs`中引入以下：
 
 ```rust,no_run
 {{#include ../../examples/02_04_executor/src/lib.rs:imports}}
 ```
 
-Our executor will work by sending tasks to run over a channel. The executor
-will pull events off of the channel and run them. When a task is ready to
-do more work (is awoken), it can schedule itself to be polled again by
-putting itself back onto the channel.
+我们的执行器通过给通道（channel）发送任务来工作。执行器会从通道中拉取事件并执行它们。当
+一个任务准备好进一步工作（被唤醒了）时，它会被放到channel的末尾，来让自己再次被调度。
 
-In this design, the executor itself just needs the receiving end of the task
-channel. The user will get a sending end so that they can spawn new futures.
-Tasks themselves are just futures that can reschedule themselves, so we'll
-store them as a future paired with a sender that the task can use to requeue
-itself.
+在设计时，执行器自身只需要任务通道的接收端。用户会拿到发送端，那样它们就可以开辟（spawn）
+新的future实例。任务自身仅仅是能够重新调度自身的future， 所以我们要把它们作为和发送端
+配对的future存储。这个发送端能够让任务重新排队。
 
 ```rust,no_run
 {{#include ../../examples/02_04_executor/src/lib.rs:executor_decl}}
 ```
 
-Let's also add a method to spawner to make it easy to spawn new futures.
-This method will take a future type, box it and put it in a FutureObj,
-and create a new `Arc<Task>` with it inside which can be enqueued onto the
-executor.
+我们来加一个方法，让开辟器（spawner）更容易开辟新future吧。这个方法会获取一个future类型，
+把它装箱并把它变成一个FutureObj对象，然后把这对象放到新的`Arc<Task>`里面。这个`Arc<Task>`
+能够放到执行器的队列中。
 
 ```rust,no_run
 {{#include ../../examples/02_04_executor/src/lib.rs:spawn_fn}}
 ```
 
-To poll futures, we'll need to create a `Waker`.
-As discussed in the [task wakeups section], `Waker`s are responsible
-for scheduling a task to be polled again once `wake` is called. Remember that
-`Waker`s tell the executor exactly which task has become ready, allowing
-them to poll just the futures that are ready to make progress. The easiest way
-to create a new `Waker` is by implementing the `ArcWake` trait and then using
-the `waker_ref` or `.into_waker()` functions to turn an `Arc<impl ArcWake>`
-into a `Waker`. Let's implement `ArcWake` for our tasks to allow them to be
-turned into `Waker`s and awoken:
+为了轮询future，我们需要创建`Waker`。正如在[任务唤醒小节]中讨论到，`Waker`负责调度任务
+在`wake`函数调用时再次轮询。记住，`Waker`告诉执行器具体哪个任务已经准备好了，这使得它们
+可以只轮询已经准备好的future。创建`Waker`的最简单方法是实现`ArcWake`特质，然后使用
+`waker_ref`或者`.into_waker()`函数来把`Arc<impl ArcWake>`转变成`Waker`。我们来给
+我们的任务实现`ArcWake`，以便它们可以变成`Waker`并且被唤醒：
 
 ```rust,no_run
 {{#include ../../examples/02_04_executor/src/lib.rs:arcwake_for_task}}
 ```
 
-When a `Waker` is created from an `Arc<Task>`, calling `wake()` on it will
-cause a copy of the `Arc` to be sent onto the task channel. Our executor then
-needs to pick up the task and poll it. Let's implement that:
+当`Waker`从`Arc<Task>`创建了之后，调用`wake()`函数会拷贝一份`Arc`，发送到任务的通道去。
+我们的执行器就会拿到这个任务并轮询它。我们来实现这个吧：
 
 ```rust,no_run
 {{#include ../../examples/02_04_executor/src/lib.rs:executor_run}}
 ```
 
-Congratulations! We now have a working futures executor. We can even use it
-to run `async/.await` code and custom futures, such as the `TimerFuture` we
-wrote earlier:
+恭喜！我们现在有一个能干活的future执行器了。我们甚至能用它来运行`async/.await`代码和定制
+的future，例如我们前面写的`TimeFuture`：
 
 ```rust,no_run
 {{#include ../../examples/02_04_executor/src/lib.rs:main}}
 ```
 
-[task wakeups section]: ./03_wakeups.md
+[任务唤醒小节]: ./03_wakeups.md
