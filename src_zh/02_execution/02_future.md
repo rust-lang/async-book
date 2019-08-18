@@ -4,7 +4,7 @@
 如`()`）。简化版future特质看起来可能像这样：
 
 ```rust,no_run
-{{#include ../../examples/02_02_future_trait/src/lib.rs:simple_future}}
+{{#include ../../examples_zh/02_02_future_trait/src/lib.rs:simple_future}}
 ```
 
 Future能通过调用`poll`的方式推进，这会尽可能地推进future到完成状态。如果future完成了，
@@ -21,28 +21,28 @@ Future能通过调用`poll`的方式推进，这会尽可能地推进future到�
 future准备好进一步操作。一个简单的`SocketRead`future可能像这样:
 
 ```rust,no_run
-{{#include ../../examples/02_02_future_trait/src/lib.rs:socket_read}}
+{{#include ../../examples_zh/02_02_future_trait/src/lib.rs:socket_read}}
 ```
 
 Futures的这种模型允许组合多个异步操作而无需立刻分配资源。同时运行多个future或者串行（chaining）future
 能够通过零分配（allocation-free）状态机实现，像这种：
 
 ```rust,no_run
-{{#include ../../examples/02_02_future_trait/src/lib.rs:join}}
+{{#include ../../examples_zh/02_02_future_trait/src/lib.rs:join}}
 ```
 
 上面代码展示了多个future如何同时执行而无需分别分配资源，这允许异步代码变得更高级。
 类似，多个future可以一个接一个执行，像这样：
 
 ```rust,no_run
-{{#include ../../examples/02_02_future_trait/src/lib.rs:and_then}}
+{{#include ../../examples_zh/02_02_future_trait/src/lib.rs:and_then}}
 ```
 
 这个例子展示`future`特质如何表达异步控制流而无需请求多个已分配对象或深嵌套回调，
 有了基本控制流后，我们来讨论真正的`Future`特质以及它和示例有什么区别：
 
 ```rust,no_run
-{{#include ../../examples/02_02_future_trait/src/lib.rs:real_future}}
+{{#include ../../examples_zh/02_02_future_trait/src/lib.rs:real_future}}
 ```
 
 我们首先注意到`selF`参数类型不再是`mut self`而是`Pin<&mut Self,`。我们会在后面章节

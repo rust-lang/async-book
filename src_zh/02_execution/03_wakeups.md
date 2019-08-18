@@ -21,20 +21,20 @@ progress），而这由`Waker`类型负责。
 这是我们开始时需要的导入：
 
 ```rust,no_run
-{{#include ../../examples/02_03_timer/src/lib.rs:imports}}
+{{#include ../../examples_zh/02_03_timer/src/lib.rs:imports}}
 ```
 
 我们开始定义future类型吧。 我们的future需要一个方法，让线程知道计时器倒数完了，future
 应该要完成了。我们准备用`Arc<Mutex<..>>`共享值来为沟通线程和future。
 
 ```rust,no_run
-{{#include ../../examples/02_03_timer/src/lib.rs:timer_decl}}
+{{#include ../../examples_zh/02_03_timer/src/lib.rs:timer_decl}}
 ```
 
 现在，我们来实现`Future`吧！
 
 ```rust,no_run
-{{#include ../../examples/02_03_timer/src/lib.rs:future_for_timer}}
+{{#include ../../examples_zh/02_03_timer/src/lib.rs:future_for_timer}}
 ```
 
 很简单，对吧？如果线程已经设置成`shared_state.completed = true`，我们就搞定了！否则，
@@ -46,7 +46,7 @@ progress），而这由`Waker`类型负责。
 最后，我们需要API来构造计时器并启动线程：
 
 ```rust,no_run
-{{#include ../../examples/02_03_timer/src/lib.rs:timer_new}}
+{{#include ../../examples_zh/02_03_timer/src/lib.rs:timer_new}}
 ```
 
 哇！这些就是我们构建一个简单计时器future所需的内容了。现在，只要一个执行器（Executor）

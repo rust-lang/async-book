@@ -26,7 +26,7 @@ futures-preview = "=0.3.0-alpha.17"
 然后，我们在`src/main.rs`中引入以下：
 
 ```rust,no_run
-{{#include ../../examples/02_04_executor/src/lib.rs:imports}}
+{{#include ../../examples_zh/02_04_executor/src/lib.rs:imports}}
 ```
 
 我们的执行器通过给通道（channel）发送任务来工作。执行器会从通道中拉取事件并执行它们。当
@@ -37,7 +37,7 @@ futures-preview = "=0.3.0-alpha.17"
 配对的future存储。这个发送端能够让任务重新排队。
 
 ```rust,no_run
-{{#include ../../examples/02_04_executor/src/lib.rs:executor_decl}}
+{{#include ../../examples_zh/02_04_executor/src/lib.rs:executor_decl}}
 ```
 
 我们来加一个方法，让开辟器（spawner）更容易开辟新future吧。这个方法会获取一个future类型，
@@ -45,7 +45,7 @@ futures-preview = "=0.3.0-alpha.17"
 能够放到执行器的队列中。
 
 ```rust,no_run
-{{#include ../../examples/02_04_executor/src/lib.rs:spawn_fn}}
+{{#include ../../examples_zh/02_04_executor/src/lib.rs:spawn_fn}}
 ```
 
 为了轮询future，我们需要创建`Waker`。正如在[任务唤醒小节]中讨论到，`Waker`负责调度任务
@@ -55,21 +55,21 @@ futures-preview = "=0.3.0-alpha.17"
 我们的任务实现`ArcWake`，以便它们可以变成`Waker`并且被唤醒：
 
 ```rust,no_run
-{{#include ../../examples/02_04_executor/src/lib.rs:arcwake_for_task}}
+{{#include ../../examples_zh/02_04_executor/src/lib.rs:arcwake_for_task}}
 ```
 
 当`Waker`从`Arc<Task>`创建了之后，调用`wake()`函数会拷贝一份`Arc`，发送到任务的通道去。
 我们的执行器就会拿到这个任务并轮询它。我们来实现这个吧：
 
 ```rust,no_run
-{{#include ../../examples/02_04_executor/src/lib.rs:executor_run}}
+{{#include ../../examples_zh/02_04_executor/src/lib.rs:executor_run}}
 ```
 
 恭喜！我们现在有一个能干活的future执行器了。我们甚至能用它来运行`async/.await`代码和定制
 的future，例如我们前面写的`TimeFuture`：
 
 ```rust,no_run
-{{#include ../../examples/02_04_executor/src/lib.rs:main}}
+{{#include ../../examples_zh/02_04_executor/src/lib.rs:main}}
 ```
 
 [任务唤醒小节]: ./03_wakeups.md

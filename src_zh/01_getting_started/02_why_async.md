@@ -5,7 +5,7 @@
 如果你想同时下载两个不同的网络报， 那么你会将任务分给两个线程，像这样：
 
 ```rust,no_run
-{{#include ../../examples/01_02_why_async/src/lib.rs:get_two_sites}}
+{{#include ../../examples_zh/01_02_why_async/src/lib.rs:get_two_sites}}
 ```
 大多数应用都能很好地运行这份代码——毕竟，线程就是设计成这样用的：一次性运行多个不同任务。
 然而，它们也有限制。线程切换过程和线程共享数据时会产生大量开销，甚至空跑线程也会占用珍贵
@@ -13,7 +13,7 @@
 重写上面的代码，这样我们就可以一次性运行多任务而不需创建多个线程：
 
 ```rust,no_run
-{{#include ../../examples/01_02_why_async/src/lib.rs:get_two_sites_async}}
+{{#include ../../examples_zh/01_02_why_async/src/lib.rs:get_two_sites_async}}
 ```
 
 最后，异步应用和对应线程化实现相比，有潜力快得多并占用更少资源，但这是有代价的。OS天然

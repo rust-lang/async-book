@@ -12,7 +12,7 @@ async fn do_something() { ... }
 `async fn`函数返回实现了`Future`的类型。为了执行这个`Future`，我们需要执行器（executor）
 
 ```rust,no_run
-{{#include ../../examples/01_04_async_await_primer/src/lib.rs:hello_world}}
+{{#include ../../examples_zh/01_04_async_await_primer/src/lib.rs:hello_world}}
 ```
 
 在`async fn`函数中， 你可以使用`.await`来等待其他实现了`Future`特质的类型完成，例如
@@ -30,14 +30,14 @@ async fn dance() { ... }
 一个“学，唱，跳舞”的方法，就是分别阻塞这些函数：
 
 ```rust,no_run
-{{#include ../../examples/01_04_async_await_primer/src/lib.rs:block_on_each}}
+{{#include ../../examples_zh/01_04_async_await_primer/src/lib.rs:block_on_each}}
 ```
 
 然而，这样性能并不是最优——我们一次只能干一件事！显然我们必须在唱歌之前学会它，但是学唱
 同时也可以跳舞。为了拽黑暗，我们可以创建两个独立可并发执行的`async fn`：
 
 ```rust,no_run
-{{#include ../../examples/01_04_async_await_primer/src/lib.rs:block_on_main}}
+{{#include ../../examples_zh/01_04_async_await_primer/src/lib.rs:block_on_main}}
 ```
 
 这个示例里，唱歌之前必须要学习唱这首歌，但是学习唱歌和唱歌都可以和跳舞同时发生。如果我们
