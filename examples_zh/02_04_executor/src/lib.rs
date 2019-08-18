@@ -14,42 +14,40 @@ use {
         task::{Context, Poll},
         time::Duration,
     },
-    // The timer we wrote in the previous section:
+    // 我们在上一章中写过的定时器:
     timer_future::TimerFuture,
 };
 // ANCHOR_END: imports
 
 // ANCHOR: executor_decl
-/// Task executor that receives tasks off of a channel and runs them.
+/// 从管道中接收任务并运行它们的执行程序.
 struct Executor {
     ready_queue: Receiver<Arc<Task>>,
 }
 
-/// `Spawner` spawns new futures onto the task channel.
+/// `Spawner` 在任务管道中创建新的 `future`.
 #[derive(Clone)]
 struct Spawner {
     task_sender: SyncSender<Arc<Task>>,
 }
 
-/// A future that can reschedule itself to be polled by an `Executor`.
+/// 一个可以重新安排自己被 `Executor` 调用的 `future`.
 struct Task {
-    /// In-progress future that should be pushed to completion.
+    /// 正在运行的 `future` 应该被推进到运行完成.
     ///
-    /// The `Mutex` is not necessary for correctness, since we only have
-    /// one thread executing tasks at once. However, Rust isn't smart
-    /// enough to know that `future` is only mutated from one thread,
-    /// so we need use the `Mutex` to prove thread-safety. A production
-    /// executor would not need this, and could use `UnsafeCell` instead.
+    /// 这个 `Mutex` 不是必要的, 因为我们一次只有一个线程
+    /// 执行任务，但是，Rust不够聪明，没有办法知道 `future`
+    /// 只会在一个线程中发生变化，所以我们需要 `Mutex` 来
+    /// 让Rust知道我们保证了跨线程之间的安全性.
     future: Mutex<Option<BoxFuture<'static, ()>>>,
 
-    /// Handle to place the task itself back onto the task queue.
+    /// 将任务放回到任务队列.
     task_sender: SyncSender<Arc<Task>>,
 }
 
 fn new_executor_and_spawner() -> (Executor, Spawner) {
-    // Maximum number of tasks to allow queueing in the channel at once.
-    // This is just to make `sync_channel` happy, and wouldn't be present in
-    // a real executor.
+    // 允许通知在管道中排队的最大任务数.
+    // 这只是为了让 `sync_channel` 满足, 并不会出现在真正的执行器中.
     const MAX_QUEUED_TASKS: usize = 10_000;
     let (task_sender, ready_queue) = sync_channel(MAX_QUEUED_TASKS);
     (Executor { ready_queue }, Spawner { task_sender})
@@ -72,8 +70,8 @@ impl Spawner {
 // ANCHOR: arcwake_for_task
 impl ArcWake for Task {
     fn wake_by_ref(arc_self: &Arc<Self>) {
-        // Implement `wake` by sending this task back onto the task channel
-        // so that it will be polled again by the executor.
+        // 通过将这个任务发送回任务管道来实现 `wake`，
+        // 以便让执行器再次轮询它.
         let cloned = arc_self.clone();
         arc_self.task_sender.send(cloned).expect("too many tasks queued");
     }
@@ -84,20 +82,17 @@ impl ArcWake for Task {
 impl Executor {
     fn run(&self) {
         while let Ok(task) = self.ready_queue.recv() {
-            // Take the future, and if it has not yet completed (is still Some),
-            // poll it in an attempt to complete it.
+            // 以 `future` 为例子，如果它还没有完成，就轮询并试图完成它.
             let mut future_slot = task.future.lock().unwrap();
             if let Some(mut future) = future_slot.take() {
-                // Create a `LocalWaker` from the task itself
+                // 从任务自身创建一个 `LocalWaker`.
                 let waker = waker_ref(&task);
                 let context = &mut Context::from_waker(&*waker);
-                // `BoxFuture<T>` is a type alias for
-                // `Pin<Box<dyn Future<Output = T> + Send + 'static>>`.
-                // We can get a `Pin<&mut dyn Future + Send + 'static>`
-                // from it by calling the `Pin::as_mut` method.
+                // `BoxFuture<T>` 是 `Pin<Box<dyn Future<Output = T> + Send + 'static>>` 的类型别名.
+                // 我们可以调用 `Pin::as_mut` 方法获得 `Pin<&mut dyn Future + Send + 'static>`.
                 if let Poll::Pending = future.as_mut().poll(context) {
-                    // We're not done processing the future, so put it
-                    // back in its task to be run again in the future.
+                    // 我们还没有完成对 `future` 的处理，所以把它再次
+                    // 放回她的任务中，以便在某个时段再次运行.
                     *future_slot = Some(future);
                 }
             }
@@ -110,20 +105,20 @@ impl Executor {
 fn main() {
     let (executor, spawner) = new_executor_and_spawner();
 
-    // Spawn a task to print before and after waiting on a timer.
+    // 在定时器之前和之后创建一个要输出的任务.
     spawner.spawn(async {
         println!("howdy!");
-        // Wait for our timer future to complete after two seconds.
+        // 定时器在两秒钟之后完成.
         TimerFuture::new(Duration::new(2, 0)).await;
         println!("done!");
     });
 
-    // Drop the spawner so that our executor knows it is finished and won't
-    // receive more incoming tasks to run.
+    // 释放这个 `spawner`，以便让我们的执行程序知道它已经工作
+    // 完成，并且不会接收到更多要运行的任务传入.
     drop(spawner);
 
-    // Run the executor until the task queue is empty.
-    // This will print "howdy!", pause, and then print "done!".
+    // 运行执行器，直到任务队列为空.
+    // 这将输出 "howdy!", 等待一会, 然后输出 "done!".
     executor.run();
 }
 // ANCHOR_END: main
