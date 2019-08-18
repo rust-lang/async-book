@@ -1,0 +1,12 @@
+[workspace]
+members = [
+  "01_02_why_async",
+  "01_04_async_await_primer",
+  "01_05_http_server",
+  "02_02_future_trait",
+  "02_03_timer",
+  "02_04_executor",
+  "03_01_async_await",
+  "05_01_streams",
+  "05_02_iteration_and_concurrency",
+]
