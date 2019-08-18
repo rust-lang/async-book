@@ -9,7 +9,7 @@ But what does it mean, and why do we need it?
 ## Why Pinning
 
 Pinning makes it possible to guarantee that an object won't ever be moved.
-To understand why this is necessary, we need to remember how `async`/`await!`
+To understand why this is necessary, we need to remember how `async`/`.await`
 works. Consider the following code:
 
 ```rust
