@@ -1,0 +1,11 @@
+[package]
+name = "02_04_executor"
+version = "0.1.0"
+authors = ["Taylor Cramer <cramertj@google.com>"]
+edition = "2018"
+
+[lib]
+
+[dependencies]
+futures-preview = { version = "=0.3.0-alpha.16" }
+timer_future = { package = "02_03_timer", path = "../02_03_timer" }
