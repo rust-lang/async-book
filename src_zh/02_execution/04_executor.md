@@ -1,8 +1,8 @@
 # 应用：构建执行器
 
-Rust的`Future`是惰性的：它们不会干任何事，除非它们是被驱动执行。一个驱动future类型的
+Rust的`Future`是惰性的：它们不会干任何事，除非它们被驱动执行。一个驱动future类型的
 方法是在`async`函数中使用`.await`调用，但这只是将问题抛到上一层：谁来跑在顶层`async`
-函数返回的future类型呢？因此，我们需要执行`Future`的执行器。
+函数返回的future实例呢？为此，我们需要执行`Future`的执行器。
 
 `Future`执行器会拿一组顶层`Future`去跑`poll`方法，无论这些`Future`能否进展。通常，
 执行器会`poll`一个future实例来启动。当`Future`通过调用`wake()`方法来指示他们准备好继续
