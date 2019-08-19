@@ -40,7 +40,7 @@ async fn run_server(addr: SocketAddr) {
     let serve_future = Server::bind(&addr)
         // 使用 `async serve_req` 函数来处理请求.
         // `serve` 接受一个闭包，它将返回一个实现了 `Service` trait的类型.
-        // `service_fn` 的返回一个实现了 `Service` trait的值，并接受一个从
+        // `service_fn` 返回一个实现了 `Service` trait的值，并接受一个从
         // 请求到响应的 `future` 闭包, 要在 `Hyper` 中使用 `serve_req` 函
         // 数，我们必须将它打包好并将其放入兼容性容器中，以便从 `futures 0.3`
         // (由 `async fn`返回的那种) 转换到 `futures 0.1` （由 `Hyper` 使
@@ -60,8 +60,8 @@ fn main() {
 
     // 调用我们的 `run_server` 函数, 它将返回一个 `future`.
     // 和 `async fn` 一样, 要让 `run_server` 执行任何操作,
-    // 都需要运行返回的 `future`. Additionally, 并且我们需
-    // 要将返回的 `future` 从 `0.3` 转换为 `0.1`.
+    // 都需要运行返回的 `future`. 并且我们需要将返回的 
+    // `future` 从 `0.3` 转换为 `0.1`.
     let futures_03_future = run_server(addr);
     let futures_01_future = futures_03_future.unit_error().boxed().compat();
 

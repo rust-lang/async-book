@@ -92,7 +92,7 @@ impl Executor {
                 // 我们可以调用 `Pin::as_mut` 方法获得 `Pin<&mut dyn Future + Send + 'static>`.
                 if let Poll::Pending = future.as_mut().poll(context) {
                     // 我们还没有完成对 `future` 的处理，所以把它再次
-                    // 放回她的任务中，以便在某个时段再次运行.
+                    // 放回它的任务中，以便在某个时段再次运行.
                     *future_slot = Some(future);
                 }
             }

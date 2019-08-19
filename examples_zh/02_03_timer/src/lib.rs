@@ -57,7 +57,7 @@ impl Future for TimerFuture {
 
 // ANCHOR: timer_new
 impl TimerFuture {
-    /// 船舰一个新的 `TimerFuture`，它将在提供的超时之后完成.
+    /// 创建一个新的 `TimerFuture`，它将在提供的超时之后完成.
     pub fn new(duration: Duration) -> Self {
         let shared_state = Arc::new(Mutex::new(SharedState {
             completed: false,
@@ -69,7 +69,7 @@ impl TimerFuture {
         thread::spawn(move || {
             thread::sleep(duration);
             let mut shared_state = thread_shared_state.lock().unwrap();
-            // 设置状态表示定时器已经完成，并唤醒轮询 `future` 中的最后一个
+            // 设置状态，表示定时器已经完成，并唤醒轮询 `future` 中的最后一个
             // 任务 (如果存在的话).
             shared_state.completed = true;
             if let Some(waker) = shared_state.waker.take() {
