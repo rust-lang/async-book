@@ -3,8 +3,8 @@
 The asynchronous Rust ecosystem has undergone a lot of evolution over time,
 so it can be hard to know what tools to use, what libraries to invest in,
 or what documentation to read. However, the `Future` trait inside the standard
-library has recently been stabilized, and the `async`/`await` feature will
-follow shortly. The ecosystem as a whole is therefore in the midst of migrating
+library and the `async`/`await` language feature has recently been stabilized.
+The ecosystem as a whole is therefore in the midst of migrating
 to the newly-stabilized API, after which point churn will be significantly
 reduced.
 

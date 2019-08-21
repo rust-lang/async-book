@@ -1,5 +1,4 @@
 #![cfg(test)]
-#![feature(async_await)]
 
 use {
     futures::{
