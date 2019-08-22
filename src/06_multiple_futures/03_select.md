@@ -55,7 +55,7 @@ the loop. Because the future returned by `future::ready` implements
 
 Note that streams have a corresponding `FusedStream` trait. Streams
 which implement this trait or have been wrapped using `.fuse()`
-`will yield `FusedFuture` futures from their
+will yield `FusedFuture` futures from their
 `.next()` / `.try_next()` combinators.
 
 ```rust
