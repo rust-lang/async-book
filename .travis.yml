@@ -2,7 +2,7 @@ sudo: false
 dist: trusty
 language: rust
 cache: cargo
-rust: nightly-2019-05-09 # minimum required version for async/await
+rust: nightly-2019-08-21 # minimum required version for async/await
 
 before_install:
   - cargo install mdbook --vers '0.3.1' --debug --force

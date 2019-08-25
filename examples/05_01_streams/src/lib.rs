@@ -1,5 +1,4 @@
 #![cfg(test)]
-#![feature(async_await)]
 
 mod stream_trait {
 use {

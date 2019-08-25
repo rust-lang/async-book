@@ -1,6 +1,5 @@
 #![allow(unused)]
 #![cfg(test)]
-#![feature(async_await)]
 
 mod async_fn_and_block_examples {
 use std::future::Future;

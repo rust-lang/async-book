@@ -16,17 +16,7 @@ Let's add some dependencies to the `Cargo.toml` file:
 ```
 
 Now that we've got our dependencies out of the way, let's start writing some
-code. Open up `src/main.rs` and enable the `async_await` feature at the top of
-the file: 
-
-```rust
-#![feature(async_await)]
-```
-
-This adds support for the nightly-only but soon-to-be-stabilized
-`async`/`await` syntax.
-
-Additionally, we have some imports to add:
+code. We have some imports to add:
 
 ```rust
 {{#include ../../examples/01_05_http_server/src/lib.rs:imports}}
