@@ -10,5 +10,5 @@
   - [用`Waker`唤醒任务](02_execution/03_wakeups.md)
   - [应用：构建执行器](02_execution/04_executor.md)
   - [执行器与系统I/O](02_execution/05_io.md)
-- [async/.await](03_async_await/01_chapter.md)
+- [`async`/`await`](03_async_await/01_chapter.md)
 
