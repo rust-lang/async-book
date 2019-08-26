@@ -24,7 +24,7 @@
 生命周期约束的`Future`：
 
 ```rust,no_run
-{{#include ../../examples/03_01_async_await/src/lib.rs:lifetimes_expanded}}
+{{#include ../../examples_zh/03_01_async_await/src/lib.rs:lifetimes_expanded}}
 ```
 
 这意味着这些future被`async fn`函数返回后必须要在它的非`'static`参数仍然有效时`.await`。
@@ -35,7 +35,7 @@
 和应用的`async fn`函数调用封装到`async`块中：
 
 ```rust,no_run
-{{#include ../../examples/03_01_async_await/src/lib.rs:static_future_with_borrow}}
+{{#include ../../examples_zh/03_01_async_await/src/lib.rs:static_future_with_borrow}}
 ```
 通过移动参数到`async`块中，我们把它的生命周期扩展到了匹配调用`foo`函数返回的`Future`的
 生命周期。
@@ -47,7 +47,7 @@
 变量的能力：
 
 ```rust,no_run
-{{#include ../../examples/03_01_async_await/src/lib.rs:async_move_examples}}
+{{#include ../../examples_zh/03_01_async_await/src/lib.rs:async_move_examples}}
 ```
 
 ## 在多线程执行器中`.await`
