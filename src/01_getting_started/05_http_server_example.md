@@ -2,7 +2,6 @@
 
 Let's use `async`/`.await` to build an echo server!
 
-
 To start, run `rustup update nightly` to make sure you've got the latest and
 greatest copy of Rust-- we're working with bleeding-edge features, so it's
 essential to stay up-to-date. Once you've done that, run

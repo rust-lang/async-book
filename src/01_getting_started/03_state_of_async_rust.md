@@ -1,4 +1,4 @@
-## The State of Asynchronous Rust
+# The State of Asynchronous Rust
 
 The asynchronous Rust ecosystem has undergone a lot of evolution over time,
 so it can be hard to know what tools to use, what libraries to invest in,
