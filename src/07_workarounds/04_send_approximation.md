@@ -16,7 +16,7 @@ use std::rc::Rc;
 struct NotSend(Rc<()>);
 ```
 
-Variables of type `NotSend` can breifly appear as temporaries in `async fn`s
+Variables of type `NotSend` can briefly appear as temporaries in `async fn`s
 even when the resulting `Future` type returned by the `async fn` must be `Send`:
 
 ```rust
@@ -74,7 +74,7 @@ a different thread. Since `Rc` is not `Send`, allowing it to travel across
 threads would be unsound. One simple solution to this would be to `drop`
 the `Rc` before the `.await`, but unfortunately that does not work today.
 
-In order to successfuly work around this issue, you may have to introduce
+In order to successfully work around this issue, you may have to introduce
 a block scope encapsulating any non-`Send` variables. This makes it easier
 for the compiler to tell that these variables do not live across an
 `.await` point.
