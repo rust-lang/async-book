@@ -1,4 +1,4 @@
-## Why Async?
+# Why Async?
 
 We all love how Rust allows us to write fast, safe software. But why write
 asynchronous code?

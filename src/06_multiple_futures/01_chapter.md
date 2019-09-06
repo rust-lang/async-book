@@ -5,6 +5,8 @@ the current task until a particular `Future` completes. However, real
 asynchronous applications often need to execute several different
 operations concurrently.
 
+# Executing Multiple Futures at a Time
+
 In this chapter, we'll cover some ways to execute multiple asynchronous
 operations at the same time:
 

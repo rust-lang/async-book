@@ -48,7 +48,7 @@ into a `'static` future is to bundle the arguments with the call to the
 ```
 
 By moving the argument into the `async` block, we extend its lifetime to match
-that of the `Future` returned from the call to `foo`.
+that of the `Future` returned from the call to `good`.
 
 ## `async move`
 

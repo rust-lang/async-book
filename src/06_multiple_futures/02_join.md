@@ -3,6 +3,8 @@
 The `futures::join` macro makes it possible to wait for multiple different
 futures to complete while executing them all concurrently.
 
+# `join!`
+
 When performing multiple asynchronous operations, it's tempting to simply
 `.await` them in a series:
 

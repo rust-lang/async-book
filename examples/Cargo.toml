@@ -11,4 +11,5 @@ members = [
   "05_02_iteration_and_concurrency",
   "06_02_join",
   "06_03_select",
+  "07_05_recursion",
 ]
