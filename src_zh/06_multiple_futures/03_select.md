@@ -49,7 +49,6 @@
 ```
 
 ## 带有`Fuse`和`FuturesUnordered`的`select`循环中的并发任务
-## Concurrent tasks in a `select` loop with `Fuse` and `FuturesUnordered`
 
 有个不太好找但是很趁手的函数叫`Fuse::terminated()`。这个函数允许构造已经被终止的空
 future，并且能够在之后填进需要运行的future。
