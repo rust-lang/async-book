@@ -51,7 +51,7 @@ fn new_executor_and_spawner() -> (Executor, Spawner) {
     // a real executor.
     const MAX_QUEUED_TASKS: usize = 10_000;
     let (task_sender, ready_queue) = sync_channel(MAX_QUEUED_TASKS);
-    (Executor { ready_queue }, Spawner { task_sender})
+    (Executor { ready_queue }, Spawner { task_sender })
 }
 // ANCHOR_END: executor_decl
 
