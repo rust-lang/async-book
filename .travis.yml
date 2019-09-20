@@ -9,8 +9,7 @@ before_install:
   - cargo install mdbook-linkcheck --vers '0.3.1' --debug --force
 
 script:
-  - rm -rf ./src
-  - mv ./src_zh ./src
+  - bash ci/spellcheck.sh list
   - mdbook build
   - cargo test --all --manifest-path=./examples/Cargo.toml --target-dir ./target
 
