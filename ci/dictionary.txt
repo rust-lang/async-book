@@ -54,6 +54,7 @@ http
 impl
 interoperate
 kqueue
+metadata
 multithreaded
 natively
 performant
@@ -71,8 +72,10 @@ spawner
 struct
 subfuture
 subfutures
+subpar
 threadpool
 toml
+tuple
 turbofish
 usize
 utils
