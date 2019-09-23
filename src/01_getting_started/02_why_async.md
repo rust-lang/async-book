@@ -3,7 +3,7 @@
 We all love how Rust allows us to write fast, safe software. But why write
 asynchronous code?
 
-Asynchonous code allows us to run multiple tasks concurrently on the same OS
+Asynchronous code allows us to run multiple tasks concurrently on the same OS
 thread. In a typical threaded application, if you wanted to download two
 different webpages at the same time, you would spread the work across two
 different threads, like this:
