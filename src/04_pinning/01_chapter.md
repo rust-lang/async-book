@@ -104,8 +104,8 @@ pointer won't be moved. For example, `Pin<&mut T>`, `Pin<&T>`,
 
 Most types don't have a problem being moved. These types implement a trait
 called `Unpin`. Pointers to `Unpin` types can be freely placed into or taken
-out of `Pin`. For example, `u8` is `Unpin`, so `Pin<&mut T>` behaves just like
-a normal `&mut T`.
+out of `Pin`. For example, `u8` is `Unpin`, so `Pin<&mut u8>` behaves just like
+a normal `&mut u8`.
 
 Some functions require the futures they work with to be `Unpin`. To use a
 `Future` or `Stream` that isn't `Unpin` with a function that requires
