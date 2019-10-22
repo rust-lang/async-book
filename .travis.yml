@@ -12,6 +12,12 @@ script:
   - mdbook build
   - cargo test --all --manifest-path=./examples/Cargo.toml --target-dir ./target
 
+before_cache:
+  - find ./target/debug -maxdepth 1 -type f -delete
+  - rm -rf ./target/debug/incremental
+  - rm -rf ./target/debug/{deps,.fingerprint}/[0-9][0-9]_[0-9][0-9]_*
+  - rm -f ./target/.rustc_info.json
+
 env:
   RUSTINFRA_DEPLOY_DIR: book/html
 import:
