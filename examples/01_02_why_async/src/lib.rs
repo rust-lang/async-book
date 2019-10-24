@@ -37,7 +37,7 @@ async fn get_two_sites_async() {
     let future_two = download_async("https://www.bar.com");
 
     // Run both futures to completion at the same time.
-    join!(future_one, future_two).await;
+    join!(future_one, future_two);
 }
 // ANCHOR_END: get_two_sites_async
 
