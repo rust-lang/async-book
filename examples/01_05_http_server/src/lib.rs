@@ -96,6 +96,7 @@ let url = url_str.parse::<Uri>().expect("failed to parse URL");
 // ANCHOR_END: parse_url
 
 // ANCHOR: get_request
+println!("making request to {}", url);
 let res = Client::new().get(url).compat().await;
 // Return the result of the request directly to the user
 println!("request finished-- returning response");

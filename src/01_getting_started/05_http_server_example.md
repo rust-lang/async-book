@@ -67,12 +67,12 @@ When we `.await` that future, an HTTP request is sent out, the current task
 is suspended, and the task is queued to be continued once a response has
 become available.
 
-Now, if you `cargo run` and open `http://127.0.0.1:3000/foo` in your browser,
+Now, if you `cargo run` and open `http://127.0.0.1:3000/` in your browser,
 you'll see the Rust homepage, and the following terminal output:
 
 ```
 Listening on http://127.0.0.1:3000
-Got request at /foo
+Got request at /
 making request to http://www.rust-lang.org/en-US/
 request finished-- returning response
 ```
