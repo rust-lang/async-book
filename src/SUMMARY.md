@@ -4,7 +4,7 @@
   - [Why Async?](01_getting_started/02_why_async.md)
   - [The State of Asynchronous Rust](01_getting_started/03_state_of_async_rust.md)
   - [`async`/`.await` Primer](01_getting_started/04_async_await_primer.md)
-  - [Applied: HTTP Server](01_getting_started/05_http_server_example.md)
+  - [Applied: Simple HTTP Server](01_getting_started/05_http_server_example.md)
 - [Under the Hood: Executing `Future`s and Tasks](02_execution/01_chapter.md)
   - [The `Future` Trait](02_execution/02_future.md)
   - [Task Wakeups with `Waker`](02_execution/03_wakeups.md)
