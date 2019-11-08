@@ -31,7 +31,7 @@ async fn download_async(_url: &str) {
 
 // ANCHOR: get_two_sites_async
 async fn get_two_sites_async() {
-    // Create a two different "futures" which, when run to completion,
+    // Create two different "futures" which, when run to completion,
     // will asynchronously download the webpages.
     let future_one = download_async("https:://www.foo.com");
     let future_two = download_async("https:://www.bar.com");
