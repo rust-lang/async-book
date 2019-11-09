@@ -1,3 +1,4 @@
+#![allow(unused)]
 #![cfg(test)]
 #![recursion_limit="128"]
 
