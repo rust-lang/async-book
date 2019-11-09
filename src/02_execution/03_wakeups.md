@@ -13,7 +13,7 @@ the associated task should be awoken. When `wake()` is called, the executor
 knows that the task associated with the `Waker` is ready to make progress, and
 its future should be polled again.
 
-`Waker` also implements `clone()` so that it can be copied around and stored.
+`Waker` also implements `Clone` so that it can be copied around and stored.
 
 Let's try implementing a simple timer future using `Waker`.
 

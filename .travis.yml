@@ -2,7 +2,7 @@ sudo: false
 dist: trusty
 language: rust
 cache: cargo
-rust: nightly-2019-08-21 # minimum required version for async/await
+rust: stable
 addons:
   apt:
     packages:
@@ -11,8 +11,8 @@ addons:
 
 before_script:
   - (test -x $HOME/.cargo/bin/cargo-install-update || cargo install cargo-update)
-  - (test -x $HOME/.cargo/bin/mdbook || cargo install --vers "0.3.1" --debug --force mdbook)
-  - (test -x $HOME/.cargo/bin/mdbook-linkcheck || cargo install --vers "0.3.1" --debug --force mdbook-linkcheck)
+  - (test -x $HOME/.cargo/bin/mdbook || cargo install --debug --force mdbook)
+  - (test -x $HOME/.cargo/bin/mdbook-linkcheck || cargo install --debug --force mdbook-linkcheck)
   - cargo install-update -a
 
 script:

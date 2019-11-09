@@ -2,10 +2,10 @@
 
 Let's use `async`/`.await` to build an echo server!
 
-To start, run `rustup update nightly` to make sure you've got the latest and
+To start, run `rustup update stable` to make sure you've got the latest and
 greatest copy of Rust-- we're working with bleeding-edge features, so it's
 essential to stay up-to-date. Once you've done that, run
-`cargo +nightly new async-await-echo` to create a new project, and open up
+`cargo new async-await-echo` to create a new project, and open up
 the resulting `async-await-echo` folder.
 
 Let's add some dependencies to the `Cargo.toml` file:
