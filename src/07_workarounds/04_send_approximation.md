@@ -20,6 +20,9 @@ Variables of type `NotSend` can briefly appear as temporaries in `async fn`s
 even when the resulting `Future` type returned by the `async fn` must be `Send`:
 
 ```rust
+# use std::rc::Rc;
+# #[derive(Default)]
+# struct NotSend(Rc<()>);
 async fn bar() {}
 async fn foo() {
     NotSend::default();
@@ -37,6 +40,9 @@ However, if we change `foo` to store `NotSend` in a variable, this example no
 longer compiles:
 
 ```rust
+# use std::rc::Rc;
+# #[derive(Default)]
+# struct NotSend(Rc<()>);
 async fn foo() {
     let x = NotSend::default();
     bar().await;
@@ -80,6 +86,9 @@ for the compiler to tell that these variables do not live across an
 `.await` point.
 
 ```rust
+# use std::rc::Rc;
+# #[derive(Default)]
+# struct NotSend(Rc<()>);
 async fn foo() {
     {
         let x = NotSend::default();
