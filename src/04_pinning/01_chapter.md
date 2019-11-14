@@ -40,7 +40,9 @@ enum State {
 }
 
 impl Future for AsyncFuture {
-    fn poll(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<()> {
+    type Output = ();
+
+    fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<()> {
         loop {
             match self.state {
                 State::AwaitingFutOne => match self.fut_one.poll(..) {
