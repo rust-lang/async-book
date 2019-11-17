@@ -45,8 +45,14 @@ Now, let's actually write the `Future` implementation!
 ```
 
 Pretty simple, right? If the thread has set `shared_state.completed = true`,
-we're done! Otherwise, we clone the `Waker` for the current task and pass it to
-`shared_state.waker` so that the thread can wake the task back up.
+we're done! Otherwise, the timer either hasn't started yet, or it is running 
+but hasn't completed. To figure this out we look at the `waker` field.
+
+If we do not have `Waker`, the timer hasn't started yet and so we spawn the 
+timer thread and set a `Waker`. If we do have a `Waker` it means the timer 
+was started but hasn't completed yet. We clone the `Waker` for the current 
+task and pass it to `shared_state.waker`  so that the thread can wake the 
+task back up.
 
 Importantly, we have to update the `Waker` every time the future is polled
 because the future may have moved to a different task with a different
