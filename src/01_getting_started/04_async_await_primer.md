@@ -9,14 +9,14 @@ blocked `Future`s will yield control of the thread, allowing other
 
 To create an asynchronous function, you can use the `async fn` syntax:
 
-```rust
-async fn do_something() { ... }
+```rust,edition2018
+async fn do_something() { /* ... */ }
 ```
 
 The value returned by `async fn` is a `Future`. For anything to happen,
 the `Future` needs to be run on an executor.
 
-```rust
+```rust,edition2018
 {{#include ../../examples/01_04_async_await_primer/src/lib.rs:hello_world}}
 ```
 
@@ -29,16 +29,16 @@ other tasks to run if the future is currently unable to make progress.
 For example, imagine that we have three `async fn`: `learn_song`, `sing_song`,
 and `dance`:
 
-```rust
-async fn learn_song() -> Song { ... }
-async fn sing_song(song: Song) { ... }
-async fn dance() { ... }
+```rust,ignore
+async fn learn_song() -> Song { /* ... */ }
+async fn sing_song(song: Song) { /* ... */ }
+async fn dance() { /* ... */ }
 ```
 
 One way to do learn, sing, and dance would be to block on each of these
 individually:
 
-```rust
+```rust,ignore
 {{#include ../../examples/01_04_async_await_primer/src/lib.rs:block_on_each}}
 ```
 
@@ -48,7 +48,7 @@ we can sing it, but it's possible to dance at the same time as learning and
 singing the song. To do this, we can create two separate `async fn` which
 can be run concurrently:
 
-```rust
+```rust,ignore
 {{#include ../../examples/01_04_async_await_primer/src/lib.rs:block_on_main}}
 ```
 
