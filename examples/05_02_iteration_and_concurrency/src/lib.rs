@@ -5,10 +5,7 @@ use {
         executor::block_on,
         stream::{self, Stream},
     },
-    std::{
-        io,
-        pin::Pin,
-    },
+    std::{io, pin::Pin},
 };
 
 // ANCHOR: nexts
@@ -55,15 +52,23 @@ async fn jump_around(
     use futures::stream::TryStreamExt; // for `try_for_each_concurrent`
     const MAX_CONCURRENT_JUMPERS: usize = 100;
 
-    stream.try_for_each_concurrent(MAX_CONCURRENT_JUMPERS, |num| async move {
-        jump_n_times(num).await?;
-        report_n_jumps(num).await?;
-        Ok(())
-    }).await?;
+    stream
+        .try_for_each_concurrent(MAX_CONCURRENT_JUMPERS, |num| {
+            async move {
+                jump_n_times(num).await?;
+                report_n_jumps(num).await?;
+                Ok(())
+            }
+        })
+        .await?;
 
     Ok(())
 }
 // ANCHOR_END: try_for_each_concurrent
 
-async fn jump_n_times(_: u8) -> Result<(), io::Error> { Ok(()) }
-async fn report_n_jumps(_: u8) -> Result<(), io::Error> { Ok(()) }
+async fn jump_n_times(_: u8) -> Result<(), io::Error> {
+    Ok(())
+}
+async fn report_n_jumps(_: u8) -> Result<(), io::Error> {
+    Ok(())
+}

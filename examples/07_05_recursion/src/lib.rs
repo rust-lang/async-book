@@ -8,6 +8,7 @@ fn recursive() -> BoxFuture<'static, ()> {
     async move {
         recursive().await;
         recursive().await;
-    }.boxed()
+    }
+        .boxed()
 }
 // ANCHOR_END: example

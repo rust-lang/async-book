@@ -3,13 +3,13 @@
 // ANCHOR: imports
 use {
     futures::{
-        future::{FutureExt, BoxFuture},
-        task::{ArcWake, waker_ref},
+        future::{BoxFuture, FutureExt},
+        task::{waker_ref, ArcWake},
     },
     std::{
         future::Future,
+        sync::mpsc::{sync_channel, Receiver, SyncSender},
         sync::{Arc, Mutex},
-        sync::mpsc::{sync_channel, SyncSender, Receiver},
         task::{Context, Poll},
         time::Duration,
     },
@@ -74,7 +74,10 @@ impl ArcWake for Task {
         // Implement `wake` by sending this task back onto the task channel
         // so that it will be polled again by the executor.
         let cloned = arc_self.clone();
-        arc_self.task_sender.send(cloned).expect("too many tasks queued");
+        arc_self
+            .task_sender
+            .send(cloned)
+            .expect("too many tasks queued");
     }
 }
 // ANCHOR_END: arcwake_for_task
@@ -128,4 +131,6 @@ fn main() {
 // ANCHOR_END: main
 
 #[test]
-fn run_main() { main() }
+fn run_main() {
+    main()
+}

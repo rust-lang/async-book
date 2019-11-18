@@ -27,7 +27,7 @@ authors = ["XYZ Author"]
 edition = "2018"
 
 [dependencies]
-futures-preview = "=0.3.0-alpha.17"
+futures = "0.3"
 ```
 
 Next, we need the following imports at the top of `src/main.rs`:
