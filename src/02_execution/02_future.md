@@ -69,8 +69,8 @@ to enable async/await.
 
 Secondly, `wake: fn()` has changed to `&mut Context<'_>`. In `SimpleFuture`,
 we used a call to a function pointer (`fn()`) to tell the future executor that
-the future in question should be polled. However, since `fn()` is zero-sized,
-it can't store any data about *which* `Future` called `wake`.
+the future in question should be polled. However, since `fn()` is just a
+function pointer, it can't store any data about *which* `Future` called `wake`.
 
 In a real-world scenario, a complex application like a web server may have
 thousands of different connections whose wakeups should all be
