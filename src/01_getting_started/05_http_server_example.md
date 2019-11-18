@@ -15,14 +15,14 @@ Let's add some dependencies to the `Cargo.toml` file:
 Now that we've got our dependencies out of the way, let's start writing some
 code. We have some imports to add:
 
-```rust
+```rust,ignore
 {{#include ../../examples/01_05_http_server/src/lib.rs:imports}}
 ```
 
 Once the imports are out of the way, we can start putting together the
 boilerplate to allow us to serve requests:
 
-```rust
+```rust,ignore
 {{#include ../../examples/01_05_http_server/src/lib.rs:boilerplate}}
 ```
 
@@ -35,7 +35,7 @@ You can also inspect the request itself, which contains information such as
 the request URI, HTTP version, headers, and other metadata. For example, we
 can print out the URI of the request like this:
 
-```rust
+```rust,ignore
 println!("Got request at {:?}", req.uri());
 ```
 
@@ -47,14 +47,14 @@ request to another website using Hyper's HTTP client.
 
 We start by parsing out the URL we want to request:
 
-```rust
+```rust,ignore
 {{#include ../../examples/01_05_http_server/src/lib.rs:parse_url}}
 ```
 
 Then we can create a new `hyper::Client` and use it to make a `GET` request,
 returning the response to the user:
 
-```rust
+```rust,ignore
 {{#include ../../examples/01_05_http_server/src/lib.rs:get_request}}
 ```
 

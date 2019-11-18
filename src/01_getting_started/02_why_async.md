@@ -8,7 +8,7 @@ thread. In a typical threaded application, if you wanted to download two
 different webpages at the same time, you would spread the work across two
 different threads, like this:
 
-```rust
+```rust,ignore
 {{#include ../../examples/01_02_why_async/src/lib.rs:get_two_sites}}
 ```
 
@@ -22,7 +22,7 @@ to eliminate. We can rewrite the function above using Rust's
 `async`/`.await` notation, which will allow us to run multiple tasks at
 once without creating multiple threads:
 
-```rust
+```rust,ignore
 {{#include ../../examples/01_02_why_async/src/lib.rs:get_two_sites_async}}
 ```
 
