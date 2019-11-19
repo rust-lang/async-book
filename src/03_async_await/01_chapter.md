@@ -12,7 +12,7 @@ code to make progress while waiting on an operation to complete.
 There are two main ways to use `async`: `async fn` and `async` blocks.
 Each returns a value that implements the `Future` trait:
 
-```rust
+```rust,edition2018,ignore
 {{#include ../../examples/03_01_async_await/src/lib.rs:async_fn_and_block_examples}}
 ```
 
@@ -29,7 +29,7 @@ Unlike traditional functions, `async fn`s which take references or other
 non-`'static` arguments return a `Future` which is bounded by the lifetime of
 the arguments:
 
-```rust
+```rust,edition2018,ignore
 {{#include ../../examples/03_01_async_await/src/lib.rs:lifetimes_expanded}}
 ```
 
@@ -43,7 +43,7 @@ One common workaround for turning an `async fn` with references-as-arguments
 into a `'static` future is to bundle the arguments with the call to the
 `async fn` inside an `async` block:
 
-```rust
+```rust,edition2018,ignore
 {{#include ../../examples/03_01_async_await/src/lib.rs:static_future_with_borrow}}
 ```
 
@@ -57,7 +57,7 @@ closures. An `async move` block will take ownership of the variables it
 references, allowing it to outlive the current scope, but giving up the ability
 to share those variables with other code:
 
-```rust
+```rust,edition2018,ignore
 {{#include ../../examples/03_01_async_await/src/lib.rs:async_move_examples}}
 ```
 

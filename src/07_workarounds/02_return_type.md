@@ -55,7 +55,7 @@ In practice, this means that returning `Box<dyn Trait>` objects from an
 
 This code will result in an error:
 
-```
+```rust,edition2018,ignore
 async fn x() -> Box<dyn std::fmt::Display> {
     Box::new("foo")
 }
@@ -63,7 +63,7 @@ async fn x() -> Box<dyn std::fmt::Display> {
 
 This issue can be worked around by manually casting using `as`:
 
-```
+```rust,edition2018
 async fn x() -> Box<dyn std::fmt::Display> {
     Box::new("foo") as Box<dyn std::fmt::Display>
 }

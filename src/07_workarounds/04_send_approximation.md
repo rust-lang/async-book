@@ -19,7 +19,7 @@ struct NotSend(Rc<()>);
 Variables of type `NotSend` can briefly appear as temporaries in `async fn`s
 even when the resulting `Future` type returned by the `async fn` must be `Send`:
 
-```rust
+```rust,edition2018
 # use std::rc::Rc;
 # #[derive(Default)]
 # struct NotSend(Rc<()>);
@@ -39,14 +39,19 @@ fn main() {
 However, if we change `foo` to store `NotSend` in a variable, this example no
 longer compiles:
 
-```rust
+```rust,edition2018
 # use std::rc::Rc;
 # #[derive(Default)]
 # struct NotSend(Rc<()>);
+# async fn bar() {}
 async fn foo() {
     let x = NotSend::default();
     bar().await;
 }
+# fn require_send(_: impl Send) {}
+# fn main() {
+#    require_send(foo());
+# }
 ```
 
 ```
@@ -85,14 +90,19 @@ a block scope encapsulating any non-`Send` variables. This makes it easier
 for the compiler to tell that these variables do not live across an
 `.await` point.
 
-```rust
+```rust,edition2018
 # use std::rc::Rc;
 # #[derive(Default)]
 # struct NotSend(Rc<()>);
+# async fn bar() {}
 async fn foo() {
     {
         let x = NotSend::default();
     }
     bar().await;
 }
+# fn require_send(_: impl Send) {}
+# fn main() {
+#    require_send(foo());
+# }
 ```
