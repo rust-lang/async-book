@@ -3,7 +3,7 @@
 The `futures::select` macro runs multiple futures simultaneously, allowing
 the user to respond as soon as any future completes.
 
-```rust
+```rust,edition2018
 {{#include ../../examples/06_03_select/src/lib.rs:example}}
 ```
 
@@ -27,7 +27,7 @@ if none of the other futures are ready.
 being `select`ed over have completed and will no longer make progress.
 This is often handy when looping over a `select!`.
 
-```rust
+```rust,edition2018
 {{#include ../../examples/06_03_select/src/lib.rs:default_and_complete}}
 ```
 
@@ -58,7 +58,7 @@ which implement this trait or have been wrapped using `.fuse()`
 will yield `FusedFuture` futures from their
 `.next()` / `.try_next()` combinators.
 
-```rust
+```rust,edition2018
 {{#include ../../examples/06_03_select/src/lib.rs:fused_stream}}
 ```
 
@@ -75,7 +75,7 @@ Note the use of the `.select_next_some()` function. This can be
 used with `select` to only run the branch for `Some(_)` values
 returned from the stream, ignoring `None`s.
 
-```rust
+```rust,edition2018
 {{#include ../../examples/06_03_select/src/lib.rs:fuse_terminated}}
 ```
 
@@ -85,6 +85,6 @@ to the one above, but will run each copy of `run_on_new_num_fut`
 to completion, rather than aborting them when a new one is created.
 It will also print out a value returned by `run_on_new_num_fut`.
 
-```rust
+```rust,edition2018
 {{#include ../../examples/06_03_select/src/lib.rs:futures_unordered}}
 ```

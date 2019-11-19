@@ -4,7 +4,11 @@ Internally, `async fn` creates a state machine type containing each
 sub-`Future` being `.await`ed. This makes recursive `async fn`s a little
 tricky, since the resulting state machine type has to contain itself:
 
-```rust
+```rust,edition2018
+# async fn step_one() { /* ... */ }
+# async fn step_two() { /* ... */ }
+# struct StepOne;
+# struct StepTwo;
 // This function:
 async fn foo() {
     step_one().await;
@@ -48,6 +52,6 @@ Unfortunately, compiler limitations mean that just wrapping the calls to
 to make `recursive` into a non-`async` function which returns a `.boxed()`
 `async` block:
 
-```rust
+```rust,edition2018
 {{#include ../../examples/07_05_recursion/src/lib.rs:example}}
 ```

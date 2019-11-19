@@ -30,7 +30,7 @@ must register `wake` to be called when data becomes ready on the socket,
 which will tell the executor that our future is ready to make progress.
 A simple `SocketRead` future might look something like this:
 
-```rust
+```rust,ignore
 {{#include ../../examples/02_02_future_trait/src/lib.rs:socket_read}}
 ```
 
@@ -39,7 +39,7 @@ operations without needing intermediate allocations. Running multiple futures
 at once or chaining futures together can be implemented via allocation-free
 state machines, like this:
 
-```rust
+```rust,ignore
 {{#include ../../examples/02_02_future_trait/src/lib.rs:join}}
 ```
 
@@ -47,7 +47,7 @@ This shows how multiple futures can be run simultaneously without needing
 separate allocations, allowing for more efficient asynchronous programs.
 Similarly, multiple sequential futures can be run one after another, like this:
 
-```rust
+```rust,ignore
 {{#include ../../examples/02_02_future_trait/src/lib.rs:and_then}}
 ```
 
@@ -56,12 +56,12 @@ control flow without requiring multiple allocated objects and deeply nested
 callbacks. With the basic control-flow out of the way, let's talk about the
 real `Future` trait and how it is different.
 
-```rust
+```rust,ignore
 {{#include ../../examples/02_02_future_trait/src/lib.rs:real_future}}
 ```
 
 The first change you'll notice is that our `self` type is no longer `&mut self`,
-but has changed to `Pin<&mut Self>`. We'll talk more about pinning in [a later 
+but has changed to `Pin<&mut Self>`. We'll talk more about pinning in [a later
 section][pinning], but for now know that it allows us to create futures that
 are immovable. Immovable objects can store pointers between their fields,
 e.g. `struct MyFut { a: i32, ptr_to_a: *const i32 }`. Pinning is necessary
