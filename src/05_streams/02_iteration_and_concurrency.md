@@ -9,7 +9,7 @@ Unfortunately, `for` loops are not usable with `Stream`s, but for
 imperative-style code, `while let` and the `next`/`try_next` functions can
 be used:
 
-```rust
+```rust,edition2018,ignore
 {{#include ../../examples/05_02_iteration_and_concurrency/src/lib.rs:nexts}}
 ```
 
@@ -19,6 +19,6 @@ writing async code in the first place. To process multiple items from a stream
 concurrently, use the `for_each_concurrent` and `try_for_each_concurrent`
 methods:
 
-```rust
+```rust,edition2018,ignore
 {{#include ../../examples/05_02_iteration_and_concurrency/src/lib.rs:try_for_each_concurrent}}
 ```

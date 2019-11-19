@@ -34,13 +34,13 @@ thread to communicate that the timer has elapsed and the future should complete.
 We'll use a shared `Arc<Mutex<..>>` value to communicate between the thread and
 the future.
 
-```rust
+```rust,ignore
 {{#include ../../examples/02_03_timer/src/lib.rs:timer_decl}}
 ```
 
 Now, let's actually write the `Future` implementation!
 
-```rust
+```rust,ignore
 {{#include ../../examples/02_03_timer/src/lib.rs:future_for_timer}}
 ```
 
@@ -55,7 +55,7 @@ being polled.
 
 Finally, we need the API to actually construct the timer and start the thread:
 
-```rust
+```rust,ignore
 {{#include ../../examples/02_03_timer/src/lib.rs:timer_new}}
 ```
 

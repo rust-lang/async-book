@@ -8,7 +8,7 @@ futures to complete while executing them all concurrently.
 When performing multiple asynchronous operations, it's tempting to simply
 `.await` them in a series:
 
-```rust
+```rust,edition2018,ignore
 {{#include ../../examples/06_02_join/src/lib.rs:naiive}}
 ```
 
@@ -18,7 +18,7 @@ futures are ambiently run to completion, so two operations can be
 run concurrently by first calling each `async fn` to start the futures, and
 then awaiting them both:
 
-```rust
+```rust,edition2018,ignore
 {{#include ../../examples/06_02_join/src/lib.rs:other_langs}}
 ```
 
@@ -28,7 +28,7 @@ This means that the two code snippets above will both run
 concurrently. To correctly run the two futures concurrently, use
 `futures::join!`:
 
-```rust
+```rust,edition2018,ignore
 {{#include ../../examples/06_02_join/src/lib.rs:join}}
 ```
 
@@ -45,7 +45,7 @@ has returned an `Err`.
 Unlike `join!`, `try_join!` will complete immediately if one of the subfutures
 returns an error.
 
-```rust
+```rust,edition2018,ignore
 {{#include ../../examples/06_02_join/src/lib.rs:try_join}}
 ```
 
@@ -53,6 +53,6 @@ Note that the futures passed to `try_join!` must all have the same error type.
 Consider using the `.map_err(|e| ...)` and `.err_into()` functions from
 `futures::future::TryFutureExt` to consolidate the error types:
 
-```rust
+```rust,edition2018,ignore
 {{#include ../../examples/06_02_join/src/lib.rs:try_join_map_err}}
 ```
