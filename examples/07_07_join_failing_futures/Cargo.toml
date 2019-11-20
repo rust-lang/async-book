@@ -1,0 +1,11 @@
+[package]
+name = "07_07_join_failing_futures"
+version = "0.1.0"
+authors = ["tarquin-the-brave <tomsteavenson@gmail.com>"]
+edition = "2018"
+
+[lib]
+
+[dependencies]
+failure = "0.1.6"
+futures = "0.3.1"

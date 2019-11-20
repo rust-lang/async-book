@@ -12,4 +12,5 @@ members = [
   "06_02_join",
   "06_03_select",
   "07_05_recursion",
+  "07_07_join_failing_futures",
 ]

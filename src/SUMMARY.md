@@ -26,6 +26,7 @@
   - [`Send` Approximation](07_workarounds/04_send_approximation.md)
   - [Recursion](07_workarounds/05_recursion.md)
   - [`async` in Traits](07_workarounds/06_async_in_traits.md)
+  - [Joining Futures that May Fail](07_workarounds/07_join_failing_futures.md)
 - [TODO: I/O](404.md)
   - [TODO: `AsyncRead` and `AsyncWrite`](404.md)
 - [TODO: Asynchronous Design Patterns: Solutions and Suggestions](404.md)
