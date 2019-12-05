@@ -44,7 +44,7 @@ async fn run_server(addr: SocketAddr) {
         // `Service` trait. `service_fn` returns a value implementing the
         // `Service` trait, and accepts a closure which goes from request
         // to a future of the response. To use our `serve_req` function with
-        // Hyper, we have to box it and put it in a compatability
+        // Hyper, we have to box it and put it in a compatibility
         // wrapper to go from a futures 0.3 future (the kind returned by
         // `async fn`) to a futures 0.1 future (the kind used by Hyper).
         .serve(|| service_fn(|req| serve_req(req).boxed().compat()));
