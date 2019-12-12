@@ -1,22 +1,18 @@
 [package]
 name = "01_05_http_server"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Taylor Cramer <cramertj@google.com>"]
 edition = "2018"
 
 [lib]
 
 [dependencies]
-# The latest version of the "futures" library, which has lots of utilities
-# for writing async code. Enable the "compat" feature to include the
-# functions for using futures 0.3 and async/await with the Hyper library,
-# which use futures 0.1.
-futures = { version = "0.3", features = ["compat"] }
-
 # Hyper is an asynchronous HTTP library. We'll use it to power our HTTP
 # server and to make HTTP requests.
-hyper = "0.12.9"
+hyper = "0.13.0"
+# To setup some sort of runtime needed by Hyper, we will use the Tokio runtime.
+tokio = { version = "0.2", features = ["full"] }
 
 # (only for testing)
-failure = "0.1.5"
-reqwest = "0.9.18"
+failure = "0.1.6"
+reqwest = "0.9.24"
