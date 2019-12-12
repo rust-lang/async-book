@@ -3,25 +3,16 @@
 // ANCHOR: imports
 use {
     hyper::{
+        // Following functions are used by Hyper to handle a `Request`
+        // and returning a `Response` in an asynchronous manner by using a Future
+        service::{make_service_fn, service_fn},
         // Miscellaneous types from Hyper for working with HTTP.
-        Body, Client, Request, Response, Server, Uri,
-
-        // This function turns a closure which returns a future into an
-        // implementation of the the Hyper `Service` trait, which is an
-        // asynchronous function from a generic `Request` to a `Response`.
-        service::service_fn,
-
-        // A function which runs a future to completion using the Hyper runtime.
-        rt::run,
-    },
-    futures::{
-        // Extension trait for futures 0.1 futures, adding the `.compat()` method
-        // which allows us to use `.await` on 0.1 futures.
-        compat::Future01CompatExt,
-        // Extension traits providing additional methods on futures.
-        // `FutureExt` adds methods that work for all futures, whereas
-        // `TryFutureExt` adds methods to futures that return `Result` types.
-        future::{FutureExt, TryFutureExt},
+        Body,
+        Client,
+        Request,
+        Response,
+        Server,
+        Uri,
     },
     std::net::SocketAddr,
 };
@@ -43,34 +34,31 @@ async fn run_server(addr: SocketAddr) {
         // `serve` takes a closure which returns a type implementing the
         // `Service` trait. `service_fn` returns a value implementing the
         // `Service` trait, and accepts a closure which goes from request
-        // to a future of the response. To use our `serve_req` function with
-        // Hyper, we have to box it and put it in a compatability
-        // wrapper to go from a futures 0.3 future (the kind returned by
-        // `async fn`) to a futures 0.1 future (the kind used by Hyper).
-        .serve(|| service_fn(|req| serve_req(req).boxed().compat()));
+        // to a future of the response.
+        .serve(make_service_fn(|_| {
+            async {
+                {
+                    Ok::<_, hyper::Error>(service_fn(serve_req))
+                }
+            }
+        }));
 
     // Wait for the server to complete serving or exit with an error.
     // If an error occurred, print it to stderr.
-    if let Err(e) = serve_future.compat().await {
+    if let Err(e) = serve_future.await {
         eprintln!("server error: {}", e);
     }
 }
 
-fn main() {
-    // Set the address to run our socket on.
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+#[tokio::main]
+async fn main() {
+  // Set the address to run our socket on.
+  let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
 
-    // Call our `run_server` function, which returns a future.
-    // As with every `async fn`, for `run_server` to do anything,
-    // the returned future needs to be run. Additionally,
-    // we need to convert the returned future from a futures 0.3 future into a
-    // futures 0.1 future.
-    let futures_03_future = run_server(addr);
-    let futures_01_future = futures_03_future.unit_error().boxed().compat();
-
-    // Finally, we can run the future to completion using the `run` function
-    // provided by Hyper.
-    run(futures_01_future);
+  // Call our `run_server` function, which returns a future.
+  // As with every `async fn`, for `run_server` to do anything,
+  // the returned future needs to be run using `await`;
+  run_server(addr).await;
 }
 // ANCHOR_END: boilerplate
 
@@ -90,16 +78,16 @@ mod proxy {
     use super::*;
     #[allow(unused)]
     async fn serve_req(_req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
-// ANCHOR: parse_url
-let url_str = "http://www.rust-lang.org/en-US/";
-let url = url_str.parse::<Uri>().expect("failed to parse URL");
-// ANCHOR_END: parse_url
+        // ANCHOR: parse_url
+        let url_str = "http://www.rust-lang.org/en-US/";
+        let url = url_str.parse::<Uri>().expect("failed to parse URL");
+        // ANCHOR_END: parse_url
 
-// ANCHOR: get_request
-let res = Client::new().get(url).compat().await;
-// Return the result of the request directly to the user
-println!("request finished-- returning response");
-res
-// ANCHOR_END: get_request
+        // ANCHOR: get_request
+        let res = Client::new().get(url).await?;
+        // Return the result of the request directly to the user
+        println!("request finished-- returning response");
+        Ok(res)
+        // ANCHOR_END: get_request
     }
 }
