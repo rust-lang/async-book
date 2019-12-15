@@ -23,7 +23,6 @@ FusedStream
 FutOne
 FutTwo
 FutureObj
-FutureResponse
 FuturesUnordered
 GenFuture
 http
@@ -52,6 +51,7 @@ ReadIntoBuf
 recognise
 RefCell
 requeue
+ResponseFuture
 reusability
 runtime
 rustc
