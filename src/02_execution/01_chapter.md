@@ -10,4 +10,4 @@ understanding the runtime and performance properties of `async`/`await` code,
 and building new asynchronous primitives. If you decide to skip this section
 now, you may want to bookmark it to revisit in the future.
 
-Now, with that out of the, way, let's talk about the `Future` trait.
+Now, with that out of the way, let's talk about the `Future` trait.
