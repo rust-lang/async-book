@@ -22,7 +22,6 @@ FusedFuture
 FusedStream
 FutOne
 FutTwo
-FutureObj
 FuturesUnordered
 GenFuture
 http
