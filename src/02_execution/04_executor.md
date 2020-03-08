@@ -52,9 +52,8 @@ itself.
 ```
 
 Let's also add a method to spawner to make it easy to spawn new futures.
-This method will take a future type, box it and put it in a FutureObj,
-and create a new `Arc<Task>` with it inside which can be enqueued onto the
-executor.
+This method will take a future type, box it, and create a new `Arc<Task>` with
+it inside which can be enqueued onto the executor.
 
 ```rust,ignore
 {{#include ../../examples/02_04_executor/src/lib.rs:spawn_fn}}
