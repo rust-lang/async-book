@@ -60,7 +60,7 @@ real `Future` trait and how it is different.
 {{#include ../../examples/02_02_future_trait/src/lib.rs:real_future}}
 ```
 
-The first change you'll notice is that our `self` type is no longer `&mut self`,
+The first change you'll notice is that our `self` type is no longer `&mut Self`,
 but has changed to `Pin<&mut Self>`. We'll talk more about pinning in [a later
 section][pinning], but for now know that it allows us to create futures that
 are immovable. Immovable objects can store pointers between their fields,
