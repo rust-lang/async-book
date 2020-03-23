@@ -6,6 +6,7 @@ The async book is built with [`mdbook`], you can install it using cargo.
 
 ```
 cargo install mdbook
+cargo install mdbook-linkcheck
 ```
 
 [`mdbook`]: https://github.com/rust-lang/mdBook
