@@ -55,3 +55,19 @@ to make `recursive` into a non-`async` function which returns a `.boxed()`
 ```rust,edition2018
 {{#include ../../examples/07_05_recursion/src/lib.rs:example}}
 ```
+
+## Using a Macro
+
+There is also a community-developed macro, [`async-recursion`](https://github.com/dcchut/async-recursion), that can be used to automatically transform an async function to return a boxed future:
+
+```rust
+use async_recursion::async_recursion;
+
+#[async_recursion]
+async fn recursive() {
+    recursive().await;
+    recursive().await;
+}
+```
+
+This allows the function to recurse without you having to manually change the method signature and body.
