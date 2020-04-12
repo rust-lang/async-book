@@ -2,15 +2,16 @@
 
 To poll futures, they must be pinned using a special type called
 `Pin<T>`. If you read the explanation of [the `Future` trait] in the
-previous section ["Executing `Future`s and Tasks"], you'll recognise
+previous section ["Executing `Future`s and Tasks"], you'll recognize
 `Pin` from the `self: Pin<&mut Self>` in the `Future::poll` method's definition.
 But what does it mean, and why do we need it?
 
 ## Why Pinning
 
-Pinning makes it possible to guarantee that an object won't ever be moved.
-To understand why this is necessary, we need to remember how `async`/`.await`
-works. Consider the following code:
+`Pin` works in tandem with the `Unpin` marker. Pinning makes it possible
+to guarantee that an object implmenting `!Unpin` won't ever be moved. To understand
+why this is necessary, we need to remember how `async`/`.await` works. Consider
+the following code:
 
 ```rust,edition2018,ignore
 let fut_one = /* ... */;
@@ -98,16 +99,489 @@ move as well, invalidating the pointer stored in `read_into_buf_fut.buf`.
 Pinning futures to a particular spot in memory prevents this problem, making
 it safe to create references to values inside an `async` block.
 
-## How to Use Pinning
+## Pinning in Detail
+
+Let's try to understand pinning by using an slightly simpler example. The problem we encounter
+above is a problem that ultimately boils down to how we handle references in self-referential
+types in Rust. 
+
+For now our example will look like this:
+
+```rust, ignore
+use std::pin::Pin;
+
+#[derive(Debug)]
+struct Test {
+    a: String,
+    b: *const String,
+}
+
+impl Test {
+    fn new(txt: &str) -> Self {
+        Test {
+            a: String::from(txt),
+            b: std::ptr::null(),
+        }
+    }
+
+    fn init(&mut self) {
+        let self_ref: *const String = &self.a;
+        self.b = self_ref;
+    }
+
+    fn a(&self) -> &str {
+        &self.a
+    }
+
+    fn b(&self) -> &String {
+        unsafe {&*(self.b)}
+    }
+}
+```
+
+`Test` provides methods to get a reference to the value of the fields `a` and `b`. Since `b` is a
+reference to `a` we store it as a pointer since the borrowing rules of Rust doesn't allow us to
+define this lifetime. We now have what we call a self-referential struct.
+
+Our example works fine if we don't move any of our data around as you can observe by running
+this example:
+
+```rust
+fn main() {
+    let mut test1 = Test::new("test1");
+    test1.init();
+    let mut test2 = Test::new("test2");
+    test2.init();
+
+    println!("a: {}, b: {}", test1.a(), test1.b());
+    println!("a: {}, b: {}", test2.a(), test2.b());
+
+}
+# use std::pin::Pin;
+# #[derive(Debug)]
+# struct Test {
+#     a: String,
+#     b: *const String,
+# }
+#
+# impl Test {
+#     fn new(txt: &str) -> Self {
+#         Test {
+#             a: String::from(txt),
+#             b: std::ptr::null(),
+#         }
+#     }
+#
+#     // We need an `init` method to actually set our self-reference
+#     fn init(&mut self) {
+#         let self_ref: *const String = &self.a;
+#         self.b = self_ref;
+#     }
+#
+#     fn a(&self) -> &str {
+#         &self.a
+#     }
+#
+#     fn b(&self) -> &String {
+#         unsafe {&*(self.b)}
+#     }
+# }
+```
+We get what we'd expect:
+
+```rust, ignore
+a: test1, b: test1
+a: test2, b: test2
+```
+
+Let's see what happens if we swap `test1` with `test2` and thereby move the data:
+
+```rust
+fn main() {
+    let mut test1 = Test::new("test1");
+    test1.init();
+    let mut test2 = Test::new("test2");
+    test2.init();
+
+    println!("a: {}, b: {}", test1.a(), test1.b());
+    std::mem::swap(&mut test1, &mut test2);
+    println!("a: {}, b: {}", test2.a(), test2.b());
+
+}
+# use std::pin::Pin;
+# #[derive(Debug)]
+# struct Test {
+#     a: String,
+#     b: *const String,
+# }
+#
+# impl Test {
+#     fn new(txt: &str) -> Self {
+#         Test {
+#             a: String::from(txt),
+#             b: std::ptr::null(),
+#         }
+#     }
+#
+#     fn init(&mut self) {
+#         let self_ref: *const String = &self.a;
+#         self.b = self_ref;
+#     }
+#
+#     fn a(&self) -> &str {
+#         &self.a
+#     }
+#
+#     fn b(&self) -> &String {
+#         unsafe {&*(self.b)}
+#     }
+# }
+```
+
+Naively, we could think that what we should get a debug print of `test1` two times like this:
+
+```rust, ignore
+a: test1, b: test1
+a: test1, b: test1
+```
+
+But instead we get:
+
+```rust, ignore
+a: test1, b: test1
+a: test1, b: test2
+```
+
+The pointer to `test2.b` still points to the old location which is inside `test1`
+now. The struct is not self-referential anymore, it holds a pointer to a field
+in a different object. That means we can't rely on the lifetime of `test2.b` to
+be tied to the lifetime of `test2` anymore.
+
+If your still not convinced, this should at least convince you:
+
+```rust
+fn main() {
+    let mut test1 = Test::new("test1");
+    test1.init();
+    let mut test2 = Test::new("test2");
+    test2.init();
+
+    println!("a: {}, b: {}", test1.a(), test1.b());
+    std::mem::swap(&mut test1, &mut test2);
+    test1.a = "I've totally changed now!".to_string();
+    println!("a: {}, b: {}", test2.a(), test2.b());
+
+}
+# use std::pin::Pin;
+# #[derive(Debug)]
+# struct Test {
+#     a: String,
+#     b: *const String,
+# }
+#
+# impl Test {
+#     fn new(txt: &str) -> Self {
+#         Test {
+#             a: String::from(txt),
+#             b: std::ptr::null(),
+#         }
+#     }
+#
+#     fn init(&mut self) {
+#         let self_ref: *const String = &self.a;
+#         self.b = self_ref;
+#     }
+#
+#     fn a(&self) -> &str {
+#         &self.a
+#     }
+#
+#     fn b(&self) -> &String {
+#         unsafe {&*(self.b)}
+#     }
+# }
+```
+
+The diagram below can help visualize what's going on:
+
+**Fig 1: Before and after swap**
+![swap_problem](../assets/swap_problem.jpg)
+
+It's easy to get this to show UB and fail in other spectacular ways as well.
+
+## Pinning in Practice
+
+Let's see how pinning and the `Pin` type can help us solve this problem.
 
 The `Pin` type wraps pointer types, guaranteeing that the values behind the
 pointer won't be moved. For example, `Pin<&mut T>`, `Pin<&T>`,
-`Pin<Box<T>>` all guarantee that `T` won't be moved.
+`Pin<Box<T>>` all guarantee that `T` won't be moved if `T: !Unpin`.
 
 Most types don't have a problem being moved. These types implement a trait
 called `Unpin`. Pointers to `Unpin` types can be freely placed into or taken
 out of `Pin`. For example, `u8` is `Unpin`, so `Pin<&mut u8>` behaves just like
 a normal `&mut u8`.
+
+However, types that can't be moved after they're pinned has a marker called
+`!Unpin`. Futures created by async/await is an example of this.
+
+### Pinning to the Stack
+
+Back to our example. We can solve our problem by using `Pin`. Let's take a look at what
+our example would look like we required a pinned pointer instead:
+
+```rust, ignore
+use std::pin::Pin;
+use std::marker::PhantomPinned;
+
+#[derive(Debug)]
+struct Test {
+    a: String,
+    b: *const String,
+    _marker: PhantomPinned,
+}
+
+
+impl Test {
+    fn new(txt: &str) -> Self {
+        Test {
+            a: String::from(txt),
+            b: std::ptr::null(),
+            _marker: PhantomPinned, // This makes our type `!Unpin`
+        }
+    }
+    fn init<'a>(self: Pin<&'a mut Self>) {
+        let self_ptr: *const String = &self.a;
+        let this = unsafe { self.get_unchecked_mut() };
+        this.b = self_ptr;
+    }
+
+    fn a<'a>(self: Pin<&'a Self>) -> &'a str {
+        &self.get_ref().a
+    }
+
+    fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+        unsafe { &*(self.b) }
+    }
+}
+```
+
+Pinning an object to the stack will always be `unsafe` if our type implements
+`!Unpin`. You can use a crate like [`pin_utils`][pin_utils] to avoid writing
+our own `unsafe` code when pinning to the stack.
+
+Below, we pin the objects `test1` and `test2` to the stack:
+
+```rust
+pub fn main() {
+    // test1 is safe to move before we initialize it
+    let mut test1 = Test::new("test1");
+    // Notice how we shadow `test1` to prevent it from being accessed again
+    let mut test1 = unsafe { Pin::new_unchecked(&mut test1) };
+    Test::init(test1.as_mut());
+
+    let mut test2 = Test::new("test2");
+    let mut test2 = unsafe { Pin::new_unchecked(&mut test2) };
+    Test::init(test2.as_mut());
+
+    println!("a: {}, b: {}", Test::a(test1.as_ref()), Test::b(test1.as_ref()));
+    println!("a: {}, b: {}", Test::a(test2.as_ref()), Test::b(test2.as_ref()));
+}
+# use std::pin::Pin;
+# use std::marker::PhantomPinned;
+#
+# #[derive(Debug)]
+# struct Test {
+#     a: String,
+#     b: *const String,
+#     _marker: PhantomPinned,
+# }
+#
+#
+# impl Test {
+#     fn new(txt: &str) -> Self {
+#         Test {
+#             a: String::from(txt),
+#             b: std::ptr::null(),
+#             // This makes our type `!Unpin`
+#             _marker: PhantomPinned,
+#         }
+#     }
+#     fn init<'a>(self: Pin<&'a mut Self>) {
+#         let self_ptr: *const String = &self.a;
+#         let this = unsafe { self.get_unchecked_mut() };
+#         this.b = self_ptr;
+#     }
+#
+#     fn a<'a>(self: Pin<&'a Self>) -> &'a str {
+#         &self.get_ref().a
+#     }
+#
+#     fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+#         unsafe { &*(self.b) }
+#     }
+# }
+```
+
+Now, if we try to move our data now we get a compilation error:
+
+```rust, compile_fail
+pub fn main() {
+    let mut test1 = Test::new("test1");
+    let mut test1 = unsafe { Pin::new_unchecked(&mut test1) };
+    Test::init(test1.as_mut());
+
+    let mut test2 = Test::new("test2");
+    let mut test2 = unsafe { Pin::new_unchecked(&mut test2) };
+    Test::init(test2.as_mut());
+
+    println!("a: {}, b: {}", Test::a(test1.as_ref()), Test::b(test1.as_ref()));
+    std::mem::swap(test1.get_mut(), test2.get_mut());
+    println!("a: {}, b: {}", Test::a(test2.as_ref()), Test::b(test2.as_ref()));
+}
+# use std::pin::Pin;
+# use std::marker::PhantomPinned;
+#
+# #[derive(Debug)]
+# struct Test {
+#     a: String,
+#     b: *const String,
+#     _marker: PhantomPinned,
+# }
+#
+#
+# impl Test {
+#     fn new(txt: &str) -> Self {
+#         Test {
+#             a: String::from(txt),
+#             b: std::ptr::null(),
+#             _marker: PhantomPinned, // This makes our type `!Unpin`
+#         }
+#     }
+#     fn init<'a>(self: Pin<&'a mut Self>) {
+#         let self_ptr: *const String = &self.a;
+#         let this = unsafe { self.get_unchecked_mut() };
+#         this.b = self_ptr;
+#     }
+#
+#     fn a<'a>(self: Pin<&'a Self>) -> &'a str {
+#         &self.get_ref().a
+#     }
+#
+#     fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+#         unsafe { &*(self.b) }
+#     }
+# }
+```
+
+The type system prevents us from moving the data.
+
+> It's important to note that stack pinning will always rely on guarantees
+> you give when writing `unsafe`. While we know that the _pointee_ of `&'a mut T`
+> is pinned for the lifetime of `'a` we can't know if the data `&'a mut T`
+> points to isn't moved after `'a` ends. If it does it will violate the Pin
+> contract.
+>
+> A mistake that is easy to make is forgetting to shadow the original variable
+> since you could drop the `Pin` and move the data after `&'a mut T`
+> like shown below (which violates the Pin contract):
+>
+> ```rust
+> fn main() {
+>    let mut test1 = Test::new("test1");
+>    let mut test1_pin = unsafe { Pin::new_unchecked(&mut test1) };
+>    Test::init(test1_pin.as_mut());
+>    drop(test1_pin);
+>    println!(r#"test1.b points to "test1": {:?}..."#, test1.b);
+>    let mut test2 = Test::new("test2");
+>    mem::swap(&mut test1, &mut test2);
+>    println!("... and now it points nowhere: {:?}", test1.b);
+> }
+> # use std::pin::Pin;
+> # use std::marker::PhantomPinned;
+> # use std::mem;
+> #
+> # #[derive(Debug)]
+> # struct Test {
+> #     a: String,
+> #     b: *const String,
+> #     _marker: PhantomPinned,
+> # }
+> #
+> #
+> # impl Test {
+> #     fn new(txt: &str) -> Self {
+> #         Test {
+> #             a: String::from(txt),
+> #             b: std::ptr::null(),
+> #             // This makes our type `!Unpin`
+> #             _marker: PhantomPinned,
+> #         }
+> #     }
+> #     fn init<'a>(self: Pin<&'a mut Self>) {
+> #         let self_ptr: *const String = &self.a;
+> #         let this = unsafe { self.get_unchecked_mut() };
+> #         this.b = self_ptr;
+> #     }
+> #
+> #     fn a<'a>(self: Pin<&'a Self>) -> &'a str {
+> #         &self.get_ref().a
+> #     }
+> #
+> #     fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+> #         unsafe { &*(self.b) }
+> #     }
+> # }
+> ```
+
+### Pinning to the Heap
+
+Pinning an `!Unpin` type to the heap gives our data a stable address so we know
+that the data we point to can't move after it's pinned. In contrast to stack
+pinning, we know that the data will be pinned for the lifetime of the object.
+
+```rust, edition2018
+use std::pin::Pin;
+use std::marker::PhantomPinned;
+
+#[derive(Debug)]
+struct Test {
+    a: String,
+    b: *const String,
+    _marker: PhantomPinned,
+}
+
+impl Test {
+    fn new(txt: &str) -> Pin<Box<Self>> {
+        let t = Test {
+            a: String::from(txt),
+            b: std::ptr::null(),
+            _marker: PhantomPinned,
+        };
+        let mut boxed = Box::pin(t);
+        let self_ptr: *const String = &boxed.as_ref().a;
+        unsafe { boxed.as_mut().get_unchecked_mut().b = self_ptr };
+
+        boxed
+    }
+
+    fn a<'a>(self: Pin<&'a Self>) -> &'a str {
+        &self.get_ref().a
+    }
+
+    fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+        unsafe { &*(self.b) }
+    }
+}
+
+pub fn main() {
+    let mut test1 = Test::new("test1");
+    let mut test2 = Test::new("test2");
+
+    println!("a: {}, b: {}",test1.as_ref().a(), test1.as_ref().b());
+    println!("a: {}, b: {}",test2.as_ref().a(), test2.as_ref().b());
+}
+```
 
 Some functions require the futures they work with to be `Unpin`. To use a
 `Future` or `Stream` that isn't `Unpin` with a function that requires
@@ -138,5 +612,30 @@ pin_mut!(fut);
 execute_unpin_future(fut); // OK
 ```
 
+## Summary
+
+1. If `T: Unpin` (which is the default), then `Pin<'a, T>` is entirely
+equivalent to `&'a mut T`. in other words: `Unpin` means it's OK for this type
+to be moved even when pinned, so `Pin` will have no effect on such a type.
+
+2. Getting a `&mut T` to a pinned T requires unsafe if `T: !Unpin`. 
+
+3. Most standard library types implement `Unpin`. The same goes for most
+"normal" types you encounter in Rust. A `Future` generated by async/await is an exception to this rule.
+
+4. You can add a `!Unpin` bound on a type on nightly with a feature flag, or
+by adding `std::marker::PhantomPinned` to your type on stable.
+
+5. You can either pin data to the stack or to the heap.
+
+6. Pinning a `!Unpin` object to the stack requires `unsafe`
+
+7. Pinning a `!Unpin` object to the heap does not require `unsafe`. There is a shortcut for doing this using `Box::pin`.
+
+8. For pinned data where `T: !Unpin` you have to maintain the invariant that its memory will not
+get invalidated or repurposed _from the moment it gets pinned until when drop_ is called. This is
+an important part of the _pin contract_.
+
 ["Executing `Future`s and Tasks"]: ../02_execution/01_chapter.md
 [the `Future` trait]: ../02_execution/02_future.md
+[pin_utils]: https://docs.rs/pin-utils/
