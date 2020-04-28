@@ -42,31 +42,3 @@ function signature with the message "expected `SomeType`, found `OtherType`"
 usually indicate that one or more return sites are incorrect.
 
 A fix to this issue is being tracked in [this bug](https://github.com/rust-lang/rust/issues/54326).
-
-## `Box<dyn Trait>`
-
-Similarly, because the return type from the function signature is not
-propagated down correctly, values returned from `async fn` aren't correctly
-coerced to their expected type.
-
-In practice, this means that returning `Box<dyn Trait>` objects from an
-`async fn` requires manually `as`-casting from `Box<MyType>` to
-`Box<dyn Trait>`.
-
-This code will result in an error:
-
-```rust,edition2018,ignore
-async fn x() -> Box<dyn std::fmt::Display> {
-    Box::new("foo")
-}
-```
-
-This issue can be worked around by manually casting using `as`:
-
-```rust,edition2018
-async fn x() -> Box<dyn std::fmt::Display> {
-    Box::new("foo") as Box<dyn std::fmt::Display>
-}
-```
-
-A fix to this issue is being tracked in [this bug](https://github.com/rust-lang/rust/issues/60424).
