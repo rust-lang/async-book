@@ -7,6 +7,12 @@ blocking function in a synchronous method would block the whole thread,
 blocked `Future`s will yield control of the thread, allowing other
 `Future`s to run.
 
+Let's add some dependencies to the `Cargo.toml` file:
+
+```toml
+{{#include ../../examples/01_04_async_await_primer/Cargo.toml:9:10}}
+```
+
 To create an asynchronous function, you can use the `async fn` syntax:
 
 ```rust,edition2018
