@@ -9,10 +9,10 @@ edition = "2018"
 [dependencies]
 # Hyper is an asynchronous HTTP library. We'll use it to power our HTTP
 # server and to make HTTP requests.
-hyper = "0.13.0"
+hyper = "0.13"
 # To setup some sort of runtime needed by Hyper, we will use the Tokio runtime.
 tokio = { version = "0.2", features = ["full"] }
 
 # (only for testing)
-failure = "0.1.6"
-reqwest = "0.9.24"
+anyhow = "1.0.31"
+reqwest = { version = "0.10.4", features = ["blocking"] }
