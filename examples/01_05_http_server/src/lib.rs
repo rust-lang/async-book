@@ -31,16 +31,14 @@ async fn run_server(addr: SocketAddr) {
     // Create a server bound on the provided address
     let serve_future = Server::bind(&addr)
         // Serve requests using our `async serve_req` function.
-        // `serve` takes a closure which returns a type implementing the
-        // `Service` trait. `service_fn` returns a value implementing the
-        // `Service` trait, and accepts a closure which goes from request
-        // to a future of the response.
-        .serve(make_service_fn(|_| {
-            async {
-                {
-                    Ok::<_, hyper::Error>(service_fn(serve_req))
-                }
-            }
+        // `serve` takes a type which implements the `MakeService` trait.
+        // `make_service_fn` converts a closure into a type which
+        // implements the `MakeService` trait. That closure must return a
+        // type that implements the `Service` trait, and `service_fn`
+        // converts a request-response function into a type that implements
+        // the `Service` trait.
+        .serve(make_service_fn(|_| async {
+            Ok::<_, hyper::Error>(service_fn(serve_req))
         }));
 
     // Wait for the server to complete serving or exit with an error.
@@ -63,13 +61,13 @@ async fn main() {
 // ANCHOR_END: boilerplate
 
 #[test]
-fn run_main_and_query_http() -> Result<(), failure::Error> {
-    std::thread::spawn(|| main());
+fn run_main_and_query_http() -> Result<(), anyhow::Error> {
+    std::thread::spawn(main);
     // Unfortunately, there's no good way for us to detect when the server
     // has come up, so we sleep for an amount that should hopefully be
     // sufficient :(
     std::thread::sleep(std::time::Duration::from_secs(5));
-    let response = reqwest::get("http://localhost:3000")?.text()?;
+    let response = reqwest::blocking::get("http://localhost:3000")?.text()?;
     assert_eq!(response, "hello, world!");
     Ok(())
 }
