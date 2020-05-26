@@ -36,7 +36,7 @@ the request URI, HTTP version, headers, and other metadata. For example, we
 can print out the URI of the request like this:
 
 ```rust,ignore
-println!("Got request at {:?}", req.uri());
+println!("Got request at {:?}", _req.uri());
 ```
 
 You may have noticed that we're not yet doing
