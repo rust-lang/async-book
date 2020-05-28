@@ -44,6 +44,7 @@ NotSend
 OtherType
 performant
 PhantomPinned
+pointee
 println
 proxied
 proxying
@@ -51,6 +52,7 @@ pseudocode
 ReadIntoBuf
 recognise
 RefCell
+repurposed
 requeue
 ResponseFuture
 reusability

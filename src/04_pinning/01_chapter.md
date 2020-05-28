@@ -9,7 +9,7 @@ But what does it mean, and why do we need it?
 ## Why Pinning
 
 `Pin` works in tandem with the `Unpin` marker. Pinning makes it possible
-to guarantee that an object implmenting `!Unpin` won't ever be moved. To understand
+to guarantee that an object implementing `!Unpin` won't ever be moved. To understand
 why this is necessary, we need to remember how `async`/`.await` works. Consider
 the following code:
 
