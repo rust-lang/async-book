@@ -27,6 +27,7 @@ GenFuture
 http
 Hyper's
 impl
+init
 interoperate
 IoBlocker
 IOCP
@@ -42,6 +43,7 @@ natively
 NotSend
 OtherType
 performant
+PhantomPinned
 println
 proxied
 proxying
