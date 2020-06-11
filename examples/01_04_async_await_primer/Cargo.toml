@@ -1,5 +1,5 @@
 [package]
-name = "01_04_async_await_primer"
+name = "example_01_04_async_await_primer"
 version = "0.1.0"
 authors = ["Taylor Cramer <cramertj@google.com>"]
 edition = "2018"

@@ -1,5 +1,5 @@
 [package]
-name = "01_05_http_server"
+name = "example_01_05_http_server"
 version = "0.2.0"
 authors = ["Taylor Cramer <cramertj@google.com>"]
 edition = "2018"
