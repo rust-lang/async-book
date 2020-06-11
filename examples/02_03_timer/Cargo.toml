@@ -1,5 +1,5 @@
 [package]
-name = "02_03_timer"
+name = "example_02_03_timer"
 version = "0.1.0"
 authors = ["Taylor Cramer <cramertj@google.com>"]
 edition = "2018"
