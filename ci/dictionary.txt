@@ -27,6 +27,7 @@ GenFuture
 http
 Hyper's
 impl
+init
 interoperate
 IoBlocker
 IOCP
@@ -42,6 +43,8 @@ natively
 NotSend
 OtherType
 performant
+PhantomPinned
+pointee
 println
 proxied
 proxying
@@ -49,6 +52,7 @@ pseudocode
 ReadIntoBuf
 recognise
 RefCell
+repurposed
 requeue
 ResponseFuture
 reusability
