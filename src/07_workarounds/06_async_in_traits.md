@@ -5,7 +5,7 @@ somewhat complex, but there are plans to remove this restriction in the
 future.
 
 In the meantime, however, this can be worked around using the
-[`async_trait` crate from crates.io](https://github.com/dtolnay/async-trait).
+[async-trait crate from crates.io](https://github.com/dtolnay/async-trait).
 
 Note that using these trait methods will result in a heap allocation
 per-function-call. This is not a significant cost for the vast majority
