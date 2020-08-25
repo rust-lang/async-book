@@ -37,7 +37,7 @@ struct Task {
     /// The `Mutex` is not necessary for correctness, since we only have
     /// one thread executing tasks at once. However, Rust isn't smart
     /// enough to know that `future` is only mutated from one thread,
-    /// so we need use the `Mutex` to prove thread-safety. A production
+    /// so we need to use the `Mutex` to prove thread-safety. A production
     /// executor would not need this, and could use `UnsafeCell` instead.
     future: Mutex<Option<BoxFuture<'static, ()>>>,
 
