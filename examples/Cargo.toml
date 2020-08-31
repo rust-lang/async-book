@@ -2,7 +2,6 @@
 members = [
   "01_02_why_async",
   "01_04_async_await_primer",
-  "01_05_http_server",
   "02_02_future_trait",
   "02_03_timer",
   "02_04_executor",
@@ -12,4 +11,9 @@ members = [
   "06_02_join",
   "06_03_select",
   "07_05_recursion",
+  "08_01_sync_tcp_server",
+  "08_02_async_tcp_server",
+  "08_03_concurrent_tcp_server",
+  "08_04_nonblocking_tcp_server",
+  "08_05_final_tcp_server",
 ]

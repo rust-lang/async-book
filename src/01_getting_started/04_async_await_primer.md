@@ -66,6 +66,3 @@ This would make it impossible to dance at the same time. By `.await`-ing
 the `learn_song` future, we allow other tasks to take over the current thread
 if `learn_song` is blocked. This makes it possible to run multiple futures
 to completion concurrently on the same thread.
-
-Now that you've learned the basics of `async`/`await`, let's try out an
-example.
