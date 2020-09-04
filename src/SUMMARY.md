@@ -25,7 +25,7 @@
   - [`Send` Approximation](07_workarounds/04_send_approximation.md)
   - [Recursion](07_workarounds/05_recursion.md)
   - [`async` in Traits](07_workarounds/06_async_in_traits.md)
-- [Applied: HTTP Server](08_example/00_intro.md)
+- [Final Project: HTTP Server](08_example/00_intro.md)
   - [Running Asynchronous Code](08_example/01_running_async_code.md)
   - [Handling Connections Concurrently](08_example/02_handling_connections_concurrently.md)
   - [Multiple Actions Per Request](08_example/03_combinators.md)

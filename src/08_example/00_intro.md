@@ -1,7 +1,9 @@
-# Applied: Building a Concurrent Web Server with Async Rust
+# Final Project: Building a Concurrent Web Server with Async Rust
 In this chapter, we'll use asynchronous Rust to modify the Rust book's 
 [single-threaded web server](https://doc.rust-lang.org/book/ch20-01-single-threaded.html) 
 to serve requests concurrently.
+
+## Recap
 Here's what the code looked like at the end of the lesson.
 
 `src/main.rs`:

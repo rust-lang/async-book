@@ -5,17 +5,16 @@ use futures::join;
 
 use async_std::net::TcpListener;
 use async_std::prelude::*;
-use async_std::task::{block_on, spawn};
+use async_std::task::spawn;
 
-fn main() {
-    block_on(async {
-        let listener = TcpListener::bind("127.0.0.1:7878").await.unwrap();
+#[async_std::main]
+async fn main() {
+    let listener = TcpListener::bind("127.0.0.1:7878").await.unwrap();
 
-        loop {
-            let (stream, _) = listener.accept().await.unwrap();
-            spawn(handle_connection(stream));
-        }
-    })
+    loop {
+        let (stream, _) = listener.accept().await.unwrap();
+        spawn(handle_connection(stream));
+    }
 }
 
 use async_std::io::{Read, Write};
@@ -129,8 +128,8 @@ mod tests {
     // ANCHOR: test
     use std::fs;
 
-    #[test]
-    fn test_handle_connection() {
+    #[async_std::test]
+    async fn test_handle_connection() {
         let input_bytes = b"GET / HTTP/1.1\r\n";
         let mut contents = vec![0u8; 1024];
         contents[..input_bytes.len()].clone_from_slice(input_bytes);
@@ -139,11 +138,9 @@ mod tests {
             write_data: Vec::new(),
         };
 
-        block_on(async {
-            handle_connection(&mut stream).await;
-            let mut buf = [0u8; 1024];
-            stream.read(&mut buf).await.unwrap();
-        });
+        handle_connection(&mut stream).await;
+        let mut buf = [0u8; 1024];
+        stream.read(&mut buf).await.unwrap();
 
         let expected_contents = fs::read_to_string("hello.html").unwrap();
         let expected_response = format!("HTTP/1.1 200 OK\r\n\r\n{}", expected_contents);

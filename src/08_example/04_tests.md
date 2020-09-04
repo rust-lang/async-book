@@ -1,4 +1,4 @@
-# Testing Async Code
+# Testing the TCP Server
 Let's move on to testing our `handle_connection` function.
 First, we need a `TcpStream` to work with, but we don't want to make a real TCP connection in test code.
 We could work around this in a few ways.
@@ -45,7 +45,7 @@ For more information on pinning and the `Unpin` trait, see the [section on pinni
 
 Now we're ready to test the `handle_connection` function.
 After setting up the `MockTcpStream` containing some initial data,
-we can run `handle_connection` using `async_std::task::block_on`, exactly as we did in the main method.
+we can run `handle_connection` using the attribute `#[async_std::test]`, similarly to how we used `#[async_std::main]`.
 To ensure that `handle_connection` works as intended, we'll check that the correct data
 was written to the `MockTcpStream` based on its initial contents.
 ```rust,ignore

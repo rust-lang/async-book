@@ -1,10 +1,7 @@
 #![cfg(test)]
 
 use {
-    futures::{
-        executor::block_on,
-        join,
-    },
+    futures::{executor::block_on, join},
     std::thread,
 };
 
