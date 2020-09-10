@@ -45,7 +45,7 @@ async fn write_to_database() {
 
 async fn add_to_queue() {
     // Simulate a slow request
-    sleep(Duration::from_secs(1)).await;
+    sleep(Duration::from_secs(3)).await;
 }
 // ANCHOR_END: slow_functions
 

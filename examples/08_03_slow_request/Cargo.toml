@@ -1,5 +1,5 @@
 [package]
-name = "nonblocking_tcp_server"
+name = "slow_request"
 version = "0.1.0"
 authors = ["Your Name <you@example.com"]
 edition = "2018"

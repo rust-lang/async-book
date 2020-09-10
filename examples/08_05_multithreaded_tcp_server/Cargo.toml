@@ -1,5 +1,5 @@
 [package]
-name = "concurrent_tcp_server"
+name = "multithreaded_tcp_server"
 version = "0.1.0"
 authors = ["Your Name <you@example.com"]
 edition = "2018"

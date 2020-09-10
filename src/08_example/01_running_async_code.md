@@ -52,9 +52,21 @@ It might be tempting to write something like this:
 
 However, just because this program uses an asynchronous connection handler
 doesn't mean that it handles connections concurrently.
-To illustrate this, try out the 
+To illustrate this, let's simulate a slow request.
+When a client makes a request to `127.0.0.1:7878/sleep`,
+our server will sleep for 5 seconds:
+
+```rust,ignore
+{{#include ../../examples/08_03_slow_request/src/main.rs:handle_connection}}
+```
+This is very similar to the 
 [simulation of a slow request](https://doc.rust-lang.org/book/ch20-02-multithreaded.html#simulating-a-slow-request-in-the-current-server-implementation)
-from the Book. You'll see that one slow request will block any other incoming requests!
+from the Book, but with one important difference:
+we're using the non-blocking `async_std::task::sleep` instead of `std::thread::sleep`, which blocks.
+It's important to remember that even if a piece of code is run within an `async fn` and `await`ed, it may still block.
+To test whether our server handles connections concurrently, we'll need to ensure that `handle_connection` is non-blocking.
+
+If you run the server, you'll see that a request to `127.0.0.1:7878/sleep` will block any other incoming requests for 5 seconds!
 This is because there are no other concurrent tasks that can make progress
 while we are `await`ing the result of `handle_connection`.
 We'll see how to avoid this in the next section.

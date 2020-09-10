@@ -24,6 +24,7 @@ FutOne
 FutTwo
 FuturesUnordered
 GenFuture
+gRPC
 html
 http
 Hyper's
@@ -35,6 +36,7 @@ IOCP
 IoObject
 kqueue
 localhost
+LocalExecutor
 metadata
 MockTcpStream
 multithreaded
@@ -65,6 +67,7 @@ runtimes
 rustc
 rustup
 SimpleFuture
+smol
 SocketRead
 SomeType
 spawner

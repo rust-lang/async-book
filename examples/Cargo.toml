@@ -13,7 +13,8 @@ members = [
   "07_05_recursion",
   "08_01_sync_tcp_server",
   "08_02_async_tcp_server",
-  "08_03_concurrent_tcp_server",
-  "08_04_nonblocking_tcp_server",
-  "08_05_final_tcp_server",
+  "08_03_slow_request",
+  "08_04_concurrent_tcp_server",
+  "08_05_multithreaded_tcp_server",
+  "08_06_final_tcp_server",
 ]

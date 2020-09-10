@@ -25,7 +25,7 @@ First, let's implement the `Read` trait, with one method, `poll_read`.
 Our mock `TcpStream` will contain some data that is copied into the read buffer,
 and we'll return `Poll::Ready` to signify that the read is complete.
 ```rust,ignore
-{{#include ../../examples/08_05_final_tcp_server/src/main.rs:mock_read}}
+{{#include ../../examples/08_06_final_tcp_server/src/main.rs:mock_read}}
 ```
 
 Our implementation of `Write` is very similar,
@@ -34,13 +34,13 @@ although we'll need to write three methods: `poll_write`, `poll_flush`, and `pol
 No work needs to be done to flush or close the mock `TcpStream`, so `poll_flush` and `poll_close`
 can just return `Poll::Ready`.
 ```rust,ignore
-{{#include ../../examples/08_05_final_tcp_server/src/main.rs:mock_write}}
+{{#include ../../examples/08_06_final_tcp_server/src/main.rs:mock_write}}
 ```
 
 Lastly, our mock will need to implement `Unpin`, signifying that its location in memory can safely be moved.
 For more information on pinning and the `Unpin` trait, see the [section on pinning](../04_pinning/01_chapter.md).
 ```rust,ignore
-{{#include ../../examples/08_05_final_tcp_server/src/main.rs:unpin}}
+{{#include ../../examples/08_06_final_tcp_server/src/main.rs:unpin}}
 ```
 
 Now we're ready to test the `handle_connection` function.
@@ -49,5 +49,5 @@ we can run `handle_connection` using the attribute `#[async_std::test]`, similar
 To ensure that `handle_connection` works as intended, we'll check that the correct data
 was written to the `MockTcpStream` based on its initial contents.
 ```rust,ignore
-{{#include ../../examples/08_05_final_tcp_server/src/main.rs:test}}
+{{#include ../../examples/08_06_final_tcp_server/src/main.rs:test}}
 ```

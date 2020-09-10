@@ -14,7 +14,6 @@ async fn main() {
 // ANCHOR_END: main_func
 
 const response: &'static str = "hello";
-// ANCHOR: handle_connection
 use async_std::prelude::*;
 
 async fn handle_connection(mut stream: TcpStream) {
@@ -25,4 +24,3 @@ async fn handle_connection(mut stream: TcpStream) {
     stream.write(response.as_bytes()).await.unwrap();
     stream.flush().await.unwrap();
 }
-// ANCHOR_END: handle_connection
