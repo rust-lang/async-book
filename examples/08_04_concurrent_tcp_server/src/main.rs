@@ -8,9 +8,9 @@ async fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").await.unwrap();
     listener
         .incoming()
-        .for_each_concurrent(/* limit */ None, |stream| async move {
-            let stream = stream.unwrap();
-            handle_connection(stream).await;
+        .for_each_concurrent(/* limit */ None, |tcpstream| async move {
+            let tcpstream = tcpstream.unwrap();
+            handle_connection(tcpstream).await;
         })
         .await;
 }

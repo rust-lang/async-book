@@ -36,6 +36,7 @@ Please consult the section on choosing a runtime for more information on asynchr
 
 [//]: <> (TODO: Link to section on runtimes once complete.)
 
+## Adding an Async Runtime
 Here, we'll use an executor from the `async-std` crate.
 The `#[async_std::main]` attribute from `async-std` allows us to write an asynchronous main function.
 To use it, enable the `attributes` feature of `async-std` in `Cargo.toml`:
@@ -45,13 +46,17 @@ version = "1.6"
 features = ["attributes"]
 ```
 
-It might be tempting to write something like this:
+As a first step, we'll swap to the asynchronous main function,
+and `await` the future returned by the async version of `handle_connection`.
+Then, we'll test how the server responds.
+Here's what that would look like:
 ```rust
 {{#include ../../examples/08_02_async_tcp_server/src/main.rs:main_func}}
 ```
+Now, let's test to see if our server can handle connections concurrently.
+Simply making `handle_connection` asynchronous doesn't mean that the server
+can handle multiple connections at the same time, and we'll soon see why.
 
-However, just because this program uses an asynchronous connection handler
-doesn't mean that it handles connections concurrently.
 To illustrate this, let's simulate a slow request.
 When a client makes a request to `127.0.0.1:7878/sleep`,
 our server will sleep for 5 seconds:
@@ -62,7 +67,7 @@ our server will sleep for 5 seconds:
 This is very similar to the 
 [simulation of a slow request](https://doc.rust-lang.org/book/ch20-02-multithreaded.html#simulating-a-slow-request-in-the-current-server-implementation)
 from the Book, but with one important difference:
-we're using the non-blocking `async_std::task::sleep` instead of `std::thread::sleep`, which blocks.
+we're using the non-blocking function `async_std::task::sleep` instead of the blocking function `std::thread::sleep`.
 It's important to remember that even if a piece of code is run within an `async fn` and `await`ed, it may still block.
 To test whether our server handles connections concurrently, we'll need to ensure that `handle_connection` is non-blocking.
 

@@ -1,21 +1,24 @@
 use std::fs;
-use std::time::{Duration, Instant};
 
-use futures::join;
+use futures::stream::StreamExt;
 
 use async_std::net::TcpListener;
 use async_std::prelude::*;
+// ANCHOR: main_func
 use async_std::task::spawn;
 
 #[async_std::main]
 async fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").await.unwrap();
-
-    loop {
-        let (stream, _) = listener.accept().await.unwrap();
-        spawn(handle_connection(stream));
-    }
+    listener
+        .incoming()
+        .for_each_concurrent(/* limit */ None, |stream| async move {
+            let stream = stream.unwrap();
+            spawn(handle_connection(stream));
+        })
+        .await;
 }
+// ANCHOR_END: main_func
 
 use async_std::io::{Read, Write};
 use std::marker::Unpin;
@@ -33,43 +36,6 @@ async fn handle_connection(mut stream: impl Read + Write + Unpin) {
     let response = format!("{}{}", status_line, contents);
     stream.write(response.as_bytes()).await.unwrap();
     stream.flush().await.unwrap();
-}
-
-// ANCHOR: slow_functions
-use async_std::task::sleep;
-
-async fn write_to_database() {
-    // Simulate a slow request
-    sleep(Duration::from_secs(2)).await;
-}
-
-async fn add_to_queue() {
-    // Simulate a slow request
-    sleep(Duration::from_secs(3)).await;
-}
-// ANCHOR_END: slow_functions
-
-async fn foo() {
-    // ANCHOR: serial_execution
-    let now = Instant::now();
-    write_to_database().await;
-    add_to_queue().await;
-    println!(
-        "Write to database + add to queue took {} seconds",
-        now.elapsed().as_secs()
-    );
-    // ANCHOR_END: serial_execution
-}
-
-async fn bar() {
-    // ANCHOR: parallel_execution
-    let now = Instant::now();
-    join!(write_to_database(), add_to_queue());
-    println!(
-        "Write to database + add to queue took {} seconds",
-        now.elapsed().as_secs()
-    );
-    // ANCHOR_END: parallel_execution
 }
 
 #[cfg(test)]
