@@ -1,7 +1,9 @@
 # Running Asynchronous Code
-An HTTP server should be able to serve multiple clients concurrently.
-Waiting for previous requests to complete before handling the current request can cause performance to suffer.
-The book [solves this problem](https://doc.rust-lang.org/book/ch20-02-multithreaded.html#turning-our-single-threaded-server-into-a-multithreaded-server) by creating a thread pool where each connection is handled on its own thread.
+An HTTP server should be able to serve multiple clients concurrently;
+that is, it should not wait for previous requests to complete before handling the current request.
+The book
+[solves this problem](https://doc.rust-lang.org/book/ch20-02-multithreaded.html#turning-our-single-threaded-server-into-a-multithreaded-server)
+by creating a thread pool where each connection is handled on its own thread.
 Here, instead of improving throughput by adding threads, we'll achieve the same effect using asynchronous code.
 
 Let's modify `handle_connection` to return a future by declaring it an `async fn`:
@@ -71,7 +73,8 @@ we're using the non-blocking function `async_std::task::sleep` instead of the bl
 It's important to remember that even if a piece of code is run within an `async fn` and `await`ed, it may still block.
 To test whether our server handles connections concurrently, we'll need to ensure that `handle_connection` is non-blocking.
 
-If you run the server, you'll see that a request to `127.0.0.1:7878/sleep` will block any other incoming requests for 5 seconds!
+If you run the server, you'll see that a request to `127.0.0.1:7878/sleep`
+will block any other incoming requests for 5 seconds!
 This is because there are no other concurrent tasks that can make progress
 while we are `await`ing the result of `handle_connection`.
-We'll see how to avoid this in the next section.
+In the next section, we'll see how to use async code to handle connections concurrently.

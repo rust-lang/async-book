@@ -39,6 +39,7 @@ localhost
 LocalExecutor
 metadata
 MockTcpStream
+multi
 multithreaded
 multithreading
 Mutex

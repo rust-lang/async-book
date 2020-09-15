@@ -28,7 +28,7 @@
 - [Final Project: HTTP Server](08_example/00_intro.md)
   - [Running Asynchronous Code](08_example/01_running_async_code.md)
   - [Handling Connections Concurrently](08_example/02_handling_connections_concurrently.md)
-  - [Adding Parallelism](08_example/03_multithreading.md)
+  - [Serving Requests in Parallel](08_example/03_multithreading.md)
   - [Testing the Server](08_example/04_tests.md)
 - [TODO: I/O](404.md)
   - [TODO: `AsyncRead` and `AsyncWrite`](404.md)
