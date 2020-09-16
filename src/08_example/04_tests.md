@@ -1,7 +1,8 @@
 # Testing the TCP Server
 Let's move on to testing our `handle_connection` function.
+
 First, we need a `TcpStream` to work with.
-In an end-to-end or integration test, we might want a to make a real TCP connection
+In an end-to-end or integration test, we might want to make a real TCP connection
 to test our code.
 One strategy for doing this is to start a listener on `localhost` port 0.
 Port 0 isn't a valid UNIX port, but it'll work for testing.

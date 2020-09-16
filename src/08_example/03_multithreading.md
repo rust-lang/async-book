@@ -10,7 +10,7 @@ Tasks can either be run on the thread that created them or on a separate thread.
 Async runtimes often provide functionality for spawning tasks onto separate threads.
 Even if tasks are executed on separate threads, they should still be non-blocking.
 
-Some runtimes provide functions for spawning blocking tasks onto separate threads,
+Some runtimes provide functions for spawning blocking tasks onto dedicated threads,
 which is useful for running synchronous code from other libraries.
 Tasks are usually required to be `Send`, so they can be moved to separate threads.
 Some runtimes also provide functions for spawning non-`Send` tasks onto a thread-local executor.
