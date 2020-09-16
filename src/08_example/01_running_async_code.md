@@ -48,7 +48,7 @@ version = "1.6"
 features = ["attributes"]
 ```
 
-As a first step, we'll swap to the asynchronous main function,
+As a first step, we'll switch to an asynchronous main function,
 and `await` the future returned by the async version of `handle_connection`.
 Then, we'll test how the server responds.
 Here's what that would look like:
