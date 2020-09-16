@@ -27,9 +27,9 @@ We'll need to import the `Stream` trait from the `futures` crate, so our Cargo.t
 +[dependencies]
 +futures = "0.3"
 
-[dependencies.async-std]
-version = "1.6"
-features = ["attributes"]
+ [dependencies.async-std]
+ version = "1.6"
+ features = ["attributes"]
 ```
 
 Now, we can handle each connection concurrently by passing `handle_connection` in through a closure function.

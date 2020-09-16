@@ -3,9 +3,9 @@ Let's move on to testing our `handle_connection` function.
 First, we need a `TcpStream` to work with.
 In an end-to-end or integration test, we might want a to make a real TCP connection
 to test our code.
-One strategy for doing this could be to connect to `localhost` on port 0.
+One strategy for doing this is to start a listener on `localhost` port 0.
 Port 0 isn't a valid UNIX port, but it'll work for testing.
-The operating system will return a connection on any open TCP port.
+The operating system will pick an open TCP port for us.
 
 Instead, in this example we'll write a unit test for the connection handler,
 to check that the correct responses are returned for the respective inputs.
