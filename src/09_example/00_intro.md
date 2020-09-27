@@ -7,17 +7,17 @@ Here's what the code looked like at the end of the lesson.
 
 `src/main.rs`:
 ```rust
-{{#include ../../examples/08_01_sync_tcp_server/src/main.rs}}
+{{#include ../../examples/09_01_sync_tcp_server/src/main.rs}}
 ```
 
 `hello.html`:
 ```html
-{{#include ../../examples/08_01_sync_tcp_server/hello.html}}
+{{#include ../../examples/09_01_sync_tcp_server/hello.html}}
 ```
 
 `404.html`:
 ```html
-{{#include ../../examples/08_01_sync_tcp_server/404.html}}
+{{#include ../../examples/09_01_sync_tcp_server/404.html}}
 ```
 
 If you run the server with `cargo run` and visit `127.0.0.1:7878` in your browser,

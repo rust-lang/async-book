@@ -8,7 +8,7 @@ Here, instead of improving throughput by adding threads, we'll achieve the same 
 
 Let's modify `handle_connection` to return a future by declaring it an `async fn`:
 ```rust,ignore
-{{#include ../../examples/08_02_async_tcp_server/src/main.rs:handle_connection_async}}
+{{#include ../../examples/09_02_async_tcp_server/src/main.rs:handle_connection_async}}
 ```
 
 Adding `async` to the function declaration changes its return type
@@ -34,9 +34,8 @@ you'll see that the connection is refused; our server is not handling requests.
 
 We can't `await` or `poll` futures within synchronous code by itself.
 We'll need an asynchronous runtime to handle scheduling and running futures to completion.
-Please consult the section on choosing a runtime for more information on asynchronous runtimes, executors, and reactors.
-
-[//]: <> (TODO: Link to section on runtimes once complete.)
+Please consult the [section on choosing a runtime](../08_ecosystem/00_chapter.md)
+for more information on asynchronous runtimes, executors, and reactors.
 
 ## Adding an Async Runtime
 Here, we'll use an executor from the `async-std` crate.
@@ -53,7 +52,7 @@ and `await` the future returned by the async version of `handle_connection`.
 Then, we'll test how the server responds.
 Here's what that would look like:
 ```rust
-{{#include ../../examples/08_02_async_tcp_server/src/main.rs:main_func}}
+{{#include ../../examples/09_02_async_tcp_server/src/main.rs:main_func}}
 ```
 Now, let's test to see if our server can handle connections concurrently.
 Simply making `handle_connection` asynchronous doesn't mean that the server
@@ -64,7 +63,7 @@ When a client makes a request to `127.0.0.1:7878/sleep`,
 our server will sleep for 5 seconds:
 
 ```rust,ignore
-{{#include ../../examples/08_03_slow_request/src/main.rs:handle_connection}}
+{{#include ../../examples/09_03_slow_request/src/main.rs:handle_connection}}
 ```
 This is very similar to the 
 [simulation of a slow request](https://doc.rust-lang.org/book/ch20-02-multithreaded.html#simulating-a-slow-request-in-the-current-server-implementation)

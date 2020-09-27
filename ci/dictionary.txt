@@ -31,6 +31,7 @@ Hyper's
 impl
 init
 interoperate
+interprocess
 IoBlocker
 IOCP
 IoObject
@@ -76,6 +77,7 @@ spawner
 StepOne
 StepTwo
 struct
+structs
 subfuture
 subfutures
 subpar
@@ -89,6 +91,7 @@ toml
 TryFutureExt
 tuple
 turbofish
+UnixStream
 usize
 utils
 Waker
