@@ -48,7 +48,7 @@ individually:
 {{#include ../../examples/01_04_async_await_primer/src/lib.rs:block_on_each}}
 ```
 
-However, we're not giving the best performance possible this way-- we're
+However, we're not giving the best performance possible this way—we're
 only ever doing one thing at once! Clearly we have to learn the song before
 we can sing it, but it's possible to dance at the same time as learning and
 singing the song. To do this, we can create two separate `async fn` which
