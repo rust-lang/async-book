@@ -33,7 +33,7 @@ enum Recursive {
 }
 ```
 
-This won't work-- we've created an infinitely-sized type!
+This won't work—we've created an infinitely-sized type!
 The compiler will complain:
 
 ```
