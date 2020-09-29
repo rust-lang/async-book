@@ -28,11 +28,11 @@ warning: unused implementer of `std::future::Future` that must be used
    = note: futures do nothing unless you `.await` or poll them
 ```
 
-Because we haven't `await`ed or `poll`ed the result of `handle_connection`,
+Because we haven't `.await`ed or `poll`ed the result of `handle_connection`,
 it'll never run. If you run the server and visit `127.0.0.1:7878` in a browser,
 you'll see that the connection is refused; our server is not handling requests.
 
-We can't `await` or `poll` futures within synchronous code by itself.
+We can't `.await` or `poll` futures within synchronous code by itself.
 We'll need an asynchronous runtime to handle scheduling and running futures to completion.
 Please consult the section on choosing a runtime for more information on asynchronous runtimes, executors, and reactors.
 
@@ -49,7 +49,7 @@ features = ["attributes"]
 ```
 
 As a first step, we'll switch to an asynchronous main function,
-and `await` the future returned by the async version of `handle_connection`.
+and `.await` the future returned by the async version of `handle_connection`.
 Then, we'll test how the server responds.
 Here's what that would look like:
 ```rust
@@ -70,11 +70,11 @@ This is very similar to the
 [simulation of a slow request](https://doc.rust-lang.org/book/ch20-02-multithreaded.html#simulating-a-slow-request-in-the-current-server-implementation)
 from the Book, but with one important difference:
 we're using the non-blocking function `async_std::task::sleep` instead of the blocking function `std::thread::sleep`.
-It's important to remember that even if a piece of code is run within an `async fn` and `await`ed, it may still block.
+It's important to remember that even if a piece of code is run within an `async fn` and `.await`ed, it may still block.
 To test whether our server handles connections concurrently, we'll need to ensure that `handle_connection` is non-blocking.
 
 If you run the server, you'll see that a request to `127.0.0.1:7878/sleep`
 will block any other incoming requests for 5 seconds!
 This is because there are no other concurrent tasks that can make progress
-while we are `await`ing the result of `handle_connection`.
+while we are `.await`ing the result of `handle_connection`.
 In the next section, we'll see how to use async code to handle connections concurrently.
