@@ -61,7 +61,7 @@ mod tests {
             buf: &mut [u8],
         ) -> Poll<Result<usize, Error>> {
             let size: usize = min(self.read_data.len(), buf.len());
-            buf.copy_from_slice(&self.read_data[..size]);
+            buf[..size].copy_from_slice(&self.read_data[..size]);
             Poll::Ready(Ok(size))
         }
     }
