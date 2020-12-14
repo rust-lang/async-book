@@ -4,7 +4,7 @@ Parts of async Rust are supported with the same stability guarantees as
 regular Rust. Other parts are still maturing and will change over time.
 Compared to regular Rust, you can expect:
 
-- Outstanding runtime performance.
+- Outstanding runtime performance for typical concurrent workloads.
 - More frequent interaction with advanced language features, such as lifetimes
   and pinning.
 - Some compatibility constraints, both between sync and async code, and between
@@ -70,13 +70,14 @@ it would be in regular Rust.
 A few novel failure modes are possible in async Rust, for instance
 if you call a blocking function from an async context or if you implement
 the `Future` trait incorrectly. Such errors can silently pass both the
-compiler and sometimes even unit tests. These pitfalls are easy to avoid through
-awareness.
+compiler and sometimes even unit tests. Having a firm understanding
+of the underlying concepts, which this book aims to give you, can help you
+avoid these pitfalls.
 
 ## Compatibility considerations
 
 Asynchronous and synchronous code cannot always be combined freely.
-For instance, you can't call an async function from a sync function.
+For instance, you can't directly call an async function from a sync function.
 Sync and async code also tend to promote different design patterns, which can
 make it difficult to compose code intended for the different environments.
 
@@ -84,16 +85,17 @@ Even async code cannot always be combined freely. Some crates depend on a
 specific async runtime to function. If so, it is usually specified in the
 crate's dependency list.
 
-These compatibility issues can limit your options, so make sure to thoroughly
-research which async runtime and what crates you may need as early as
-possible. Once you have settled in with a runtime, you won't have to worry
-about compatibility much.
+These compatibility issues can limit your options, so make sure to
+research which async runtime and what crates you may need early.
+Once you have settled in with a runtime, you won't have to worry
+much about compatibility.
 
 ## Performance characteristics
 
 The CPU and memory overhead of async is typically significantly
-lower compared to using OS threads, especially when you have many lightweight
-tasks. Together with Rust's zero-cost abstractions, async Rust is one of the
+lower compared to using OS threads directly, especially for workloads with a
+large amount of IO-bound tasks, such as servers.
+Together with Rust's zero-cost abstractions, async Rust is one of the
 most performant concurrency environments available.
 The choice of an async runtime also impacts performance characteristics, but
 to a lesser extent.
