@@ -1,8 +1,8 @@
 # The State of Asynchronous Rust
 
 Parts of async Rust are supported with the same stability guarantees as
-regular Rust. Other parts are still maturing and will change over time.
-Compared to regular Rust, you can expect:
+synchronous Rust. Other parts are still maturing and will change
+over time. With async Rust, you can expect:
 
 - Outstanding runtime performance for typical concurrent workloads.
 - More frequent interaction with advanced language features, such as lifetimes
@@ -13,7 +13,7 @@ Compared to regular Rust, you can expect:
   and language support.
 
 In short, async Rust is more difficult to use and can result in a higher
-maintenance burden than regular Rust,
+maintenance burden than synchronous Rust,
 but gives you best-in-class performance in return.
 All areas of async Rust are constantly improving,
 so the impact of these issues will wear off over time.
@@ -39,7 +39,7 @@ language features and library support:
   ["The Async Ecosystem"](../02_execution/01_chapter.md) section for more
   details.
 
-Some language features you may be used to from regular Rust are not yet
+Some language features you may be used to from synchronous Rust are not yet
 available in async Rust. Notably, Rust does not let you declare async
 functions in traits. Instead, you need to use workarounds to achieve the same
 result, which can be more verbose.
@@ -53,7 +53,7 @@ noteworthy differences:
 ### Compilation errors
 
 Compilation errors in async Rust conform to the same high standards as
-regular Rust, but since async Rust often depends on more complex language
+synchronous Rust, but since async Rust often depends on more complex language
 features, such as lifetimes and pinning, you may encounter these types of
 errors more frequently.
 
@@ -63,7 +63,7 @@ Whenever the compiler encounters an async function, it generates a state
 machine under the hood. Stack traces in async Rust typically contain details
 from these state machines, as well as function calls from
 the runtime. As such, interpreting stack traces can be a bit more involved than
-it would be in regular Rust.
+it would be in synchronous Rust.
 
 ### New failure modes
 
