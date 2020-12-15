@@ -1,24 +1,107 @@
 # The State of Asynchronous Rust
 
-The asynchronous Rust ecosystem has undergone a lot of evolution over time,
-so it can be hard to know what tools to use, what libraries to invest in,
-or what documentation to read. However, the `Future` trait inside the standard
-library and the `async`/`await` language feature has recently been stabilized.
-The ecosystem as a whole is therefore in the midst of migrating
-to the newly-stabilized API, after which point churn will be significantly
-reduced.
+Parts of async Rust are supported with the same stability guarantees as
+synchronous Rust. Other parts are still maturing and will change
+over time. With async Rust, you can expect:
 
-At the moment, however, the ecosystem is still undergoing rapid development
-and the asynchronous Rust experience is unpolished. Most libraries still
-use the 0.1 definitions of the `futures` crate, meaning that to interoperate
-developers frequently need to reach for the `compat` functionality from the
-0.3 `futures` crate. The `async`/`await` language feature is still new.
-Important extensions like `async fn` syntax in trait methods are still
-unimplemented, and the current compiler error messages can be difficult to
-parse.
+- Outstanding runtime performance for typical concurrent workloads.
+- More frequent interaction with advanced language features, such as lifetimes
+  and pinning.
+- Some compatibility constraints, both between sync and async code, and between
+  different async runtimes.
+- Higher maintenance burden, due to the ongoing evolution of async runtimes
+  and language support.
 
-That said, Rust is well on its way to having some of the most performant
-and ergonomic support for asynchronous programming around, and if you're not
-afraid of doing some spelunking, enjoy your dive into the world of
-asynchronous programming in Rust!
+In short, async Rust is more difficult to use and can result in a higher
+maintenance burden than synchronous Rust,
+but gives you best-in-class performance in return.
+All areas of async Rust are constantly improving,
+so the impact of these issues will wear off over time.
 
+## Language and library support
+
+While asynchronous programming is supported by Rust itself,
+most async applications depend on functionality provided
+by community crates.
+As such, you need to rely on a mixture of
+language features and library support:
+
+- The most fundamental traits, types and functions, such as the
+  [`Future`](https://doc.rust-lang.org/std/future/trait.Future.html) trait
+  are provided by the standard library.
+- The `async/await` syntax is supported directly by the Rust compiler.
+- Many utility types, macros and functions are provided by the
+  [`futures`](https://docs.rs/futures/) crate. They can be used in any async
+  Rust application.
+- Execution of async code, IO and task spawning are provided by "async
+  runtimes", such as Tokio and async-std. Most async applications, and some
+  async crates, depend on a specific runtime. See
+  ["The Async Ecosystem"](../02_execution/01_chapter.md) section for more
+  details.
+
+Some language features you may be used to from synchronous Rust are not yet
+available in async Rust. Notably, Rust does not let you declare async
+functions in traits. Instead, you need to use workarounds to achieve the same
+result, which can be more verbose.
+
+## Compiling and debugging
+
+For the most part, compiler- and runtime errors in async Rust work
+the same way as they have always done in Rust. There are a few
+noteworthy differences:
+
+### Compilation errors
+
+Compilation errors in async Rust conform to the same high standards as
+synchronous Rust, but since async Rust often depends on more complex language
+features, such as lifetimes and pinning, you may encounter these types of
+errors more frequently.
+
+### Runtime errors
+
+Whenever the compiler encounters an async function, it generates a state
+machine under the hood. Stack traces in async Rust typically contain details
+from these state machines, as well as function calls from
+the runtime. As such, interpreting stack traces can be a bit more involved than
+it would be in synchronous Rust.
+
+### New failure modes
+
+A few novel failure modes are possible in async Rust, for instance
+if you call a blocking function from an async context or if you implement
+the `Future` trait incorrectly. Such errors can silently pass both the
+compiler and sometimes even unit tests. Having a firm understanding
+of the underlying concepts, which this book aims to give you, can help you
+avoid these pitfalls.
+
+## Compatibility considerations
+
+Asynchronous and synchronous code cannot always be combined freely.
+For instance, you can't directly call an async function from a sync function.
+Sync and async code also tend to promote different design patterns, which can
+make it difficult to compose code intended for the different environments.
+
+Even async code cannot always be combined freely. Some crates depend on a
+specific async runtime to function. If so, it is usually specified in the
+crate's dependency list.
+
+These compatibility issues can limit your options, so make sure to
+research which async runtime and what crates you may need early.
+Once you have settled in with a runtime, you won't have to worry
+much about compatibility.
+
+## Performance characteristics
+
+The CPU and memory overhead of async is typically significantly
+lower compared to using OS threads directly, especially for workloads with a
+large amount of IO-bound tasks, such as servers.
+Together with Rust's zero-cost abstractions, async Rust is one of the
+most performant concurrency environments available.
+The choice of an async runtime also impacts performance characteristics, but
+to a lesser extent.
+
+That said, async Rust can result in larger binary sizes, both due to the state
+machines that are generated from async functions and because each executable
+needs to bundle an async runtime. Additionally, the existing async runtimes do
+not support fine-tuned scheduling of tasks, which can be necessary in some
+latency-sensitive applications.
