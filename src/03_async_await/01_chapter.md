@@ -1,7 +1,7 @@
 # `async`/`.await`
 
-In [the first chapter], we took a brief look at `async`/`.await` and used
-it to build a simple server. This chapter will discuss `async`/`.await` in
+In [the first chapter], we took a brief look at `async`/`.await`.
+This chapter will discuss `async`/`.await` in
 greater detail, explaining how it works and how `async` code differs from
 traditional Rust programs.
 

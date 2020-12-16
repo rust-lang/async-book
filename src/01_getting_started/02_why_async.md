@@ -12,7 +12,7 @@ different threads, like this:
 {{#include ../../examples/01_02_why_async/src/lib.rs:get_two_sites}}
 ```
 
-This works fine for many applications-- after all, threads were designed
+This works fine for many applications—after all, threads were designed
 to do just this: run multiple different tasks at once. However, they also
 come with some limitations. There's a lot of overhead involved in the
 process of switching between different threads and sharing data between
@@ -29,7 +29,7 @@ once without creating multiple threads:
 Overall, asynchronous applications have the potential to be much faster and
 use fewer resources than a corresponding threaded implementation. However,
 there is a cost. Threads are natively supported by the operating system,
-and using them doesn't require any special programming model-- any function
+and using them doesn't require any special programming model—any function
 can create a thread, and calling a function that uses threads is usually
 just as easy as calling any normal function. However, asynchronous functions
 require special support from the language or libraries.

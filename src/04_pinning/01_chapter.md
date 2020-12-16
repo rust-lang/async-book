@@ -307,7 +307,7 @@ The diagram below can help visualize what's going on:
 **Fig 1: Before and after swap**
 ![swap_problem](../assets/swap_problem.jpg)
 
-It's easy to get this to show UB and fail in other spectacular ways as well.
+It's easy to get this to show undefined behavior and fail in other spectacular ways as well.
 
 ## Pinning in Practice
 
