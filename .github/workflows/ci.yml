@@ -10,7 +10,7 @@ jobs:
   test:
     name: build and test
     env:
-      MDBOOK_VERSION: 0.4.4
+      MDBOOK_VERSION: 0.4.5
       MDBOOK_LINKCHECK_VERSION: 0.7.0
     runs-on: ubuntu-latest
     steps:
