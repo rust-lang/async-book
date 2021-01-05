@@ -10,17 +10,17 @@ jobs:
   test:
     name: build and test
     env:
-      MDBOOK_VERSION: 0.4.5
       MDBOOK_LINKCHECK_VERSION: 0.7.0
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Install Rust
         run: rustup update stable && rustup default stable
-      - run: sudo apt-get install aspell aspell-en
+      - run: sudo apt-get update && sudo apt-get install aspell aspell-en
       - name: Install mdbook and mdbook-linkcheck
         run: |
-          curl -LsSf https://github.com/rust-lang/mdBook/releases/download/v${MDBOOK_VERSION}/mdbook-v${MDBOOK_VERSION}-x86_64-unknown-linux-gnu.tar.gz | tar xzf -
+          tag=$(curl -LsSf https://api.github.com/repos/rust-lang/mdBook/releases/latest | jq -r '.tag_name')
+          curl -LsSf https://github.com/rust-lang/mdBook/releases/download/$tag/mdbook-$tag-x86_64-unknown-linux-gnu.tar.gz | tar xzf -
           curl -LsSf https://github.com/Michael-F-Bryan/mdbook-linkcheck/releases/download/v${MDBOOK_LINKCHECK_VERSION}/mdbook-linkcheck-v${MDBOOK_LINKCHECK_VERSION}-x86_64-unknown-linux-gnu.tar.gz | tar xzf -
           echo $(pwd) >> $GITHUB_PATH
       - run: bash ci/spellcheck.sh list
@@ -30,4 +30,4 @@ jobs:
         with:
           deploy_dir: book/html
           github_token: ${{ secrets.GITHUB_TOKEN }}
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository == 'rust-lang/async-book'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'rust-lang'
