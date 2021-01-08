@@ -36,7 +36,7 @@ language features and library support:
 - Execution of async code, IO and task spawning are provided by "async
   runtimes", such as Tokio and async-std. Most async applications, and some
   async crates, depend on a specific runtime. See
-  ["The Async Ecosystem"](../02_execution/01_chapter.md) section for more
+  ["The Async Ecosystem"](../08_ecosystem/00_chapter.md) section for more
   details.
 
 Some language features you may be used to from synchronous Rust are not yet
