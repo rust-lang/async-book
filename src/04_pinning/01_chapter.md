@@ -328,7 +328,7 @@ However, types that can't be moved after they're pinned have a marker called
 ### Pinning to the Stack
 
 Back to our example. We can solve our problem by using `Pin`. Let's take a look at what
-our example would look like we required a pinned pointer instead:
+our example would look like if we required a pinned pointer instead:
 
 ```rust, ignore
 use std::pin::Pin;
