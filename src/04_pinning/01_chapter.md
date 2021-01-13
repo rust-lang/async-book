@@ -134,7 +134,8 @@ impl Test {
     }
 
     fn b(&self) -> &String {
-        unsafe {&*(self.b)}
+        assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
+        unsafe { &*(self.b) }
     }
 }
 ```
@@ -183,7 +184,8 @@ fn main() {
 #     }
 #
 #     fn b(&self) -> &String {
-#         unsafe {&*(self.b)}
+#         assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
+#         unsafe { &*(self.b) }
 #     }
 # }
 ```
@@ -233,7 +235,8 @@ fn main() {
 #     }
 #
 #     fn b(&self) -> &String {
-#         unsafe {&*(self.b)}
+#         assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
+#         unsafe { &*(self.b) }
 #     }
 # }
 ```
@@ -297,7 +300,8 @@ fn main() {
 #     }
 #
 #     fn b(&self) -> &String {
-#         unsafe {&*(self.b)}
+#         assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
+#         unsafe { &*(self.b) }
 #     }
 # }
 ```
@@ -361,6 +365,7 @@ impl Test {
     }
 
     fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+        assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
         unsafe { &*(self.b) }
     }
 }
@@ -418,6 +423,7 @@ pub fn main() {
 #     }
 #
 #     fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+#         assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
 #         unsafe { &*(self.b) }
 #     }
 # }
@@ -469,6 +475,7 @@ pub fn main() {
 #     }
 #
 #     fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+#         assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
 #         unsafe { &*(self.b) }
 #     }
 # }
@@ -529,6 +536,7 @@ The type system prevents us from moving the data.
 > #     }
 > #
 > #     fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+> #         assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
 > #         unsafe { &*(self.b) }
 > #     }
 > # }
