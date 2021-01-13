@@ -3,7 +3,7 @@ title = "Asynchronous Programming in Rust"
 authors = ["Taylor Cramer"]
 
 [build]
-create-missing = true
+create-missing = false
 
 [preprocess.links]
 
