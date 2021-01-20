@@ -92,16 +92,15 @@ much about compatibility.
 
 ## Performance characteristics
 
-The CPU and memory overhead of async is typically significantly
-lower compared to using OS threads directly, especially for workloads with a
-large amount of IO-bound tasks, such as servers.
-Together with Rust's zero-cost abstractions, async Rust is one of the
-most performant concurrency environments available.
-The choice of an async runtime also impacts performance characteristics, but
-to a lesser extent.
+The performance of async Rust depends on the implementation of the
+async runtime you are using.
+Even though the runtimes that power async Rust applications are relatively new,
+they perform exceptionally well for most practical workloads.
 
-That said, async Rust can result in larger binary sizes, both due to the state
-machines that are generated from async functions and because each executable
-needs to bundle an async runtime. Additionally, the existing async runtimes do
-not support fine-tuned scheduling of tasks, which can be necessary in some
-latency-sensitive applications.
+That said, most of the async ecosystem assumes a _multi-threaded_ runtime.
+This makes it difficult to enjoy the theoretical performance benefits
+of single-threaded async applications, namely cheaper synchronization.
+Another overlooked use-case is _latency sensitive tasks_, which are
+important for drivers, GUI applications and so on. Such tasks depend
+on runtime and/or OS support in order to be scheduled appropriately.
+You can expect better library support for these use cases in the future.

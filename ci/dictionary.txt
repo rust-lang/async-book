@@ -13,6 +13,7 @@ combinator
 combinators
 compat
 const
+coroutines
 dyn
 enqueued
 enum
@@ -29,6 +30,7 @@ html
 http
 Hyper's
 impl
+implementors
 init
 interoperate
 interprocess
