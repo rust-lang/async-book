@@ -12,15 +12,17 @@ look and feel of ordinary synchronous programming, through the
 
 ## Async vs other concurrency models
 
-Since the inception of concurrent programming, several models have been
-proposed with the intention of making concurrency simple and performant.
-Although details vary between different languages and frameworks,
-a brief overview of the main categories can help you understand how
-asynchronous programming fits within the broader field of concurrent programming:
+Concurrent programming is less mature and "standardized" than
+regular, sequential programming. As a result, we express concurrency
+differently depending on which concurrent programming model
+the language is supporting.
+A brief overview of the most popular concurrency models can help
+you understand how asynchronous programming fits within the broader
+field of concurrent programming:
 
 - **OS threads** don't require any changes to the programming model,
-  which makes them easier to
-  use than async. However, they come with a large performance overhead.
+  which makes it very easy to express concurrency. However, synchronizing
+  between threads can be difficult, and the performance overhead is large.
   Thread pools can mitigate some of these costs, but not enough to support
   massive IO-bound workloads.
 - **Event-driven programming**, in conjunction with _callbacks_, can be very
@@ -47,10 +49,10 @@ differs from most languages in a few ways:
 
 - **Futures are inert** in Rust and make progress only when polled. Dropping a
   future stops it from making further progress.
-- **Async is zero-cost** in Rust, and does not require heap allocations or
-  dynamic dispatch.
-  As such, you can use async Rust in constrained environments, such as embedded
-  systems.
+- **Async is zero-cost** in Rust, which means that you only pay for what you use.
+  Specifically, you can use async without heap allocations and dynamic dispatch,
+  which is great for performance!
+  This also lets you use async in constrained environments, such as embedded systems.
 - **No built-in runtime** is provided by Rust. Instead, runtimes are provided by
   community maintained crates.
 - **Both single- and multithreaded** runtimes are available in Rust, which have
@@ -66,10 +68,6 @@ typically requires major refactoring work, both in terms of implementation and
 (if you are building a library) any exposed public interfaces. As such,
 picking the model that suits your needs early can save a lot of development time.
 
-Note that asynchronous programming is not _better_ than threads, but different.
-If you don't need async for performance reasons, threads can often be
-the simpler alternative. Specifically:
-
 **OS threads** are suitable for a small number of tasks, since threads come with
 CPU and memory overhead. Spawning and switching between threads
 is quite expensive as even idle threads consume system resources.
@@ -82,10 +80,17 @@ which is useful for drivers and other latency sensitive applications.
 **Async** provides significantly reduced CPU and memory
 overhead, especially for workloads with a
 large amount of IO-bound tasks, such as servers and databases.
-All else equal, you can have orders of magnitude more tasks than OS threads.
+All else equal, you can have orders of magnitude more tasks than OS threads,
+because an async runtime uses a small amount of (expensive) threads to handle
+a large amount of (cheap) tasks.
 However, async Rust results in larger binary blobs due to the state
 machines generated from async functions and since each executable
 bundles an async runtime.
+
+On a last note, asynchronous programming is not _better_ than threads,
+but different.
+If you don't need async for performance reasons, threads can often be
+the simpler alternative.
 
 ### Example: Concurrent downloading
 
@@ -111,7 +116,7 @@ dispatched, and there are no heap allocations!
 However, we need to write the code to be asynchronous in the first place,
 which this book will help you achieve.
 
-## Other concurrency models
+## Custom concurrency models in Rust
 
 On a last note, Rust doesn't force you to choose between threads and async.
 You can use both models within the same application, which can be
