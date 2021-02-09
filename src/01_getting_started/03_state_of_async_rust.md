@@ -93,7 +93,7 @@ much about compatibility.
 ## Performance characteristics
 
 The performance of async Rust depends on the implementation of the
-async runtime you are using.
+async runtime you're using.
 Even though the runtimes that power async Rust applications are relatively new,
 they perform exceptionally well for most practical workloads.
 

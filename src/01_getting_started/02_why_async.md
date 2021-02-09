@@ -1,6 +1,6 @@
 # Why Async?
 
-We all love how Rust allows us to write fast, safe software.
+We all love how Rust empowers us to write fast, safe software.
 But how does asynchronous programming fit into this vision?
 
 Asynchronous programming, or async for short, is a _concurrent programming model_
@@ -16,7 +16,7 @@ Since the inception of concurrent programming, several models have been
 proposed with the intention of making concurrency simple and performant.
 Although details vary between different languages and frameworks,
 a brief overview of the main categories can help you understand how
-asynchronous programming fits within the field of concurrent programming:
+asynchronous programming fits within the broader field of concurrent programming:
 
 - **OS threads** don't require any changes to the programming model,
   which makes them easier to
@@ -32,10 +32,10 @@ asynchronous programming fits within the field of concurrent programming:
   are important for systems programming and custom runtime implementors.
 - **The actor model** divides all concurrent computation into units called
   actors, which communicate through fallible message passing, much like
-  in distributed systems. It can be efficiently implemented, but it leaves
+  in distributed systems. The actor model can be efficiently implemented, but it leaves
   many practical issues unanswered, such as flow control and retry logic.
 
-In short, asynchronous programming allows highly performant implementations
+In summary, asynchronous programming allows highly performant implementations
 that are suitable for low-level languages like Rust, while providing
 most of the ergonomic benefits of threads and coroutines.
 
@@ -58,21 +58,21 @@ differs from most languages in a few ways:
 
 ## Async vs threads in Rust
 
-The most obvious alternative to async in Rust is using OS threads, either
+The primary alternative to async in Rust is using OS threads, either
 directly through [`std::thread`](https://doc.rust-lang.org/std/thread/)
 or indirectly through a thread pool.
 Migrating from threads to async or vice versa
 typically requires major refactoring work, both in terms of implementation and
 (if you are building a library) any exposed public interfaces. As such,
-picking the model that suits your needs early can save you a lot of time.
+picking the model that suits your needs early can save a lot of development time.
 
 Note that asynchronous programming is not _better_ than threads, but different.
 If you don't need async for performance reasons, threads can often be
-a simpler option. Specifically:
+the simpler alternative. Specifically:
 
 **OS threads** are suitable for a small number of tasks, since threads come with
 CPU and memory overhead. Spawning and switching between threads
-is quite expensive—even idle threads consume valuable system resources.
+is quite expensive as even idle threads consume system resources.
 A thread pool library can help mitigate some of these costs, but not all.
 However, threads let you reuse existing synchronous code without significant
 code changes—no particular programming model is required.
@@ -83,14 +83,14 @@ which is useful for drivers and other latency sensitive applications.
 overhead, especially for workloads with a
 large amount of IO-bound tasks, such as servers and databases.
 All else equal, you can have orders of magnitude more tasks than OS threads.
-That said, async Rust can result in larger binary sizes, both due to the state
-machines that are generated from async functions and because each executable
-needs to bundle an async runtime.
+However, async Rust results in larger binary blobs due to the state
+machines generated from async functions and since each executable
+bundles an async runtime.
 
 ### Example: Concurrent downloading
 
-In this example, our goal is to download two web pages concurrently.
-In a typical threaded application, we need to spawn threads
+In this example our goal is to download two web pages concurrently.
+In a typical threaded application we need to spawn threads
 to achieve concurrency:
 
 ```rust,ignore
