@@ -4,6 +4,10 @@ Importantly, executors, tasks, reactors, combinators, and low-level I/O futures 
 are not yet provided in the standard library. In the meantime,
 community-provided async ecosystems fill in these gaps.
 
+The Async Foundations Team is interested in extending examples in the Async Book to cover multiple runtimes.
+If you're interested in contributing to this project, please reach out to us on
+[Zulip](https://rust-lang.zulipchat.com/#narrow/stream/201246-wg-async-foundations.2Fbook).
+
 ## Async Runtimes
 Async runtimes are libraries used for executing async applications.
 Runtimes usually bundle together a *reactor* with one or more *executors*.

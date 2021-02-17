@@ -36,9 +36,11 @@ We can't `await` or `poll` futures within synchronous code by itself.
 We'll need an asynchronous runtime to handle scheduling and running futures to completion.
 Please consult the [section on choosing a runtime](../08_ecosystem/00_chapter.md)
 for more information on asynchronous runtimes, executors, and reactors.
+Any of the runtimes listed will work for this project, but for these examples,
+we've chosen to use the `async-std` crate.
 
 ## Adding an Async Runtime
-Here, we'll use an executor from the `async-std` crate.
+The following example will demonstrate refactoring synchronous code to use an async runtime; here, `async-std`.
 The `#[async_std::main]` attribute from `async-std` allows us to write an asynchronous main function.
 To use it, enable the `attributes` feature of `async-std` in `Cargo.toml`:
 ```toml
