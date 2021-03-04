@@ -9,6 +9,7 @@ create-missing = false
 
 [output.html]
 git-repository-url = "https://github.com/rust-lang/async-book"
+site-url = "/async-book/"
 
 [output.linkcheck]
 follow-web-links = true
