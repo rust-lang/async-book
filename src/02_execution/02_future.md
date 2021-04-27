@@ -1,9 +1,9 @@
 # The `Future` Trait
 
-The `Future` trait is at the center of asynchronous programming in Rust.
-A `Future` is an asynchronous computation that can produce a value
-(although that value may be empty, e.g. `()`). A *simplified* version of
-the future trait might look something like this:
+The `Future` trait is at the center of asynchronous programming in Rust. A
+`Future` is an asynchronous computation that can produce a value (although
+that value may be empty, e.g. `()`) and is typically expected to complete. A
+*simplified* version of the future trait might look something like this:
 
 ```rust
 {{#include ../../examples/02_02_future_trait/src/lib.rs:simple_future}}
