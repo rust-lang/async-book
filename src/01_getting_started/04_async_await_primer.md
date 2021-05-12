@@ -48,7 +48,7 @@ individually:
 {{#include ../../examples/01_04_async_await_primer/src/lib.rs:block_on_each}}
 ```
 
-However, we're not giving the best performance possible this way-- we're
+However, we're not giving the best performance possible this way—we're
 only ever doing one thing at once! Clearly we have to learn the song before
 we can sing it, but it's possible to dance at the same time as learning and
 singing the song. To do this, we can create two separate `async fn` which
@@ -66,6 +66,3 @@ This would make it impossible to dance at the same time. By `.await`-ing
 the `learn_song` future, we allow other tasks to take over the current thread
 if `learn_song` is blocked. This makes it possible to run multiple futures
 to completion concurrently on the same thread.
-
-Now that you've learned the basics of `async`/`await`, let's try out an
-example.

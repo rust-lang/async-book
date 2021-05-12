@@ -1,7 +1,7 @@
 # `async`/`.await`
 
-In [the first chapter], we took a brief look at `async`/`.await` and used
-it to build a simple server. This chapter will discuss `async`/`.await` in
+In [the first chapter], we took a brief look at `async`/`.await`.
+This chapter will discuss `async`/`.await` in
 greater detail, explaining how it works and how `async` code differs from
 traditional Rust programs.
 
@@ -72,7 +72,7 @@ This means that it is not safe to use `Rc`, `&RefCell` or any other types
 that don't implement the `Send` trait, including references to types that don't
 implement the `Sync` trait.
 
-(Caveat: it is possible to use these types so long as they aren't in scope
+(Caveat: it is possible to use these types as long as they aren't in scope
 during a call to `.await`.)
 
 Similarly, it isn't a good idea to hold a traditional non-futures-aware lock
