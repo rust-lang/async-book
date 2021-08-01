@@ -23,7 +23,8 @@ For the sake of the example, we'll just spin up a new thread when the timer
 is created, sleep for the required time, and then signal the timer future
 when the time window has elapsed.
 
-Here are the imports we'll need to get started:
+First, start a new project with `cargo new timer_future` and add the imports
+we'll need to get started to `src/lib.rs`:
 
 ```rust
 {{#include ../../examples/02_03_timer/src/lib.rs:imports}}
