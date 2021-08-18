@@ -22,8 +22,9 @@ jobs:
       - run: bash ci/spellcheck.sh list
       - run: mdbook build
       - run: cargo test --all --manifest-path=./examples/Cargo.toml --target-dir ./target
-      - uses: rust-lang/simpleinfra/github-actions/static-websites@master
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          deploy_dir: book/html
           github_token: ${{ secrets.GITHUB_TOKEN }}
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'rust-lang'
+          publish_dir: ./book
+
