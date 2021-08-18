@@ -11,6 +11,6 @@ create-missing = false
 git-repository-url = "https://github.com/rust-lang/async-book"
 site-url = "/async-book/"
 
-[output.linkcheck]
-follow-web-links = true
-traverse-parent-directories = false
+#[output.linkcheck]
+#follow-web-links = true
+#traverse-parent-directories = false
