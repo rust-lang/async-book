@@ -35,7 +35,7 @@ warning: unused implementer of `std::future::Future` that must be used
 我们不能在同步代码里去 `await` 或 `poll` futures。现在我们需要一个，
 可以调度并驱动 futures 去完成的异步运行时。
 有关异步运行时、执行器和反应器的更多信息，请参阅
-[选择一个运行时](../08_ecosystem/00_chapter.md) 这一章节。
+[选择一个运行时](../08_ecosystem/00_chapter_zh.md) 这一章节。
 其中列出的运行时，每一个都可在这个项目上使用，但在下面的示例中，
 我们已经选择了 `async-std` 箱。
 
