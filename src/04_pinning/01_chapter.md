@@ -251,7 +251,7 @@ a: test1, b: test1
 But instead we get:
 
 ```rust, ignore
-a: test2, b: test1
+a: test1, b: test1
 a: test1, b: test2
 ```
 
