@@ -349,6 +349,7 @@ impl Test {
             _marker: PhantomPinned, // This makes our type `!Unpin`
         }
     }
+
     fn init<'a>(self: Pin<&'a mut Self>) {
         let self_ptr: *const String = &self.a;
         let this = unsafe { self.get_unchecked_mut() };
@@ -407,6 +408,7 @@ pub fn main() {
 #             _marker: PhantomPinned,
 #         }
 #     }
+#
 #     fn init<'a>(self: Pin<&'a mut Self>) {
 #         let self_ptr: *const String = &self.a;
 #         let this = unsafe { self.get_unchecked_mut() };
@@ -459,6 +461,7 @@ pub fn main() {
 #             _marker: PhantomPinned, // This makes our type `!Unpin`
 #         }
 #     }
+#
 #     fn init<'a>(self: Pin<&'a mut Self>) {
 #         let self_ptr: *const String = &self.a;
 #         let this = unsafe { self.get_unchecked_mut() };
@@ -520,6 +523,7 @@ The type system prevents us from moving the data.
 > #             _marker: PhantomPinned,
 > #         }
 > #     }
+> #
 > #     fn init<'a>(self: Pin<&'a mut Self>) {
 > #         let self_ptr: *const String = &self.a;
 > #         let this = unsafe { self.get_unchecked_mut() };
