@@ -584,8 +584,8 @@ impl Test {
 }
 
 pub fn main() {
-    let mut test1 = Test::new("test1");
-    let mut test2 = Test::new("test2");
+    let test1 = Test::new("test1");
+    let test2 = Test::new("test2");
 
     println!("a: {}, b: {}",test1.as_ref().a(), test1.as_ref().b());
     println!("a: {}, b: {}",test2.as_ref().a(), test2.as_ref().b());
