@@ -37,7 +37,7 @@ impl SimpleFuture for SocketRead<'_> {
 
     fn poll(&mut self, wake: fn()) -> Poll<Self::Output> {
         if self.socket.has_data_to_read() {
-            // The socket has data-- read it into a buffer and return it.
+            // The socket has data -- read it into a buffer and return it.
             Poll::Ready(self.socket.read_buf())
         } else {
             // The socket does not yet have data.
@@ -89,7 +89,7 @@ where
         }
 
         if self.a.is_none() && self.b.is_none() {
-            // Both futures have completed-- we can return successfully
+            // Both futures have completed -- we can return successfully
             Poll::Ready(())
         } else {
             // One or both futures returned `Poll::Pending` and still have
@@ -121,7 +121,7 @@ where
     fn poll(&mut self, wake: fn()) -> Poll<Self::Output> {
         if let Some(first) = &mut self.first {
             match first.poll(wake) {
-                // We've completed the first future-- remove it and start on
+                // We've completed the first future -- remove it and start on
                 // the second!
                 Poll::Ready(()) => self.first.take(),
                 // We couldn't yet complete the first future.
