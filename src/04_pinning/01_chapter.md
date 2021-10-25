@@ -350,17 +350,17 @@ impl Test {
         }
     }
 
-    fn init<'a>(self: Pin<&'a mut Self>) {
+    fn init(self: Pin<mut Self>) {
         let self_ptr: *const String = &self.a;
         let this = unsafe { self.get_unchecked_mut() };
         this.b = self_ptr;
     }
 
-    fn a<'a>(self: Pin<&'a Self>) -> &'a str {
+    fn a(self: Pin<&Self>) -> &str {
         &self.get_ref().a
     }
 
-    fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+    fn b(self: Pin<&Self>) -> &String {
         assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
         unsafe { &*(self.b) }
     }
@@ -409,17 +409,17 @@ pub fn main() {
 #         }
 #     }
 #
-#     fn init<'a>(self: Pin<&'a mut Self>) {
+#     fn init(self: Pin<&mut Self>) {
 #         let self_ptr: *const String = &self.a;
 #         let this = unsafe { self.get_unchecked_mut() };
 #         this.b = self_ptr;
 #     }
 #
-#     fn a<'a>(self: Pin<&'a Self>) -> &'a str {
+#     fn a(self: Pin<&Self>) -> &str {
 #         &self.get_ref().a
 #     }
 #
-#     fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+#     fn b(self: Pin<&Self>) -> &String {
 #         assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
 #         unsafe { &*(self.b) }
 #     }
@@ -462,17 +462,17 @@ pub fn main() {
 #         }
 #     }
 #
-#     fn init<'a>(self: Pin<&'a mut Self>) {
+#     fn init(self: Pin<&mut Self>) {
 #         let self_ptr: *const String = &self.a;
 #         let this = unsafe { self.get_unchecked_mut() };
 #         this.b = self_ptr;
 #     }
 #
-#     fn a<'a>(self: Pin<&'a Self>) -> &'a str {
+#     fn a(self: Pin<&Self>) -> &str {
 #         &self.get_ref().a
 #     }
 #
-#     fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+#     fn b(self: Pin<&Self>) -> &String {
 #         assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
 #         unsafe { &*(self.b) }
 #     }
