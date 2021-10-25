@@ -496,8 +496,10 @@ The type system prevents us from moving the data.
 >    let mut test1 = Test::new("test1");
 >    let mut test1_pin = unsafe { Pin::new_unchecked(&mut test1) };
 >    Test::init(test1_pin.as_mut());
+>
 >    drop(test1_pin);
 >    println!(r#"test1.b points to "test1": {:?}..."#, test1.b);
+>
 >    let mut test2 = Test::new("test2");
 >    mem::swap(&mut test1, &mut test2);
 >    println!("... and now it points nowhere: {:?}", test1.b);
