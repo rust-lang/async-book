@@ -108,8 +108,6 @@ types in Rust.
 For now our example will look like this:
 
 ```rust, ignore
-use std::pin::Pin;
-
 #[derive(Debug)]
 struct Test {
     a: String,
@@ -158,7 +156,6 @@ fn main() {
     println!("a: {}, b: {}", test2.a(), test2.b());
 
 }
-# use std::pin::Pin;
 # #[derive(Debug)]
 # struct Test {
 #     a: String,
@@ -210,7 +207,6 @@ fn main() {
     println!("a: {}, b: {}", test2.a(), test2.b());
 
 }
-# use std::pin::Pin;
 # #[derive(Debug)]
 # struct Test {
 #     a: String,
@@ -275,7 +271,6 @@ fn main() {
     println!("a: {}, b: {}", test2.a(), test2.b());
 
 }
-# use std::pin::Pin;
 # #[derive(Debug)]
 # struct Test {
 #     a: String,
