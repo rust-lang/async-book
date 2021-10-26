@@ -77,9 +77,11 @@ mod tests {
             self.write_data = Vec::from(buf);
             return Poll::Ready(Ok(buf.len()));
         }
+
         fn poll_flush(self: Pin<&mut Self>, _: &mut Context) -> Poll<Result<(), Error>> {
             Poll::Ready(Ok(()))
         }
+
         fn poll_close(self: Pin<&mut Self>, _: &mut Context) -> Poll<Result<(), Error>> {
             Poll::Ready(Ok(()))
         }
