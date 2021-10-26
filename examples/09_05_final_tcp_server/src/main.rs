@@ -75,7 +75,8 @@ mod tests {
             buf: &[u8],
         ) -> Poll<Result<usize, Error>> {
             self.write_data = Vec::from(buf);
-            return Poll::Ready(Ok(buf.len()));
+
+            Poll::Ready(Ok(buf.len()))
         }
 
         fn poll_flush(self: Pin<&mut Self>, _: &mut Context) -> Poll<Result<(), Error>> {
