@@ -17,11 +17,12 @@ In this section, we'll write our own simple executor capable of running a large
 number of top-level futures to completion concurrently.
 
 For this example, we depend on the `futures` crate for the `ArcWake` trait,
-which provides an easy way to construct a `Waker`.
+which provides an easy way to construct a `Waker`. Edit `Cargo.toml` to add
+a new dependency:
 
 ```toml
 [package]
-name = "xyz"
+name = "timer_future"
 version = "0.1.0"
 authors = ["XYZ Author"]
 edition = "2018"
