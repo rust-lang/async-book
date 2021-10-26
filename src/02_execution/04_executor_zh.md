@@ -18,7 +18,7 @@ Rust 的 `Future` 是懒惰的：除非积极地推动它完成，不然它不�
 
 ```toml
 [package]
-name = "xyz"
+name = "timer_future"
 version = "0.1.0"
 authors = ["XYZ Author"]
 edition = "2018"

@@ -18,7 +18,7 @@ futures 需要确保在其就绪后即会被再次轮询。而这是通过 `Wake
 就此示例而言，我们将在创建计时器时启动一个新线程，并让它休眠一定的时间，
 然后在时间窗口结束时给计时器 future 发信号。
 
-以下是我们在开始工作前需要导入的：
+首先我们通过 `cargo new timer_future` 来添加所需的依赖：
 
 ```rust
 {{#include ../../examples/02_03_timer/src/lib.rs:imports}}
