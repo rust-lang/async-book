@@ -54,7 +54,6 @@
 {{#include ../../examples/03_01_async_await/src/lib.rs:async_move_examples}}
 ```
 
-## `.await`ing on a Multithreaded Executor
 ## 在多线程执行器上的 `.await`
 
 注意，当使用多线程 `Future` 执行器时，`Future` 可能会在线程间移动，
