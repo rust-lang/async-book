@@ -350,7 +350,7 @@ impl Test {
         }
     }
 
-    fn init(self: Pin<mut Self>) {
+    fn init(self: Pin<&mut Self>) {
         let self_ptr: *const String = &self.a;
         let this = unsafe { self.get_unchecked_mut() };
         this.b = self_ptr;
