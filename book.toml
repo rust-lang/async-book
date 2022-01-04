@@ -2,6 +2,8 @@
 title = "Asynchronous Programming in Rust"
 authors = ["Taylor Cramer"]
 
+src = "src-kr"
+
 [build]
 create-missing = false
 
