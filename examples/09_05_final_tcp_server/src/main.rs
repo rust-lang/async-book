@@ -33,7 +33,7 @@ async fn handle_connection(mut stream: impl Read + Write + Unpin) {
         ("HTTP/1.1 404 NOT FOUND\r\n\r\n", "404.html")
     };
     let contents = fs::read_to_string(filename).unwrap();
-    let response = format!("{}{}", status_line, contents);
+    let response = format!("{status_line}{contents}");
     stream.write(response.as_bytes()).await.unwrap();
     stream.flush().await.unwrap();
 }
