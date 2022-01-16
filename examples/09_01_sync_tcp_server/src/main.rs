@@ -34,6 +34,6 @@ fn handle_connection(mut stream: TcpStream) {
     // Write response back to the stream,
     // and flush the stream to ensure the response is sent back to the client
     let response = format!("{status_line}{contents}");
-    stream.write(response.as_bytes()).unwrap();
+    stream.write_all(response.as_bytes()).unwrap();
     stream.flush().unwrap();
 }
