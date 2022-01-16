@@ -574,11 +574,11 @@ impl Test {
         boxed
     }
 
-    fn a<'a>(self: Pin<&'a Self>) -> &'a str {
+    fn a(self: Pin<&Self>) -> &str {
         &self.get_ref().a
     }
 
-    fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+    fn b(self: Pin<&Self>) -> &String {
         unsafe { &*(self.b) }
     }
 }
