@@ -568,7 +568,7 @@ impl Test {
             _marker: PhantomPinned,
         };
         let mut boxed = Box::pin(t);
-        let self_ptr: *const String = &boxed.as_ref().a;
+        let self_ptr: *const String = &boxed.a;
         unsafe { boxed.as_mut().get_unchecked_mut().b = self_ptr };
 
         boxed
