@@ -39,8 +39,8 @@ As long as `handle_connection` does not block, a slow request will no longer pre
 {{#include ../../examples/09_04_concurrent_tcp_server/src/main.rs:main_func}}
 ```
 # Serving Requests in Parallel
-Our example so far has largely presented concurrency (using async code)
-as an alternative to parallelism (using threads).
+Our example so far has largely presented cooperative multitasking concurrency (using async code)
+as an alternative to preemptive multitasking (using threads).
 However, async code and threads are not mutually exclusive.
 In our example, `for_each_concurrent` processes each connection concurrently, but on the same thread.
 The `async-std` crate allows us to spawn tasks onto separate threads as well.
@@ -49,6 +49,6 @@ Here's what that would look like:
 ```rust
 {{#include ../../examples/09_05_final_tcp_server/src/main.rs:main_func}}
 ```
-Now we are using both concurrency and parallelism to handle multiple requests at the same time!
+Now we are using both cooperative multitasking concurrency and preemptive multitasking to handle multiple requests at the same time!
 See the [section on multithreaded executors](../08_ecosystem/00_chapter.md#single-threading-vs-multithreading)
 for more information.
