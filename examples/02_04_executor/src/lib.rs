@@ -10,7 +10,7 @@ use {
         future::Future,
         sync::mpsc::{sync_channel, Receiver, SyncSender},
         sync::{Arc, Mutex},
-        task::{Context, Poll},
+        task::Context,
         time::Duration,
     },
     // The timer we wrote in the previous section:
