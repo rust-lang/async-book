@@ -34,3 +34,4 @@
 - [TODO: Asynchronous Design Patterns: Solutions and Suggestions]()
   - [TODO: Modeling Servers and the Request/Response Pattern]()
   - [TODO: Managing Shared State]()
+- [Appendix: Translations of the Book](12_appendix/01_translations.md)

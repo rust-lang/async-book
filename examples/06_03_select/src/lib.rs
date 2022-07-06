@@ -112,7 +112,7 @@ async fn run_loop(
                 }
             },
             new_num = get_new_num_fut => {
-                // A new number has arrived-- start a new `run_on_new_num_fut`,
+                // A new number has arrived -- start a new `run_on_new_num_fut`,
                 // dropping the old one.
                 run_on_new_num_fut.set(run_on_new_num(new_num).fuse());
             },
@@ -165,7 +165,7 @@ async fn run_loop(
                 }
             },
             new_num = get_new_num_fut => {
-                // A new number has arrived-- start a new `run_on_new_num_fut`.
+                // A new number has arrived -- start a new `run_on_new_num_fut`.
                 run_on_new_num_futs.push(run_on_new_num(new_num));
             },
             // Run the `run_on_new_num_futs` and check if any have completed
