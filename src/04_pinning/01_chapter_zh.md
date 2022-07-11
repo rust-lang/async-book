@@ -92,7 +92,7 @@ struct AsyncFuture {
 从而导致存储在 `read_into_buf_fut.buf` 中的指针变为无效指针！
 
 将 futures 固定在内存中特定的位置可以避免此问题，
-从而安全地创建对 `async` 代码块中值的引用。
+从而安全地在 `async` 代码块中创建对值的引用。
 
 ## 固定的细节
 
@@ -309,19 +309,20 @@ fn main() {
 
 让我们来探究下如何固定，以及 `Pin` 类型如何帮助我们解决这个问题。
 
-`Pin` 类型用于包装指针类型，来保证指针后面的值不会被移动。例如，即使 T 实现了
-`!Unpin`，`Pin<&mut T>`，`Pin<&T>`, `Pin<Box<T>>` 都可保证 `T` 不会被移动。
+`Pin` 类型用于装饰指针类型，来确保若指针指向的值未实现 `Unpin`，则其不能被移动。
+例如，如果有 `T: !Unpin`，则 `Pin<&mut T>`、`Pin<&T>`、`Pin<Box<T>>` 
+都可保证 `T` 无法被移动。
 
 大部分类型在被移动时都没有问题。因为这些类型实现 `Unpin` 特征。
-指向 `Unpin` 类型的指针都可以自由的放入 `Pin` 或从中取出来。比如，
+指向 `Unpin` 类型的指针都可以自由地放入 `Pin` 或从中取出来。比如，
 `u8` 是 `Unpin`，所以 `Pin<&mut u8>` 可当作普通的 `&mut u8` 一样使用。
 
-但是，类型在被固定后会有一个 `!Unpin` 标记，它们将不能被移动。
+但是，有 `!Unpin` 标记的类型被固定后就不能再被移动了。
 async/await 创建的 futures 就是一个例子。
 
 ### 固定在栈上
 
-再回到我们的例子中。通过使用 `Pin` 可以解决我们的问题。
+再回到我们的例子中。我们可以通过使用 `Pin` 来解决这个问题。
 让我们看一看如果使用固定的指针，我们的例子会是什么样子：
 
 ```rust, ignore
@@ -344,17 +345,17 @@ impl Test {
             _marker: PhantomPinned, // This makes our type `!Unpin`
         }
     }
-    fn init<'a>(self: Pin<&'a mut Self>) {
+    fn init(self: Pin<&mut Self>) {
         let self_ptr: *const String = &self.a;
         let this = unsafe { self.get_unchecked_mut() };
         this.b = self_ptr;
     }
 
-    fn a<'a>(self: Pin<&'a Self>) -> &'a str {
+    fn a(self: Pin<&Self>) -> &str {
         &self.get_ref().a
     }
 
-    fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+    fn b(self: Pin<&Self>) -> &String {
         assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
         unsafe { &*(self.b) }
     }
@@ -402,17 +403,17 @@ pub fn main() {
 #             _marker: PhantomPinned,
 #         }
 #     }
-#     fn init<'a>(self: Pin<&'a mut Self>) {
+#     fn init(self: Pin<&mut Self>) {
 #         let self_ptr: *const String = &self.a;
 #         let this = unsafe { self.get_unchecked_mut() };
 #         this.b = self_ptr;
 #     }
 #
-#     fn a<'a>(self: Pin<&'a Self>) -> &'a str {
+#     fn a(self: Pin<&Self>) -> &str {
 #         &self.get_ref().a
 #     }
 #
-#     fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+#     fn b(self: Pin<&Self>) -> &String {
 #         assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
 #         unsafe { &*(self.b) }
 #     }
@@ -454,17 +455,17 @@ pub fn main() {
 #             _marker: PhantomPinned, // This makes our type `!Unpin`
 #         }
 #     }
-#     fn init<'a>(self: Pin<&'a mut Self>) {
+#     fn init(self: Pin<&mut Self>) {
 #         let self_ptr: *const String = &self.a;
 #         let this = unsafe { self.get_unchecked_mut() };
 #         this.b = self_ptr;
 #     }
 #
-#     fn a<'a>(self: Pin<&'a Self>) -> &'a str {
+#     fn a(self: Pin<&Self>) -> &str {
 #         &self.get_ref().a
 #     }
 #
-#     fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+#     fn b(self: Pin<&Self>) -> &String {
 #         assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
 #         unsafe { &*(self.b) }
 #     }
@@ -512,17 +513,17 @@ pub fn main() {
 > #             _marker: PhantomPinned,
 > #         }
 > #     }
-> #     fn init<'a>(self: Pin<&'a mut Self>) {
+> #     fn init(self: Pin<&mut Self>) {
 > #         let self_ptr: *const String = &self.a;
 > #         let this = unsafe { self.get_unchecked_mut() };
 > #         this.b = self_ptr;
 > #     }
 > #
-> #     fn a<'a>(self: Pin<&'a Self>) -> &'a str {
+> #     fn a(self: Pin<&Self>) -> &str {
 > #         &self.get_ref().a
 > #     }
 > #
-> #     fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+> #     fn b(self: Pin<&Self>) -> &String {
 > #         assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
 > #         unsafe { &*(self.b) }
 > #     }
@@ -560,11 +561,11 @@ impl Test {
         boxed
     }
 
-    fn a<'a>(self: Pin<&'a Self>) -> &'a str {
+    fn a(self: Pin<&Self>) -> &str {
         &self.get_ref().a
     }
 
-    fn b<'a>(self: Pin<&'a Self>) -> &'a String {
+    fn b(self: Pin<&Self>) -> &String {
         unsafe { &*(self.b) }
     }
 }
@@ -581,7 +582,7 @@ pub fn main() {
 一些函数要求它们使用的 futures 必须是 `Unpin`（非固定）的。想要非 `Unpin`
 的 `Future` 或 `Stream` 和要求 `Unpin` 类型的函数一起使用，
 首先你需要使用 `Box::pin`（创建 `Pin<Box<T>>`）或 `pin_utils::pin_mut!` 
-宏（创建 `Pin<&mut T>`）。`Pin<Box<Fut>>` 和 `Pin<&mut Fut>`
+宏（创建 `Pin<&mut T>`）固定值。`Pin<Box<Fut>>` 和 `Pin<&mut Fut>`
 都可作为 futures 使用，并且都实现了 `Unpin`。
 
 例如：
@@ -612,7 +613,7 @@ execute_unpin_future(fut); // OK
 换句话说，`Unpin` 意味着即使被固定，此类型也可以被移动，`Pin`
 对于这种类型是无效的。
 
-2. 如果 `T: !Unpin`，那么将 `&mut T` 固定是不安全的。
+2. 如果 `T: !Unpin`，将 `&mut T` 转换为固定的 T 是不安全的，需要 `unsafe`。
 
 3. 大部分标准库类型都实现了 `Unpin`。你在 Rust 中使用的大多数“正常”类型亦如此。
 由 async/await 生成的 Future 则是例外。

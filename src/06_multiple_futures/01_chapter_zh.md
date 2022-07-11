@@ -8,4 +8,4 @@
 - `join!`：等待直到 futures 全部完成
 - `select!`：在多个 futures 中等待其中一个完成
 - Spawning：创建一个顶级任务，去推动 future 完成。
-- `FuturesUnordered`：一个 futures 组，来为其中的每个子 future 产生结果 
+- `FuturesUnordered`：一个 futures 组，使每个子 future 产生结果 

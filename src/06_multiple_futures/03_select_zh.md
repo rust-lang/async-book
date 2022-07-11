@@ -8,7 +8,7 @@
 ```
 
 上面的函数将同时运行 `t1` 和 `t2`。当其中任意一个任务完成后，
-就会运行与之对应的 `println!` 语句，同时结束此函数，无论是否还有未完成任务。
+就会运行与之对应的 `println!` 语句，同时结束此函数，而不处理其它未完成任务。
 
 `select` 的基本语法是这样 `<pattern> = <expression> => <code>,`，
 像这样你可以在 select 代码块里放进所有你需要的 futures。
@@ -21,7 +21,7 @@
 因此具有 `default` 分支的 `select` 都将立即返回一个结果。
 
 在 `select` 的所有分支都是已完成状态，不会再取得任何进展时，`complete`
-分支将会运行。当在循环中使用 `select!` 时，这是非常有用的！
+分支将会运行。在循环中使用 `select!` 时，这是非常有用的！
 
 ```rust,edition2018
 {{#include ../../examples/06_03_select/src/lib.rs:default_and_complete}}
@@ -31,7 +31,7 @@
 
 在上面的第一个例子中，也许你发现了这点：对于在两个 `async fn` 返回的 futures，
 我们必须对它们调用 `.fuse()` 方法，同时使用 `pin_mut` 来将它们固定。
-这两个调用都是必要的，因为 `select` 中使用的 futures 必须同时实现 `Unpin` 和
+这两个调用都是必要的，因为 `select` 中使用的 futures 必须实现 `Unpin` 和
 `FusedFuture` 这两个特征。
 
 `Unpin` 之所以有必要，是因为 `select` 使用中的 futures 不是其本身，
@@ -45,9 +45,9 @@
 返回的 future 实现了 `FusedFuture`，这样它就可以告知 `select` 
 不要再去轮询它！
 
-注意，streams 具有相应的 `FusedStream` 特征。实现此特征，或使用 `.fuse()`
-包装后的 Streams，将从 `.next()` / `.try_next()` 组合子中产生 `FusedFuture`
-futures。
+注意，streams 具有相应的 `FusedStream` 特征。实现了此特征，或使用 `.fuse()`
+包装后的 Streams，将从它们的 `.next()` / `.try_next()` 组合器中产生
+`FusedFuture` futures。
 
 ```rust,edition2018
 {{#include ../../examples/06_03_select/src/lib.rs:fused_stream}}
@@ -55,14 +55,14 @@ futures。
 
 ## 带有 `Fuse` 和 `FuturesUnordered` 的 `select` 循环中的并发任务
 
-一个有点儿难以发现但非常方便的函数是 `Fuse::terminated()`，
+一个有点儿难以发现但非常好用的函数是 `Fuse::terminated()`，
 它允许创建一个已经终止的空 future，并可稍后再把一个需要运行的 future 填充进去。
 
-当一个任务需要在 `select` 循环中运行，但它需要先在 `select` 循环内部产生时，
+当一个任务需要在 `select` 循环中运行，但它需要在 `select` 循环内部产生时，
 使用它就会变得很方便。
 
-请注意 `.select_next_some` 函数的使用方法。它在同 `select` 一起使用时，
-只运行 stream 返回值为 `Some(_)` 的分支，而忽略 `None`s。
+请注意这里使用了 `.select_next_some` 函数。它在同 `select` 一起使用时，
+只会运行 stream 返回值为 `Some(_)` 的分支，而忽略 `None`s。
 
 ```rust,edition2018
 {{#include ../../examples/06_03_select/src/lib.rs:fuse_terminated}}

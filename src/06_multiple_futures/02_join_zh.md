@@ -4,7 +4,7 @@
 
 # `join!`
 
-当执行多个异步操作时，可以很简单地将它们组成一个序列并使用 `.await`： 
+当执行多个异步操作时，可以很简单地将它们组成一个使用 `.await` 的序列：
 
 ```rust,edition2018,ignore
 {{#include ../../examples/06_02_join/src/lib.rs:naiive}}
@@ -31,10 +31,10 @@
 ## `try_join!`
 
 对于那些返回值是 `Result` 类型的 futures，可以考虑使用 `try_join!` 而非 `join!`。
-因为 `join!` 只会在所有的子 futures 完成后，才会完成，
+因为 `join!` 只会在所有的子 futures 完成后才会“完成”（返回），
 即使其中的子 future 返回了错误，也会继续等待其它子 future 完成。
 
-不同于 `join!`，`try_join!` 将在某个子 future 返回 error 后立即完成。
+不同于 `join!`，`try_join!` 将在某个子 future 返回 error 后立即完成（返回）。
 
 ```rust,edition2018,ignore
 {{#include ../../examples/06_02_join/src/lib.rs:try_join}}

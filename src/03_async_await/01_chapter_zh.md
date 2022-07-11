@@ -2,9 +2,9 @@
 
 在[第一章]中，我们对 `async`/`.await` 已有了一个简单的了解。
 本章将更详尽的介绍 `async`/`.await`，解读它是如何工作的，
-以及 `async` 代码与传统的 Rust 同步程序有合不同。
+以及 `async` 代码与传统的 Rust 同步程序有何不同。
 
-`async`/`.await` 是特殊的 Rust 语法，通过它可以在本身产生阻塞时，
+`async`/`.await` 是 Rust 语法的特殊部分，通过它可以在本身产生阻塞时，
 让出当前线程的控制权，即在等待自身完成时，亦可允许其它代码运行。
 
 有两种方法来使用 `async`：`async fn` 函数和 `async` 代码块。
@@ -22,7 +22,7 @@
 
 ## `async` 的生命周期
 
-不同于传统函数，`async fn` 接收引用或其它非静态参数，
+不同于传统函数，`async fn`s 接收引用或其它非静态参数，
 并返回一个受其参数的生命周期限制的 `Future`。
 
 ```rust,edition2018,ignore
@@ -34,8 +34,9 @@
 `foo(&x).await`）。然而，当这个 future 被存储起来或发送到其它任务或线程上时，
 这可能会成为一个问题。
 
-一种常见的解决办法是，将参数和 `async fn` 调用一并放置在一个 `async`
-代码块中，这将 `async fn` 和引参转化成了一个 `'static` future。
+一种常见的解决办法是，将引用参数（references-as-arguments）和
+`async fn` 调用一并放置在一个 `async`代码块中，
+这将 `async fn` 和引参转化成了一个 `'static` future。
 
 ```rust,edition2018,ignore
 {{#include ../../examples/03_01_async_await/src/lib.rs:static_future_with_borrow}}
@@ -63,10 +64,10 @@
 这意味着使用 `Rc`, `&RefCell` 或其它任何未实现 `Send` 特征的类型及未实现
 `Sync` 特征的类型的引用都是不安全的。
 
-（警告：只要在调用 `.await` 期间内不对它们进行操作就可使用这些类型。）
+（警告：只要在它们不在调用 `.await` 的代码块里就能使用这些类型。）
 
 同样，在 `.await` 中使用传统的“非 future 感知”锁也并不是一个好主意，
-它可能导致线程池死锁：一个任务取得了锁，然后 `.await`，
+它可能导致线程池死锁：一个任务在 `.await` 时获得了锁，然后交出运行权，
 而执行器调度另一个任务同样想获取这个锁，这就导致了死锁。在 `futures::lock` 中
 使用 `Mutex` 而不是 `std::sync` 可以避免这种情况。
 

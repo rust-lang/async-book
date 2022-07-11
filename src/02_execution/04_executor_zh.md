@@ -1,20 +1,20 @@
 # 应用：构建一个执行器
 
-Rust 的 `Future` 是懒惰的：除非积极地推动它完成，不然它不会做任何事情。
+Rust 的 `Future`s 是懒惰的：除非积极地推动它完成，不然它不会做任何事情。
 一种推动 future 完成的方式是在 `async` 函数中使用 `.await`，
-但这只是将问题推进了一层，还面临着：谁将运行从顶级 `async` 返回的 future？
+但这只是将问题推进了一层，还面临着：谁将运行从顶级 `async` 函数里返回的 future？
 很明显我们需要一个 `Future` 执行器。
 
-`Future` 执行器获取一级顶级 `Future`s 并在 `Future`
-取得工作进展时通过调用 `poll` 来将它们运行直至完成。
+`Future` 执行器获取一组顶级 `Future`s 并在 `Future`
+可取得进展时通过调用 `poll` 来将它们运行直至完成。
 通常，执行器会调用一次 `poll` 来使 future 开始运行。
-当 `Future` 通过调用 `wake()` 表示它们已就绪时，会被再次放入队列中以便 `poll`
+当 `Future`s 通过调用 `wake()` 表示它们已就绪时，会被再次放入队列中以便 `poll`
 再次调用，重复直到 `Future` 完成。
 
-在本章中，我们将编写一个简单的，能够同时运行大量顶级 futures 的执行器。
+在本章中，我们将编写一个简单的，能够同时运行大量顶级 futures 并驱使其完成的执行器。
 
 在这个例子中，我们依赖于 `futures` 箱，它提供了 `ArcWake` 特征，
-有了这个特征，我们可以很方便的构建一个 `Waker`。
+有了这个特征，我们可以很方便的构建一个 `Waker`。编辑 `Cargo.toml` 添加依赖：
 
 ```toml
 [package]
@@ -46,19 +46,19 @@ futures，所以我们将它和发送端绑定成一对儿，它可以此重新�
 ```
 
 同时，让我们也给 spawner 添加一个新方法，使它可以方便地生成新的 futures。
-这个方法将接收一个 future 类型，将它打包，并在其中创建一个新的 `Arc<Task>`
+这个方法将接收一个 future 类型，放入智能指针 box 中，并在创建一个新的 `Arc<Task>`
 以便它可以添加到执行器的队列中。
 
 ```rust,ignore
 {{#include ../../examples/02_04_executor/src/lib.rs:spawn_fn}}
 ```
 
-我们需要创建一个 `Waker`，来轮询 futures。之前在 [唤醒任务]
+我们需要创建一个 `Waker` 来轮询 futures。之前在 [唤醒任务]
 中提到过，一旦任务的 `wake` 被调用，`Waker` 就会安排再次轮询它。请记住，
 `Waker` 会准确的告知执行器哪个任务已就绪，这样就会只轮询已就绪的 futures。
 创建一个 `Waker` 最简单的方法，就是实现 `ArcWake` 特征，之后使用 `waker_ref`
 或 `.into_waker` 方法来将一个 `Arc<impl ArcWake>` 转化成 `Waker`。
-下面让我们为任务实现 `ArcWake` 以便将它们转化成可唤醒的 `Waker`。
+下面让我们为 Task 实现 `ArcWake` 以便将它们转化成可唤醒的 `Waker`s。
 
 ```rust,ignore
 {{#include ../../examples/02_04_executor/src/lib.rs:arcwake_for_task}}
