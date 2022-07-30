@@ -17,7 +17,6 @@ First, we'll change the signature of `handle_connection` to make it easier to te
 it requires any struct that implements `async_std::io::Read`, `async_std::io::Write`, and `marker::Unpin`.
 Changing the type signature to reflect this allows us to pass a mock for testing.
 ```rust,ignore
-use std::marker::Unpin;
 use async_std::io::{Read, Write};
 
 async fn handle_connection(mut stream: impl Read + Write + Unpin) {
