@@ -25,7 +25,7 @@ a new dependency:
 name = "timer_future"
 version = "0.1.0"
 authors = ["XYZ Author"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 futures = "0.3"
