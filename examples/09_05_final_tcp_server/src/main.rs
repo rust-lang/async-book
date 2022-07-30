@@ -21,7 +21,6 @@ async fn main() {
 // ANCHOR_END: main_func
 
 use async_std::io::{Read, Write};
-use std::marker::Unpin;
 
 async fn handle_connection(mut stream: impl Read + Write + Unpin) {
     let mut buffer = [0; 1024];
@@ -90,7 +89,6 @@ mod tests {
     // ANCHOR_END: mock_write
 
     // ANCHOR: unpin
-    use std::marker::Unpin;
     impl Unpin for MockTcpStream {}
     // ANCHOR_END: unpin
 

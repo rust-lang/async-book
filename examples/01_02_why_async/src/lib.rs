@@ -1,12 +1,7 @@
 #![cfg(test)]
 
-use {
-    futures::{
-        executor::block_on,
-        join,
-    },
-    std::thread,
-};
+use futures::{executor::block_on, join};
+use std::thread;
 
 fn download(_url: &str) {
     // ...
