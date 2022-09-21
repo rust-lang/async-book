@@ -1,14 +1,12 @@
 #![cfg(test)]
 
-use {
-    futures::{
-        executor::block_on,
-        stream::{self, Stream},
-    },
-    std::{
-        io,
-        pin::Pin,
-    },
+use futures::{
+    executor::block_on,
+    stream::{self, Stream},
+};
+use std::{
+    io,
+    pin::Pin,
 };
 
 // ANCHOR: nexts

@@ -1,12 +1,10 @@
 #![cfg(test)]
 
 mod stream_trait {
-use {
-    futures::stream::{Stream as RealStream},
-    std::{
-        pin::Pin,
-        task::{Context, Poll},
-    },
+use futures::stream::Stream as RealStream;
+use std::{
+    pin::Pin,
+    task::{Context, Poll},
 };
 
 // ANCHOR: stream_trait
@@ -34,11 +32,9 @@ impl<I> Stream for dyn RealStream<Item = I> {
 }
 
 mod channels {
-use {
-    futures::{
-        channel::mpsc,
-        prelude::*,
-    },
+use futures::{
+    channel::mpsc,
+    prelude::*,
 };
 
 // ANCHOR: channels
