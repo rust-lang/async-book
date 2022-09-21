@@ -21,7 +21,6 @@ async fn main() {
 // ANCHOR_END: main_func
 
 use async_std::io::{Read, Write};
-use std::marker::Unpin;
 
 async fn handle_connection(mut stream: impl Read + Write + Unpin) {
     let mut buffer = [0; 1024];
@@ -90,7 +89,6 @@ mod tests {
     // ANCHOR_END: mock_write
 
     // ANCHOR: unpin
-    use std::marker::Unpin;
     impl Unpin for MockTcpStream {}
     // ANCHOR_END: unpin
 
@@ -108,8 +106,6 @@ mod tests {
         };
 
         handle_connection(&mut stream).await;
-        let mut buf = [0u8; 1024];
-        stream.read(&mut buf).await.unwrap();
 
         let expected_contents = fs::read_to_string("hello.html").unwrap();
         let expected_response = format!("HTTP/1.1 200 OK\r\n\r\n{}", expected_contents);

@@ -2,7 +2,6 @@ use std::fs;
 use std::io::{Read, Write};
 use std::net::TcpListener;
 use std::net::TcpStream;
-use std::time::Duration;
 
 #[async_std::main]
 async fn main() {
@@ -14,6 +13,7 @@ async fn main() {
 }
 
 // ANCHOR: handle_connection
+use std::time::Duration;
 use async_std::task;
 
 async fn handle_connection(mut stream: TcpStream) {
