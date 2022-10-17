@@ -11,7 +11,7 @@ The function above will run both `t1` and `t2` concurrently. When either
 `t1` or `t2` finishes, the corresponding handler will call `println!`, and
 the function will end without completing the remaining task.
 
-The basic syntax for `select` is `<pattern> = <expression> => <code>,`,
+The basic syntax for `select` is `<pattern> = <expression> => <code>`,
 repeated for as many futures as you would like to `select` over.
 
 ## `default => ...` and `complete => ...`
