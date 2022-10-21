@@ -533,10 +533,12 @@ The type system prevents us from moving the data.
 > #         this.b = self_ptr;
 > #     }
 > #
+> #     #[allow(unused)]
 > #     fn a<'a>(self: Pin<&'a Self>) -> &'a str {
 > #         &self.get_ref().a
 > #     }
 > #
+> #     #[allow(unused)]
 > #     fn b<'a>(self: Pin<&'a Self>) -> &'a String {
 > #         assert!(!self.b.is_null(), "Test::b called without Test::init being called first");
 > #         unsafe { &*(self.b) }
