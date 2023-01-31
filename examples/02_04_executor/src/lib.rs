@@ -61,7 +61,7 @@ impl Spawner {
             future: Mutex::new(Some(future)),
             task_sender: self.task_sender.clone(),
         });
-        self.task_sender.send(task).expect("too many tasks queued");
+        self.task_sender.try_send(task).expect("too many tasks queued");
     }
 }
 // ANCHOR_END: spawn_fn
@@ -74,7 +74,7 @@ impl ArcWake for Task {
         let cloned = arc_self.clone();
         arc_self
             .task_sender
-            .send(cloned)
+            .try_send(cloned)
             .expect("too many tasks queued");
     }
 }
