@@ -480,7 +480,27 @@ pub fn main() {
 # }
 ```
 
-The type system prevents us from moving the data.
+The type system prevents us from moving the data, as follows:
+
+```
+error[E0277]: `PhantomPinned` cannot be unpinned
+   --> src\test.rs:56:30
+    |
+56  |         std::mem::swap(test1.get_mut(), test2.get_mut());
+    |                              ^^^^^^^ within `test1::Test`, the trait `Unpin` is not implemented for `PhantomPinned`
+    |
+    = note: consider using `Box::pin`
+note: required because it appears within the type `test1::Test`
+   --> src\test.rs:7:8
+    |
+7   | struct Test {
+    |        ^^^^
+note: required by a bound in `std::pin::Pin::<&'a mut T>::get_mut`
+   --> <...>rustlib/src/rust\library\core\src\pin.rs:748:12
+    |
+748 |         T: Unpin,
+    |            ^^^^^ required by this bound in `std::pin::Pin::<&'a mut T>::get_mut`
+```
 
 > It's important to note that stack pinning will always rely on guarantees
 > you give when writing `unsafe`. While we know that the _pointee_ of `&'a mut T`
