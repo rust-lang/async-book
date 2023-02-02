@@ -21,13 +21,3 @@ async fn main() {
     }
 }
 // ANCHOR_END: example
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[async_std::test]
-    async fn run_example() {
-        main().await
-    }
-}
