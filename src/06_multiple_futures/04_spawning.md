@@ -12,5 +12,5 @@ task once it's completed.
 {{#include ../../examples/06_04_spawning/src/lib.rs:example}}
 ```
 
-To communicate between the main task and the spawned task, we can use 
+To communicate between the main task and the spawned task, we can use channels
 provided by the used async runtime.
