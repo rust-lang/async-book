@@ -140,13 +140,6 @@ async fn get_new_num() -> u8 { /* ... */ 5 }
 
 async fn run_on_new_num(_: u8) -> u8 { /* ... */ 5 }
 
-// Runs `run_on_new_num` with the latest number
-// retrieved from `get_new_num`.
-//
-// `get_new_num` is re-run every time a timer elapses,
-// immediately cancelling the currently running
-// `run_on_new_num` and replacing it with the newly
-// returned value.
 async fn run_loop(
     mut interval_timer: impl Stream<Item = ()> + FusedStream + Unpin,
     starting_num: u8,
