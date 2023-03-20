@@ -144,9 +144,10 @@ async fn run_on_new_num(_: u8) -> u8 { /* ... */ 5 }
 // retrieved from `get_new_num`.
 //
 // `get_new_num` is re-run every time a timer elapses,
-// immediately cancelling the currently running
-// `run_on_new_num` and replacing it with the newly
-// returned value.
+// abandoning and replacing the existing `get_new_num`.
+// When `get_new_num` finishes, an additional
+// `run_on_new_num` is created with the new number and is
+// added to the set of futures being polled.
 async fn run_loop(
     mut interval_timer: impl Stream<Item = ()> + FusedStream + Unpin,
     starting_num: u8,
