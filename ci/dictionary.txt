@@ -37,6 +37,7 @@ interprocess
 IoBlocker
 IOCP
 IoObject
+JoinHandle
 kqueue
 localhost
 LocalExecutor
@@ -103,4 +104,3 @@ wakeups
 webpages
 webserver
 Woot
-JoinHandle

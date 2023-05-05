@@ -21,3 +21,26 @@ async fn main() {
     }
 }
 // ANCHOR_END: example
+use std::time::Duration;
+async fn my_task(time: Duration) {
+    println!("Hello from my_task with time {:?}", time);
+    task::sleep(time).await;
+    println!("Goodbye from my_task with time {:?}", time);
+}
+// ANCHOR: join_all
+use futures::future::join_all;
+async fn task_spawner(){
+    let tasks = vec![
+        task::spawn(my_task(Duration::from_secs(1))),
+        task::spawn(my_task(Duration::from_secs(2))),
+        task::spawn(my_task(Duration::from_secs(3))),
+    ];
+    // If we do not await these tasks and the function finishes, they will be dropped
+    join_all(tasks).await;
+}
+// ANCHOR_END: join_all
+
+#[test]
+fn run_task_spawner() {
+    futures::executor::block_on(task_spawner());
+}
