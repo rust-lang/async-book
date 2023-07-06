@@ -9,6 +9,7 @@ AsyncRead
 AsyncWrite
 AwaitingFutOne
 AwaitingFutTwo
+cancelling
 combinator
 combinators
 compat
@@ -37,6 +38,7 @@ interprocess
 IoBlocker
 IOCP
 IoObject
+JoinHandle
 kqueue
 localhost
 LocalExecutor
