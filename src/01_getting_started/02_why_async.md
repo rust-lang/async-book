@@ -68,8 +68,8 @@ typically requires major refactoring work, both in terms of implementation and
 (if you are building a library) any exposed public interfaces. As such,
 picking the model that suits your needs early can save a lot of development time.
 
-**OS threads** are suitable for a small number of tasks, since threads come with
-CPU and memory overhead. Spawning and switching between threads
+**OS threads** are only suitable for running a small number of tasks concurrently, since
+threads come with CPU and memory overhead. Spawning and switching between threads
 is quite expensive as even idle threads consume system resources.
 A thread pool library can help mitigate some of these costs, but not all.
 However, threads let you reuse existing synchronous code without significant
