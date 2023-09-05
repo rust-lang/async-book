@@ -23,3 +23,8 @@ server to serve the book.
 ```
 mdbook serve
 ```
+
+# My note
+
+This is a fork of the [async-book](), with my additional notes and random other stuff that
+I will as I fill in gaps in my knowledge.
