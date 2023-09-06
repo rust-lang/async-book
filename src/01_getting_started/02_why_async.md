@@ -16,6 +16,7 @@ Concurrent programming is less mature and "standardized" than
 regular, sequential programming. As a result, we express concurrency
 differently depending on which concurrent programming model
 the language is supporting.
+
 A brief overview of the most popular concurrency models can help
 you understand how asynchronous programming fits within the broader
 field of concurrent programming:
@@ -70,59 +71,83 @@ field of concurrent programming:
   in distributed systems. The actor model can be efficiently implemented, but it
   leaves many practical issues unanswered, such as flow control and retry logic.
 
-In summary, asynchronous programming allows highly performant implementations
-that are suitable for low-level languages like Rust, while providing
-most of the ergonomic benefits of threads and coroutines.
+Asynchronous programming allows highly performant implementations that are
+suitable for low-level languages like Rust, while providing most of the
+ergonomic benefits of threads and coroutines.
 
 ## Async in Rust vs other languages
 
-Although asynchronous programming is supported in many languages, some
-details vary across implementations. Rust's implementation of async
-differs from most languages in a few ways:
+Although asynchronous programming is supported in many languages, some details
+vary across implementations.
+
+Rust's abstractions for async programming are provided by the
+[futures crate](https://docs.rs/futures/latest/futures/). These include
+
+- **Futures** are single eventual values produced by asynchronous computations.
+  A future is a value that might not have finished computing yet. A thread can
+  continue doing useful work while it waits for the value to become available.
+
+- **Streams** are a series of values produced asynchronously. An object with the
+  [`Stream`](https://docs.rs/futures/latest/futures/stream/trait.Stream.html)
+  trait asynchronously produces a sequence of values.
+
+- **Sinks** values into which other values can be sent asynchronously. Sinks
+  include the sending side of channels, sockets, and pipes.
+
+- **Executors** are responsible for running asynchronous tasks. Executors spawn
+  futures as tasks. Most of the time they are executed on a
+  [_thread pool_](https://docs.rs/futures/latest/futures/executor/struct.ThreadPool.html).
+  A small set of worker threads can handle a large set of spawned tasks. It is
+  also possible to run a task within a single thread via the
+  [`LocalPool`](https://docs.rs/futures/latest/futures/executor/struct.LocalPool.html)
+  executor, which should be used for running I/O-bound tasks that do relatively
+  little work between I/O operations.
+
+Rust's implementation of async differs from most languages in a few ways:
 
 - **Futures are inert** in Rust and make progress only when polled. Dropping a
   future stops it from making further progress.
+
 - **Async is zero-cost** in Rust, which means that you only pay for what you use.
   Specifically, you can use async without heap allocations and dynamic dispatch,
   which is great for performance!
   This also lets you use async in constrained environments, such as embedded systems.
+
 - **No built-in runtime** is provided by Rust. Instead, runtimes are provided by
   community maintained crates.
+
 - **Both single- and multithreaded** runtimes are available in Rust, which have
   different strengths and weaknesses.
 
 ## Async vs threads in Rust
 
-The primary alternative to async in Rust is using OS threads, either
-directly through [`std::thread`](https://doc.rust-lang.org/std/thread/)
-or indirectly through a thread pool.
-Migrating from threads to async or vice versa
-typically requires major refactoring work, both in terms of implementation and
-(if you are building a library) any exposed public interfaces. As such,
-picking the model that suits your needs early can save a lot of development time.
+The primary alternative to async in Rust is using OS threads, either directly
+through [`std::thread`](https://doc.rust-lang.org/std/thread/) or indirectly
+through a [thread pool](https://docs.rs/threadpool/latest/threadpool/).
+Migrating from threads to async or vice versa typically requires major
+refactoring work, both in terms of implementation and (if you are building a
+library) any exposed public interfaces. As such, picking the model that suits
+your needs early can save a lot of development time.
 
-**OS threads** are only suitable for running a small number of tasks concurrently, since
-threads come with CPU and memory overhead. Spawning and switching between threads
-is quite expensive as even idle threads consume system resources.
-A thread pool library can help mitigate some of these costs, but not all.
-However, threads let you reuse existing synchronous code without significant
-code changes—no particular programming model is required.
-In some operating systems, you can also change the priority of a thread,
-which is useful for drivers and other latency sensitive applications.
+**OS threads** are only suitable for running a small number of tasks
+concurrently, since threads come with CPU and memory overhead. Spawning and
+switching between threads is quite expensive as even idle threads consume system
+resources. A thread pool library can help mitigate some of these costs, but not
+all. However, threads let you reuse existing synchronous code without significant
+code changes—no particular programming model is required. In some operating
+systems, you can also change the priority of a thread, which is useful for 
+drivers and other latency sensitive applications.
 
-**Async** provides significantly reduced CPU and memory
-overhead, especially for workloads with a
-large amount of IO-bound tasks, such as servers and databases.
+**Async** provides significantly reduced CPU and memory overhead, especially for
+workloads with a large amount of IO-bound tasks, such as servers and databases.
 All else equal, you can have orders of magnitude more tasks than OS threads,
 because an async runtime uses a small amount of (expensive) threads to handle
-a large amount of (cheap) tasks.
-However, async Rust results in larger binary blobs due to the state
-machines generated from async functions and since each executable
-bundles an async runtime.
+a large amount of (cheap) tasks. However, async Rust results in larger binary
+blobs due to the state machines generated from async functions and since each
+executable bundles an async runtime.
 
-On a last note, asynchronous programming is not _better_ than threads,
-but different.
-If you don't need async for performance reasons, threads can often be
+On a last note, asynchronous programming is not _better_ than threads, but
+different. If you don't need async for performance reasons, threads can often be
 the simpler alternative.
 
 ### Example: Concurrent downloading
