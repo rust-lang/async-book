@@ -24,7 +24,7 @@ server to serve the book.
 mdbook serve
 ```
 
-# My note
+# What?
 
-This is a fork of the [async-book](), with my additional notes and random other stuff that
-I will as I fill in gaps in my knowledge.
+This is a fork of the [async-book](https://github.com/rust-lang/async-book), with a few
+additional notes and random other stuff that I add as I fill in any gaps I need to.
