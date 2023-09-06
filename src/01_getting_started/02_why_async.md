@@ -20,22 +20,55 @@ A brief overview of the most popular concurrency models can help
 you understand how asynchronous programming fits within the broader
 field of concurrent programming:
 
-- **OS threads** don't require any changes to the programming model,
-  which makes it very easy to express concurrency. However, synchronizing
-  between threads can be difficult, and the performance overhead is large.
-  Thread pools can mitigate some of these costs, but not enough to support
-  massive IO-bound workloads.
-- **Event-driven programming**, in conjunction with _callbacks_, can be very
-  performant, but tends to result in a verbose, "non-linear" control flow.
-  Data flow and error propagation is often hard to follow.
-- **Coroutines**, like threads, don't require changes to the programming model,
-  which makes them easy to use. Like async, they can also support a large
-  number of tasks. However, they abstract away low-level details that
-  are important for systems programming and custom runtime implementors.
+- **Processes** are the simplest way to write concurrent programs. Processes
+  launched this way cannot read or write to each other's virtual memory. This
+  makes it harder for processes to share state; they have to use explicit IPC
+  methods, e.g. pipes, FIFOS, shared memory, and semaphores.
+
+  In Rust, the [`std::process`](https://doc.rust-lang.org/std/process/index.html)
+  provides functionality for spawning and interacting with child processes.
+
+
+- **OS threads** are logical flows of execution that run in the context of a
+  single process. Multiple threads of execution run concurrently in a single
+  process, and are scheduled by the host operating system kernel (this is an
+  instance of _preemptive multi-tasking_, i.e. control over the multi-tasking
+  lies with the kernel, not the scheduled threads). Each thread has its own
+  thread context, but shares the virtual address space of the parent process. 
+
+  Threads usually don't require any changes to the programming model, which
+  makes it very easy to express concurrency. However, synchronizing between
+  threads can be difficult, and the performance overhead is large. Thread pools
+  can mitigate some of these costs, but not enough to support massive IO-bound 
+  workloads.
+
+  In Rust, thread management primitives are supplied by the 
+  [`std::thread`](https://doc.rust-lang.org/std/thread/) module.
+
+- **Event-driven programming** is a programming model where the control flow of
+  the program is determined by events. Registered events trigger matching 
+  _callback functions_ when the event occurs. This model can be very performant,
+  but tends to result in a complex, verbose, "non-linear" control flow. Data 
+  flow and error propagation is often hard to follow.
+
+  This programming model is not supported in the standard library, but there are
+  crates that provide support for it, for example
+  [cross_town crate](https://docs.rs/crosstown_bus/latest/crosstown_bus/), which
+  provides an Event Bus for building event-driven systems.
+
+- **Coroutines**, are like threads, except that they provide _cooperative multi-
+  tasking_. Coroutines voluntarily _yield_ control periodically, when idle, or
+  when running blocking IO to allow other coroutines to run.
+
+  Coroutines usually don't require changes to the programming model, which makes
+  them easy to use. Like async, they can also support a large number of tasks.
+  However, they abstract away low-level details that are important for systems
+  programming and custom runtime implementors.
+
 - **The actor model** divides all concurrent computation into units called
   actors, which communicate through fallible message passing, much like
-  in distributed systems. The actor model can be efficiently implemented, but it leaves
-  many practical issues unanswered, such as flow control and retry logic.
+  in distributed systems. The actor model can be efficiently implemented, but it
+  leaves many practical issues unanswered, such as flow control and retry logic.
 
 In summary, asynchronous programming allows highly performant implementations
 that are suitable for low-level languages like Rust, while providing
