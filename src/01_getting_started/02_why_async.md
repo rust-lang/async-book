@@ -80,8 +80,13 @@ ergonomic benefits of threads and coroutines.
 Although asynchronous programming is supported in many languages, some details
 vary across implementations.
 
-Rust's abstractions for async programming are provided by the
-[futures crate](https://docs.rs/futures/latest/futures/). These include
+The fundamental traits, types and functions, such as the
+[`Future`](https://doc.rust-lang.org/std/future/trait.Future.html) trait are
+provided by the standard library. More utility, types, macros and functions
+for async programming are provided by the
+[futures crate](https://docs.rs/futures/latest/futures/).
+
+Primitives used for async programming include:
 
 - **Futures** are single eventual values produced by asynchronous computations.
   A future is a value that might not have finished computing yet. A thread can

@@ -6,25 +6,22 @@ over time. With async Rust, you can expect:
 
 - Outstanding runtime performance for typical concurrent workloads.
 - More frequent interaction with advanced language features, such as lifetimes
-  and pinning.
+  and [pinning](https://doc.rust-lang.org/std/pin/).
 - Some compatibility constraints, both between sync and async code, and between
   different async runtimes.
 - Higher maintenance burden, due to the ongoing evolution of async runtimes
   and language support.
 
 In short, async Rust is more difficult to use and can result in a higher
-maintenance burden than synchronous Rust,
-but gives you best-in-class performance in return.
-All areas of async Rust are constantly improving,
-so the impact of these issues will wear off over time.
+maintenance burden than synchronous Rust, but gives you best-in-class
+performance in return. All areas of async Rust are constantly improving, so the
+impact of these issues will wear off over time.
 
 ## Language and library support
 
-While asynchronous programming is supported by Rust itself,
-most async applications depend on functionality provided
-by community crates.
-As such, you need to rely on a mixture of
-language features and library support:
+While asynchronous programming is supported by Rust itself, most async
+applications depend on functionality provided by community crates. As such, you
+need to rely on a mixture of language features and library support:
 
 - The most fundamental traits, types and functions, such as the
   [`Future`](https://doc.rust-lang.org/std/future/trait.Future.html) trait
