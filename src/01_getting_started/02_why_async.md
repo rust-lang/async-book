@@ -152,33 +152,31 @@ the simpler alternative.
 
 ### Example: Concurrent downloading
 
-In this example our goal is to download two web pages concurrently.
-In a typical threaded application we need to spawn threads
-to achieve concurrency:
+In this example our goal is to download two web pages concurrently.  In a
+typical threaded application we need to spawn threads to achieve concurrency:
 
 ```rust,ignore
 {{#include ../../examples/01_02_why_async/src/lib.rs:get_two_sites}}
 ```
 
-However, downloading a web page is a small task; creating a thread
-for such a small amount of work is quite wasteful. For a larger application, it
-can easily become a bottleneck. In async Rust, we can run these tasks
-concurrently without extra threads:
+However, downloading a web page is a small task; creating a thread for such a
+small amount of work is quite wasteful. For a larger application, it can easily
+become a bottleneck. In async Rust, we can run these tasks concurrently without
+extra threads:
 
 ```rust,ignore
 {{#include ../../examples/01_02_why_async/src/lib.rs:get_two_sites_async}}
 ```
 
-Here, no extra threads are created. Additionally, all function calls are statically
-dispatched, and there are no heap allocations!
-However, we need to write the code to be asynchronous in the first place,
-which this book will help you achieve.
+Here, no extra threads are created. Additionally, all function calls are
+statically dispatched, and there are no heap allocations! However, we need to
+write the code to be asynchronous in the first place, which this book will help
+you achieve.
 
 ## Custom concurrency models in Rust
 
 On a last note, Rust doesn't force you to choose between threads and async.
-You can use both models within the same application, which can be
-useful when you have mixed threaded and async dependencies.
-In fact, you can even use a different concurrency model altogether,
-such as event-driven programming, as long as you find a library that
-implements it.
+You can use both models within the same application, which can be useful when
+you have mixed threaded and async dependencies. In fact, you can even use a
+different concurrency model altogether, such as event-driven programming, as
+long as you find a library that implements it.
