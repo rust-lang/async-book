@@ -645,7 +645,7 @@ execute_unpin_future(fut); // OK
 ## Summary
 
 1. If `T: Unpin` (which is the default), then `Pin<'a, T>` is entirely
-equivalent to `&'a mut T`. in other words: `Unpin` means it's OK for this type
+equivalent to `&'a mut T`. In other words: `Unpin` means it's OK for this type
 to be moved even when pinned, so `Pin` will have no effect on such a type.
 
 2. Getting a `&mut T` to a pinned T requires unsafe if `T: !Unpin`.
