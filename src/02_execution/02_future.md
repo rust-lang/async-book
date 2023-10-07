@@ -20,7 +20,7 @@ make more progress.
 Without `wake()`, the executor would have no way of knowing when a particular
 future could make progress, and would have to be constantly polling every
 future. With `wake()`, the executor knows exactly which futures are ready to
-be `poll`ed.
+be `polled`.
 
 For example, consider the case where we want to read from a socket that may
 or may not have data available already. If there is data, we can read it
@@ -34,7 +34,7 @@ A simple `SocketRead` future might look something like this:
 {{#include ../../examples/02_02_future_trait/src/lib.rs:socket_read}}
 ```
 
-This model of `Future`s allows for composing together multiple asynchronous
+This model of `Futures` allows for composing together multiple asynchronous
 operations without needing intermediate allocations. Running multiple futures
 at once or chaining futures together can be implemented via allocation-free
 state machines, like this:
