@@ -139,7 +139,7 @@ impl Test {
 ```
 
 `Test` provides methods to get a reference to the value of the fields `a` and `b`. Since `b` is a
-reference to `a` we store it as a pointer since the borrowing rules of Rust doesn't allow us to
+reference to `a` we store it as a pointer since the borrowing rules of Rust don't allow us to
 define this lifetime. We now have what we call a self-referential struct.
 
 Our example works fine if we don't move any of our data around as you can observe by running
