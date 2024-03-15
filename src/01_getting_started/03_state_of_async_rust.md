@@ -40,9 +40,7 @@ language features and library support:
   details.
 
 Some language features you may be used to from synchronous Rust are not yet
-available in async Rust. Notably, Rust does not let you declare async
-functions in traits. Instead, you need to use workarounds to achieve the same
-result, which can be more verbose.
+available in async Rust.
 
 ## Compiling and debugging
 
