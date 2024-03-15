@@ -125,6 +125,7 @@ where
                 // the second!
                 Poll::Ready(()) => self.first.take(),
                 // We couldn't yet complete the first future.
+                // Notice that we disrupt the flow of the `pool` function with the `return` statement.
                 Poll::Pending => return Poll::Pending,
             };
         }
