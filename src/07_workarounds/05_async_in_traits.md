@@ -12,3 +12,5 @@ per-function-call. This is not a significant cost for the vast majority
 of applications, but should be considered when deciding whether to use
 this functionality in the public API of a low-level function that is expected
 to be called millions of times a second.
+
+Last updates: https://blog.rust-lang.org/2023/12/21/async-fn-rpit-in-traits.html
