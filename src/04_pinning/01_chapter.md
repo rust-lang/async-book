@@ -237,21 +237,21 @@ fn main() {
 # }
 ```
 
-Naively, we could think that what we should get a debug print of `test1` two times like this:
+Naively, we could think that what we should get a debug print of `test2` before and after the swap like this:
 
 ```rust, ignore
-a: test1, b: test1
+a: test2, b: test2
 a: test1, b: test1
 ```
 
 But instead we get:
 
 ```rust, ignore
-a: test1, b: test1
+a: test2, b: test2
 a: test1, b: test2
 ```
 
-The pointer to `test2.b` still points to the old location which is inside `test1`
+The pointer `test2.b` still points to the old location which is inside `test1`
 now. The struct is not self-referential anymore, it holds a pointer to a field
 in a different object. That means we can't rely on the lifetime of `test2.b` to
 be tied to the lifetime of `test2` anymore.
@@ -265,10 +265,15 @@ fn main() {
     let mut test2 = Test::new("test2");
     test2.init();
 
-    println!("a: {}, b: {}", test1.a(), test1.b());
+    println!("test1: a: {}, b: {}", test1.a(), test1.b());
+    println!("test2: a: {}, b: {}", test2.a(), test2.b());
     std::mem::swap(&mut test1, &mut test2);
+    println!("----------swap-----------");
+    println!("test1: a: {}, b: {}", test1.a(), test1.b());
+    println!("test2: a: {}, b: {}", test2.a(), test2.b());
+    println!("`test1.a = \"I've totally changed now!\".to_string();`");
     test1.a = "I've totally changed now!".to_string();
-    println!("a: {}, b: {}", test2.a(), test2.b());
+    println!("test2: a: {}, b: {}", test2.a(), test2.b());
 
 }
 # #[derive(Debug)]
