@@ -323,7 +323,7 @@ out of `Pin`. For example, `u8` is `Unpin`, so `Pin<&mut u8>` behaves just like
 a normal `&mut u8`.
 
 However, types that can't be moved after they're pinned have a marker called
-`!Unpin`. Futures created by async/await is an example of this.
+`!Unpin`. Futures created by async/await are an example of this.
 
 ### Pinning to the Stack
 
