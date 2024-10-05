@@ -101,7 +101,7 @@ it safe to create references to values inside an `async` block.
 
 ## Pinning in Detail
 
-Let's try to understand pinning by using an slightly simpler example. The problem we encounter
+Let's try to understand pinning by using a slightly simpler example. The problem we encounter
 above is a problem that ultimately boils down to how we handle references in self-referential
 types in Rust.
 
