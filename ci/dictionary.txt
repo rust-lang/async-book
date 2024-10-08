@@ -26,6 +26,7 @@ FutOne
 FutTwo
 FuturesUnordered
 GenFuture
+GitHub
 gRPC
 html
 http
@@ -65,6 +66,7 @@ ReadIntoBuf
 recognise
 refactor
 RefCell
+repo
 repurposed
 requeue
 ResponseFuture
@@ -102,6 +104,7 @@ Waker
 waker
 Wakeups
 wakeups
+webpage
 webpages
 webserver
 Woot

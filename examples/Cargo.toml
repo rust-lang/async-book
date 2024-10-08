@@ -1,5 +1,6 @@
 [workspace]
 members = [
+  "hello-world",
   "01_02_why_async",
   "01_04_async_await_primer",
   "02_02_future_trait",
@@ -18,3 +19,4 @@ members = [
   "09_04_concurrent_tcp_server",
   "09_05_final_tcp_server",
 ]
+resolver = "2"

@@ -1,5 +1,18 @@
 # Table of Contents
 
+[Introduction](intro.md)
+
+- [Navigation]()
+  - [By topic]()
+  - [FAQs]()
+  - [Index]()
+
+# Part 1: guide
+
+# Part 2: reference
+
+# Old chapters
+
 - [Getting Started](01_getting_started/01_chapter.md)
   - [Why Async?](01_getting_started/02_why_async.md)
   - [The State of Asynchronous Rust](01_getting_started/03_state_of_async_rust.md)
@@ -35,3 +48,4 @@
   - [TODO: Modeling Servers and the Request/Response Pattern]()
   - [TODO: Managing Shared State]()
 - [Appendix: Translations of the Book](12_appendix/01_translations.md)
+
