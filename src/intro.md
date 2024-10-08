@@ -4,24 +4,24 @@ NOTE: this guide is currently undergoing a rewrite after a long time without muc
 
 This book is a guide to asynchronous programming in Rust. It is designed to help you take your first steps and to discover more about advanced topics. We don't assume any experience with asynchronous programming (in Rust or another language), but we do assume you're familiar with Rust already. If you want to learn about Rust, you could start with [The Rust Programming Language](https://doc.rust-lang.org/stable/book/).
 
-This book has two main parts: part one is a beginners guide, it is designed to be read in-order and to take you from total beginner to intermediate level. Part two is a collection of stand-alone chapters on more advanced topics. It should be useful once you've worked through part one or if you already have some experience with async Rust.
+This book has two main parts: [part one](part-guide/intro.md) is a beginners guide, it is designed to be read in-order and to take you from total beginner to intermediate level. Part two is a collection of stand-alone chapters on more advanced topics. It should be useful once you've worked through part one or if you already have some experience with async Rust.
 
 You can navigate this book in multiple ways:
 
-* You can read it front to back, in order. This is the recommend path for newcomers to async Rust, at least for part one of the book.
+* You can read it front to back, in order. This is the recommend path for newcomers to async Rust, at least for [part one](part-guide/intro.md) of the book.
 * There is a summary contents on the left-hand side of the webpage.
 * If you want information about a broad topic, you could start with the topic index.
 * If you want to find all discussion about a specific topic, you could start with the detailed index.
 * You could see if your question is answered in the FAQs.
 
 
-## What is Async Programming?
+## What is Async Programming and why would you do it?
 
 In concurrent programming, the program does multiple things at the same time (or at least appears to). Programming with threads is one form of concurrent programming. Code within a thread is written in sequential style and the operating system executes threads concurrently. With async programming, concurrency happens entirely within your program (the operating system is not involved). An async runtime (which is just another crate in Rust) manages async tasks in conjunction with the programmer explicitly yielding control by using the `await` keyword.
 
 Because the operating system is not involved, *context switching* in the async world is very fast. Furthermore, async tasks have much lower memory overhead than operating system threads. This makes async programming a good fit for systems which need to handle very many concurrent tasks and where those tasks spend a lot of time waiting (for example, for client responses or for IO).
 
-Async programming also offers the programmer fine-grained control over how tasks are executed (levels of parallelism and concurrency, control flow, scheduling, and so forth). This means that async programming can be expressive as well as ergonomic for many uses.
+Async programming also offers the programmer fine-grained control over how tasks are executed (levels of parallelism and concurrency, control flow, scheduling, and so forth). This means that async programming can be expressive as well as ergonomic for many uses. In particular, async programming in Rust has a powerful concept of cancellation and supports many different flavours of concurrency (expressed using constructs including `spawn` and it's variations, `join`, `select`, `for_each_concurrent`, etc.). These allow composable and reusable implementations of concepts like timeouts, pausing, and throttling.
 
 
 ## Hello, world!
@@ -34,9 +34,7 @@ Just to give you a taste of what async Rust looks like, here is a 'hello, world'
 
 We'll explain everything in detail later. For now, note how we define an asynchronous function using `async fn` and call it using `.await` - an async function in Rust doesn't do anything unless it is `await`ed[^blocking].
 
-Like all examples in this book, if you want to see the full example (including `Cargo.toml`, for example) or to run it yourself locally, you can find them in the book's GitHub repo: e.g., [examples/hello-world]().
-
-TODO link: https://github.com/rust-lang/async-book/tree/master/examples/hello-world
+Like all examples in this book, if you want to see the full example (including `Cargo.toml`, for example) or to run it yourself locally, you can find them in the book's GitHub repo: e.g., [examples/hello-world](https://github.com/rust-lang/async-book/tree/master/examples/hello-world).
 
 
 ## Development of Async Rust
