@@ -11,3 +11,10 @@ fn recursive() -> BoxFuture<'static, ()> {
     }.boxed()
 }
 // ANCHOR_END: example
+
+// ANCHOR: example_pinned
+async fn recursive_pinned() {
+    Box::pin(recursive_pinned()).await;
+    Box::pin(recursive_pinned()).await;
+}
+// ANCHOR_END: example_pinned
