@@ -22,8 +22,23 @@ jobs:
       - run: bash ci/spellcheck.sh list
       - run: mdbook build
       - run: cargo test --all --manifest-path=./examples/Cargo.toml --target-dir ./target
-      - uses: rust-lang/simpleinfra/github-actions/static-websites@master
+      - uses: actions/upload-pages-artifact@v3
         with:
-          deploy_dir: book/html
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          path: book/html
         if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'rust-lang'
+
+  deploy:
+    name: deploy
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'rust-lang'
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{steps.deployment.outputs.page_url}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+        id: deployment
