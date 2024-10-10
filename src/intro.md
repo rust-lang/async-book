@@ -4,11 +4,11 @@ NOTE: this guide is currently undergoing a rewrite after a long time without muc
 
 This book is a guide to asynchronous programming in Rust. It is designed to help you take your first steps and to discover more about advanced topics. We don't assume any experience with asynchronous programming (in Rust or another language), but we do assume you're familiar with Rust already. If you want to learn about Rust, you could start with [The Rust Programming Language](https://doc.rust-lang.org/stable/book/).
 
-This book has two main parts: part one is a beginners guide, it is designed to be read in-order and to take you from total beginner to intermediate level. Part two is a collection of stand-alone chapters on more advanced topics. It should be useful once you've worked through part one or if you already have some experience with async Rust.
+This book has two main parts: [part one](part-guide/intro.md) is a beginners guide, it is designed to be read in-order and to take you from total beginner to intermediate level. Part two is a collection of stand-alone chapters on more advanced topics. It should be useful once you've worked through part one or if you already have some experience with async Rust.
 
 You can navigate this book in multiple ways:
 
-* You can read it front to back, in order. This is the recommend path for newcomers to async Rust, at least for part one of the book.
+* You can read it front to back, in order. This is the recommend path for newcomers to async Rust, at least for [part one](part-guide/intro.md) of the book.
 * There is a summary contents on the left-hand side of the webpage.
 * If you want information about a broad topic, you could start with the topic index.
 * If you want to find all discussion about a specific topic, you could start with the detailed index.
@@ -34,9 +34,7 @@ Just to give you a taste of what async Rust looks like, here is a 'hello, world'
 
 We'll explain everything in detail later. For now, note how we define an asynchronous function using `async fn` and call it using `.await` - an async function in Rust doesn't do anything unless it is `await`ed[^blocking].
 
-Like all examples in this book, if you want to see the full example (including `Cargo.toml`, for example) or to run it yourself locally, you can find them in the book's GitHub repo: e.g., [examples/hello-world]().
-
-TODO link: https://github.com/rust-lang/async-book/tree/master/examples/hello-world
+Like all examples in this book, if you want to see the full example (including `Cargo.toml`, for example) or to run it yourself locally, you can find them in the book's GitHub repo: e.g., [examples/hello-world](https://github.com/rust-lang/async-book/tree/master/examples/hello-world).
 
 
 ## Development of Async Rust
