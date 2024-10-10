@@ -27,9 +27,10 @@ jobs:
           path: book/html
         if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'rust-lang'
 
+  # Deploy is run as a separate job as it needs elevated permissions
   deploy:
     name: deploy
-    needs: test
+    needs: test  # the `test` job uploads the pages artifact
     if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'rust-lang'
     permissions:
       pages: write
