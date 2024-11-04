@@ -11,6 +11,7 @@
 
 - [Introduction](part-guide/intro.md)
 - [Concurrent programming](part-guide/concurrency.md)
+- [Async and Await](part-guide/async-await.md)
 
 # Part 2: reference
 
