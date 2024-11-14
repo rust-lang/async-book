@@ -9,6 +9,9 @@
 
 # Part 1: guide
 
+- [Introduction](part-guide/intro.md)
+- [Concurrent programming](part-guide/concurrency.md)
+
 # Part 2: reference
 
 # Old chapters
