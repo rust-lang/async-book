@@ -1,6 +1,9 @@
 [workspace]
 members = [
   "hello-world",
+  "hello-world-sleep",
+  "hello-world-spawn",
+  "hello-world-join",
   "01_02_why_async",
   "01_04_async_await_primer",
   "02_02_future_trait",

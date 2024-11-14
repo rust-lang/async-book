@@ -1,0 +1,8 @@
+[package]
+name = "hello-world-sleep"
+version = "0.1.0"
+authors = ["Nicholas Cameron <nrc@ncameron.org>"]
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1.40.0", features = ["full"] }
