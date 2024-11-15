@@ -55,7 +55,7 @@
 
 - [Parallelism](../part-guide/concurrency.md#concurrency-and-parallelism)
   - [c.f., concurrency](../part-guide/concurrency.md#concurrency-and-parallelism)
-
+- [Pinning, `Pin`](../part-reference/pinning.md)
 
 
 - [`race`](../part-guide/concurrency-primitives.md#race-select)
@@ -80,3 +80,7 @@
   - [async](../part-guide/more-async-await.md#async-traits)
   - `Future`
 [`try_join`](../part-guide/concurrency-primitives.md#join)
+
+
+
+- [`Unpin`](../part-reference/pinning.md)
