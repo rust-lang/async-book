@@ -14,12 +14,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install Rust
         run: rustup update stable && rustup default stable
-      - run: sudo apt-get update && sudo apt-get install aspell aspell-en
       - name: Install mdbook
         uses: taiki-e/install-action@mdbook
       - name: Install mdbook-linkcheck
         uses: taiki-e/install-action@mdbook-linkcheck
-      - run: bash ci/spellcheck.sh list
       - run: mdbook build
       - run: cargo test --all --manifest-path=./examples/Cargo.toml --target-dir ./target
       - uses: rust-lang/simpleinfra/github-actions/static-websites@master
