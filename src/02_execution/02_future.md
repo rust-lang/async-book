@@ -61,8 +61,8 @@ real `Future` trait and how it is different.
 ```
 
 The first change you'll notice is that our `self` type is no longer `&mut Self`,
-but has changed to `Pin<&mut Self>`. We'll talk more about pinning in [a later
-section][pinning], but for now know that it allows us to create futures that
+but has changed to `Pin<&mut Self>`. We'll talk more about pinning in a later
+section, but for now know that it allows us to create futures that
 are immovable. Immovable objects can store pointers between their fields,
 e.g. `struct MyFut { a: i32, ptr_to_a: *const i32 }`. Pinning is necessary
 to enable async/await.
@@ -76,5 +76,3 @@ In a real-world scenario, a complex application like a web server may have
 thousands of different connections whose wakeups should all be
 managed separately. The `Context` type solves this by providing access to
 a value of type `Waker`, which can be used to wake up a specific task.
-
-[pinning]: ../04_pinning/01_chapter.md
