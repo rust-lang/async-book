@@ -23,6 +23,14 @@
 - unordered variations
 - StreamGroup
 
+### join/select/race with streams
+
+- hazards with select in a loop
+- fusing
+- difference to just futures
+- alternatives to these
+  - Stream::merge, etc.
+
 ## Implementing an async iterator
 
 - Implementing the trait

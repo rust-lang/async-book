@@ -19,8 +19,10 @@
 
 - [Cancellation](../part-guide/more-async-await.md#cancellation)
   - [`CancellationToken`](../part-guide/more-async-await.md#cancellation)
+  - [In `select`](../part-guide/concurrency-primitives.md#race-select)
 - [Concurrency](../part-guide/concurrency.md)
   - [c.f., parallelism](../part-guide/concurrency.md#concurrency-and-parallelism)
+  - [Primitives (`join`, `select`, etc.)](../part-guide/concurrency-primitives.md)
 
 
 
@@ -38,6 +40,7 @@
 
 
 
+- [`join`](../part-guide/concurrency-primitives.md#join)
 - [Joining tasks](../part-guide/async-await.md#joining-tasks)
 - [`JoinHandle`](../part-guide/async-await.md#joinhandle)
   - [`abort`](../part-guide/more-async-await.md#cancellation)
@@ -55,12 +58,14 @@
 
 
 
+- [`race`](../part-guide/concurrency-primitives.md#race-select)
 - [Reactor](../part-guide/async-await.md#the-runtime)
 - [Runtimes](../part-guide/async-await.md#the-runtime)
 
 
 
 - [Scheduler](../part-guide/async-await.md#the-runtime)
+- [`select`](../part-guide/concurrency-primitives.md#race-select)
 - [Spawning tasks](../part-guide/async-await.md#spawning-tasks)
 
 
@@ -74,3 +79,4 @@
 - Traits
   - [async](../part-guide/more-async-await.md#async-traits)
   - `Future`
+[`try_join`](../part-guide/concurrency-primitives.md#join)
