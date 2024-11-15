@@ -20,7 +20,7 @@
 - [Destruction and clean-up](part-guide/dtors.md)
 - [Futures](part-guide/futures.md)
 - [Runtimes](part-guide/runtimes.md)
-- [Timers and signal handling](part-guide/times-signals.md)
+- [Timers and signal handling](part-guide/timers-signals.md)
 - [Async iterators (streams)](part-guide/streams.md)
 
 # Part 2: reference
@@ -37,7 +37,7 @@
 - [Async and FFI]()
 - [Comparing async programming in Rust to other languages]()
 - [The implementation of async/await in rustc]()
-- structured concurrency?
+- [Structured concurrency?]()
 
 
 # Old chapters

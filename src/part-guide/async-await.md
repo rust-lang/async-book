@@ -111,7 +111,7 @@ Finally, for one more perspective on `await`: we mentioned earlier that futures 
 Let's start by revisiting our 'hello, world!' example:
 
 ```rust,edition2021
-{{#include ../examples/hello-world/src/main.rs}}
+{{#include ../../examples/hello-world/src/main.rs}}
 ```
 
 You should now recognise the boilerplate around `main`. It's for initializing the Tokio runtime and creating an initial task to run the async `main` function.
@@ -143,7 +143,7 @@ The code is a bit more interesting, but we're essentially doing the same thing -
 For all the talk so far about concurrency, parallelism, and asynchrony, both these examples are 100% sequential. Just calling and awaiting async functions does not introduce any concurrency unless there are other tasks to schedule while the awaiting task is waiting. To prove this to ourselves, lets look at another simple (but contrived) example:
 
 ```rust,edition2021
-{{#include ../examples/hello-world-sleep/src/main.rs}}
+{{#include ../../examples/hello-world-sleep/src/main.rs}}
 ```
 
 Between printing "hello" and "world", we put the current task to sleep[^async-sleep] for one second. Observe what happens when we run the program: it prints "hello", does nothing for one second, then prints "world". That is because executing a single task is purely sequential. If we had some concurrency, then that one second nap would be an excellent opportunity to get some other work done, like printing "world". We'll see how to do that in the next section.
@@ -158,7 +158,7 @@ We've talked about async and await as a way to run code in an async task. And we
 Here's a tiny example of running an async function on a separate task by using `spawn`:
 
 ```rust,edition2021
-{{#include ../examples/hello-world-spawn/src/main.rs}}
+{{#include ../../examples/hello-world-spawn/src/main.rs}}
 ```
 
 Similar to the last example, we have two functions printing "hello" and "world!". But this time we run them concurrently (and in parallel) rather than sequentially. If you run the program a few times you should see the strings printing in both orders - sometimes "hello" first, sometimes "world!" first. A classic concurrent race!
@@ -184,7 +184,7 @@ For example, let's revisit our 'Hello, world!' example one more time:
 
 
 ```rust,edition2021
-{{#include ../examples/hello-world-join/src/main.rs}}
+{{#include ../../examples/hello-world-join/src/main.rs}}
 ```
 
 The code is similar to last time, but instead of just calling `spawn`, we save the returned `JoinHandle`s and later `await` them. Since we're waiting for those tasks to complete before we exit the `main` function, we no longer need the `sleep` in `main`.
@@ -197,4 +197,4 @@ If we immediately `await`ed the `JoinHandle` of the first `spawn` rather than sa
 
 We'll quickly look at `JoinHandle` in a little more depth. The fact that we can `await` a `JoinHandle` is a clue that a `JoinHandle` is itself a future. `spawn` is not an `async` function, it's a regular function that returns a future (`JoinHandle`). It does some work (to schedule the task) before returning the future (unlike an async future), which is why we don't *need* to `await` `spawn`. Awaiting a `JoinHandle` waits for the spawned task to complete and then returns the result. In the above example, there was no result, we just waited for the task to complete. `JoinHandle` is a generic type and it's type parameter is the type returned by the spawned task. In the above example, the type would be `JoinHandle<()>`, a future that results in a `String` would produce a `JoinHandle` with type `JoinHandle<String>`.
 
-`await`ing a `JoinHandle` returns a `Result` (which is why we used `let _ = ...` in the above example, it avoids a warning about an unused `Result`). If the spawned task completed successfully, then the task's result will be in the `Ok` variant. If the task panicked or was aborted (a form of cancellation, see [TODO](TODO)), then the result will be an `Err` containing a [`JoinError` docs](https://docs.rs/tokio/latest/tokio/task/struct.JoinError.html). If you are not using cancellation via `abort` in your project, then `unwrapping` the result of `JoinHandle.await` is a reasonable approach, since that is effectively propagating a panic from the spawned task to the spawning task.
+`await`ing a `JoinHandle` returns a `Result` (which is why we used `let _ = ...` in the above example, it avoids a warning about an unused `Result`). If the spawned task completed successfully, then the task's result will be in the `Ok` variant. If the task panicked or was aborted (a form of cancellation, see [TODO]()), then the result will be an `Err` containing a [`JoinError` docs](https://docs.rs/tokio/latest/tokio/task/struct.JoinError.html). If you are not using cancellation via `abort` in your project, then `unwrapping` the result of `JoinHandle.await` is a reasonable approach, since that is effectively propagating a panic from the spawned task to the spawning task.
