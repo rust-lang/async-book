@@ -13,7 +13,7 @@ async fn test_something() {
 
 There are many ways to configure the test, see the [docs](https://docs.rs/tokio/latest/tokio/attr.test.html) for details.
 
-There are some more advanced topics in testing async code (e.g., testing for race conditions, deadlock, etc.) and we'll cover some of those [later]() in this guide.
+There are some more advanced topics in testing async code (e.g., testing for race conditions, deadlock, etc.), and we'll cover some of those [later]() in this guide.
 
 
 ## Blocking and cancellation
@@ -22,9 +22,9 @@ Blocking and cancellation are important to keep in mind when programming with as
 
 ### Blocking IO
 
-We say a thread (note we're talking about OS threads here, not async tasks) is blocked when it can't make any progress. That's usually because it is waiting for the OS to complete a task on it's behalf (usually IO). Importantly, while a thread is blocked, the OS knows not to schedule it so that other threads can make progress. This is fine in a multithreaded program because it lets other threads make progress while the blocked thread is waiting. However, in an async program, there are other tasks which should be scheduled on the same OS thread, but the OS doesn't know about those and keeps the whole thread waiting. This means that rather than the single task waiting for it's IO to complete (which is fine), many tasks have to wait (not fine).
+We say a thread (note we're talking about OS threads here, not async tasks) is blocked when it can't make any progress. That's usually because it is waiting for the OS to complete a task on its behalf (usually I/O). Importantly, while a thread is blocked, the OS knows not to schedule it so that other threads can make progress. This is fine in a multithreaded program because it lets other threads make progress while the blocked thread is waiting. However, in an async program, there are other tasks which should be scheduled on the same OS thread, but the OS doesn't know about those and keeps the whole thread waiting. This means that rather than the single task waiting for its I/O to complete (which is fine), many tasks have to wait (which is not fine).
 
-We'll talk soon about non-blocking/async IO. For now, just know that non-blocking IO is IO which the async runtime knows about and so will only block the task which is waiting for it, not the whole thread. It is very important to only use non-blocking IO from an async task, never blocking IO (which is the only kind provided in Rust's standard library).
+We'll talk soon about non-blocking/async I/O. For now, just know that non-blocking I/O is I/O which the async runtime knows about and so will only block the task which is waiting for it, not the whole thread. It is very important to only use non-blocking I/O from an async task, never blocking I/O (which is the only kind provided in Rust's standard library).
 
 ### Blocking computation
 
@@ -38,23 +38,23 @@ Cancellation means stopping a future (or task) from executing. Since in Rust, fu
 
 Cancellation can be initiated in a few ways:
 
-- calling [`abort`](https://docs.rs/tokio/latest/tokio/task/struct.JoinHandle.html#method.abort) on a task's 'JoinHandle' (or an `AbortHandle`),
-- via a [`CancellationToken`](https://docs.rs/tokio-util/latest/tokio_util/sync/struct.CancellationToken.html) (which requires the future being cancelled to notice the token and cooperatively cancel itself),
-- implicitly, by a function or macro like [`select`](https://docs.rs/tokio/latest/tokio/macro.select.html),
-- by simply dropping a future if you have a direct reference to it.
+- Calling [`abort`](https://docs.rs/tokio/latest/tokio/task/struct.JoinHandle.html#method.abort) on a task's 'JoinHandle' (or an `AbortHandle`).
+- Via a [`CancellationToken`](https://docs.rs/tokio-util/latest/tokio_util/sync/struct.CancellationToken.html) (which requires the future being cancelled to notice the token and cooperatively cancel itself).
+- Implicitly, by a function or macro like [`select`](https://docs.rs/tokio/latest/tokio/macro.select.html).
+- By simply dropping a future if you own it.
 
-The first two are specific to Tokio, though most runtimes provide similar facilities. The second requires cooperation of the future being cancelled, but the others do not. In these other cases, the cancelled future will get no notification of cancellation and no opportunity to clean up (besides its destructor). Note that even if a future has a cancellation token, it can still be cancelled via the other methods which won't trigger the cancellation token.
+The first two are specific to Tokio, though most runtimes provide similar facilities. The second requires cooperation of the future being canceled, but the others do not. In these other cases, the canceled future will get no notification of cancellation and no opportunity to clean up (besides its destructor). Note that even if a future has a cancellation token, it can still be canceled via the other methods which won't trigger the cancellation token.
 
 From the perspective of writing async code (in async functions, blocks, futures, etc.), the code might stop executing at any `await` (including hidden ones in macros) and never start again. In order for your code to be correct (specifically to be *cancellation safe*), it must never leave any data in an inconsistent state at any await point.
 
-An example of how this can go wrong is if an async function reads data into an internal buffer, then awaits the next datum. If reading the data is destructive (i.e., cannot be re-read from the original source) and the async function is cancelled, then the internal buffer will be dropped, and the data in it will be lost.
+An example of how this can go wrong is if an async function reads data into an internal buffer, then awaits the next datum. If reading the data is destructive (i.e., cannot be re-read from the original source) and the async function is canceled, then the internal buffer will be dropped, and the data in it will be lost.
 
 We'll be coming back to cancellation and cancellation safety a few times in this guide, and there is a whole [chapter]() on the topic in the reference section.
 
 
 ## Async blocks
 
-A regular block in Rust (`{ ... }`) groups code together in the source and creates a scope of encapsulation for names. At runtime, the block is executed in order and evaluates to the value of it's last expression (or void (`()`) if there is no trailing expression).
+A regular block (`{ ... }`) groups code together in the source and creates a scope of encapsulation for names. At runtime, the block is executed in order and evaluates to the value of its last expression (or the unit type (`()`) if there is no trailing expression).
 
 Similarly to async functions, an async block is a deferred version of a regular block. An async block scopes code and names together, but at runtime it is not immediately executed and evaluates to a future. To execute the block and obtain the result, it must be `await`ed. E.g.,
 
@@ -70,7 +70,7 @@ let s2 = async {
 };
 ```
 
-If we were to execute this snippet, `s1` would be a string which could be printed, but `s2` would be a future - `question()` would not have been called. To print `s2`, we first have to `s2.await`.
+If we were to execute this snippet, `s1` would be a string which could be printed, but `s2` would be a future; `question()` would not have been called. To print `s2`, we first have to `s2.await`.
 
 An async block is the simplest way to create a future, and the simplest way to create an async context for deferred work.
 
