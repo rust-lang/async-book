@@ -21,6 +21,7 @@
 - Taking a future instead of a closure
 - Some example combinators
 - unordered variations
+- StreamGroup
 
 ## Implementing an async iterator
 
