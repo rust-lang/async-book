@@ -12,7 +12,7 @@
 - [Introduction](part-guide/intro.md)
 - [Concurrent programming](part-guide/concurrency.md)
 - [Async and await](part-guide/async-await.md)
-- [Advanced async/await topics](part-guide/adv-async-await.md)
+- [More async/await topics](part-guide/more-async-await.md)
 - [IO and issues with blocking](part-guide/io.md)
 - [Concurrency primitives](part-guide/concurrency-primitives.md)
 - [Channels, locking, and synchronization](part-guide/sync.md)

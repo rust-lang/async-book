@@ -3,22 +3,22 @@
 
 
 - Async/`async`
-  - [blocks](../part-guide/adv-async-await.md#async-blocks)
-  - [closures](../part-guide/adv-async-await.md#async-closures)
+  - [blocks](../part-guide/more-async-await.md#async-blocks)
+  - [closures](../part-guide/more-async-await.md#async-closures)
   - [functions](../part-guide/async-await.md#async-functions)
-  - [traits](../part-guide/adv-async-await.md#async-traits)
+  - [traits](../part-guide/more-async-await.md#async-traits)
   - [c.f., threads](../part-guide/concurrency.md#async-programming)
 - [`await`](../part-guide/async-await.md#await)
 
 
 
-- [Blocking](../part-guide/adv-async-await.md#blocking-and-cancellation)
-  - [IO](../part-guide/adv-async-await.md#blocking-io)
+- [Blocking](../part-guide/more-async-await.md#blocking-and-cancellation)
+  - [IO](../part-guide/more-async-await.md#blocking-io)
 
 
 
-- [Cancellation](../part-guide/adv-async-await.md#cancellation)
-  - [`CancellationToken`](../part-guide/adv-async-await.md#cancellation)
+- [Cancellation](../part-guide/more-async-await.md#cancellation)
+  - [`CancellationToken`](../part-guide/more-async-await.md#cancellation)
 - [Concurrency](../part-guide/concurrency.md)
   - [c.f., parallelism](../part-guide/concurrency.md#concurrency-and-parallelism)
 
@@ -34,13 +34,13 @@
 
 
 - IO
-  - [Blocking](../part-guide/adv-async-await.md#blocking-io)
+  - [Blocking](../part-guide/more-async-await.md#blocking-io)
 
 
 
 - [Joining tasks](../part-guide/async-await.md#joining-tasks)
 - [`JoinHandle`](../part-guide/async-await.md#joinhandle)
-  - [`abort`](../part-guide/adv-async-await.md#cancellation)
+  - [`abort`](../part-guide/more-async-await.md#cancellation)
 
 
 
@@ -68,9 +68,9 @@
 - [Tasks](../part-guide/async-await.md#futures-and-tasks)
   - [Spawning](../part-guide/async-await.md#spawning-tasks)
 - Testing
-  - [Unit tests](../part-guide/adv-async-await.md#unit-tests)
+  - [Unit tests](../part-guide/more-async-await.md#unit-tests)
 - [Threads](../part-guide/concurrency.md#processes-and-threads)
 - [Tokio](../part-guide/async-await.md#the-runtime)
 - Traits
-  - [async](../part-guide/adv-async-await.md#async-traits)
+  - [async](../part-guide/more-async-await.md#async-traits)
   - `Future`

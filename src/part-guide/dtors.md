@@ -13,7 +13,7 @@
 
 ## Cancellation
 
-- How it happens (recap of adv-async-await.md)
+- How it happens (recap of more-async-await.md)
   - drop a future
   - cancellation token
   - abort functions

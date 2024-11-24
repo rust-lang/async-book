@@ -8,13 +8,13 @@
 ## Correctness and safety
 
 - Cancellation
-  - [Introduction](../part-guide/adv-async-await.md#cancellation)
+  - [Introduction](../part-guide/more-async-await.md#cancellation)
 
 ## Performance
 
 - Blocking
-  - [Introduction](../part-guide/adv-async-await.md#blocking-and-cancellation)
+  - [Introduction](../part-guide/more-async-await.md#blocking-and-cancellation)
 
 ## Testing
 
-- [Unit test syntax](../part-guide/adv-async-await.md#unit-tests)
+- [Unit test syntax](../part-guide/more-async-await.md#unit-tests)
