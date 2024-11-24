@@ -2,10 +2,10 @@
 
 [Introduction](intro.md)
 
-- [Navigation]()
-  - [By topic]()
+- [Navigation](navigation/intro.md)
+  - [By topic](navigation/topics.md)
   - [FAQs]()
-  - [Index]()
+  - [Index](navigation/index.md)
 
 # Part 1: guide
 
