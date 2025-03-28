@@ -5,8 +5,6 @@ authors = ["Taylor Cramer"]
 [build]
 create-missing = false
 
-[preprocess.links]
-
 [output.html]
 git-repository-url = "https://github.com/rust-lang/async-book"
 site-url = "/async-book/"
