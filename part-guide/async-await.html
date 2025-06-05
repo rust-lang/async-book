@@ -1,0 +1,411 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Async and await - Asynchronous Programming in Rust</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Asynchronous Programming in Rust</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/async-book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="async-and-await"><a class="header" href="#async-and-await">Async and Await</a></h1>
+<p>In this chapter we'll get started doing some async programming in Rust and we'll introduce the <code>async</code> and <code>await</code> keywords.</p>
+<p><code>async</code> is an annotation on functions (and other items, such as traits, which we'll get to later); <code>await</code> is an operator used in expressions. But before we jump into those keywords, we need to cover a few core concepts of async programming in Rust, this follows from the discussion in the previous chapter, here we'll relate things directly to Rust programming.</p>
+<h2 id="rust-async-concepts"><a class="header" href="#rust-async-concepts">Rust async concepts</a></h2>
+<h3 id="the-runtime"><a class="header" href="#the-runtime">The runtime</a></h3>
+<p>Async tasks must be managed and scheduled. There are typically more tasks than cores available so they can't all be run at once. When one stops executing another must be picked to execute. If a task is waiting on IO or some other event, it should not be scheduled, but when that completes, it should be scheduled. That requires interacting with the OS and managing IO work.</p>
+<p>Many programming languages provide a runtime. Commonly, this runtime does a lot more than manage async tasks - it might manage memory (including garbage collection), have a role in exception handling, provide an abstraction layer over the OS, or even be a full virtual machine. Rust is a low-level language and strives towards minimal runtime overhead. The async runtime therefore has a much more limited scope than many other languages' runtimes. There are also many ways to design and implement an async runtime, so Rust lets you choose one depending on your requirements, rather than providing one. This does mean that getting started with async programming requires an extra step.</p>
+<p>As well as running and scheduling tasks, a runtime must interact with the OS to manage async IO. It must also provide timer functionality to tasks (which intersects with IO management). There are no strong rules about how a runtime must be structured, but some terms and division of responsibilities are common:</p>
+<ul>
+<li><em>reactor</em> or <em>event loop</em> or <em>driver</em> (equivalent terms): dispatches IO and timer events, interacts with the OS, and does the lowest-level driving forward of execution,</li>
+<li><em>scheduler</em>: determines when tasks can execute and on which OS threads,</li>
+<li><em>executor</em> or <em>runtime</em>: combines the reactor and scheduler, and is the user-facing API for running async tasks; <em>runtime</em> is also used to mean the whole library of functionality (e.g., everything in the Tokio crate, not just the Tokio executor which is represented by the <a href="https://docs.rs/tokio/latest/tokio/runtime/struct.Runtime.html"><code>Runtime</code></a> type).</li>
+</ul>
+<p>As well as the executor as described above, a runtime crate typically includes many utility traits and functions. These might include traits (e.g., <code>AsyncRead</code>) and implementations for IO, functionality for common IO tasks such as networking or accessing the file system, locks, channels, and other synchronisation primitives, utilities for timing, utilities for working with the OS (e.g., signal handling), utility functions for working with futures and streams (async iterators), or monitoring and observation tools. We'll cover many of those in this guide.</p>
+<p>There are many async runtimes to choose from. Some have very different scheduling policies, or are optimised for a specific task or domain. For most of this guide we'll use the <a href="https://tokio.rs/">Tokio</a> runtime. It's a general purpose runtime and is the most popular runtime in the ecosystem. It's a great choice for getting started and for production work. In some circumstances, you might get better performance or be able to write simpler code with a different runtime. Later in this guide we'll discuss some of the other available runtimes and why you might choose one or another, or even write your own.</p>
+<p>To get up and running as quickly as possible, you need just a little boilerplate. You'll need to include the Tokio crate as a dependency in your Cargo.toml (just like any other crate):</p>
+<pre><code>[dependencies]
+tokio = { version = "1", features = ["full"] }
+</code></pre>
+<p>And you'll use the <code>tokio::main</code> annotation on your <code>main</code> function so that it can be an async function (which is otherwise not permitted in Rust):</p>
+<pre><pre class="playground"><code class="language-rust norun">#[tokio::main]
+async fn main() { ... }</code></pre></pre>
+<p>That's it! You're ready to write some asynchronous code!</p>
+<p>The <code>#[tokio::main]</code> annotation initializes the Tokio runtime and starts an async task for running the code in <code>main</code>. Later in this guide we'll explain in more detail what that annotation is doing and how to use async code without it (which will give you more flexibility).</p>
+<h3 id="futures-rs-and-the-ecosystem"><a class="header" href="#futures-rs-and-the-ecosystem">Futures-rs and the ecosystem</a></h3>
+<p>TODO context and history, what futures-rs is for - was used a lot, probably don't need it now, overlap with Tokio and other runtimes (sometimes with subtle semantic differences), why you might need it (working with futures directly, esp writing your own, streams, some utils)</p>
+<p>Other ecosystem stuff - Yosh's crates, alt runtimes, experimental stuff, other?</p>
+<h3 id="futures-and-tasks"><a class="header" href="#futures-and-tasks">Futures and tasks</a></h3>
+<p>The basic unit of async concurrency in Rust is the <em>future</em>. A future is just a regular old Rust object (a struct or enum, usually) which implements the <a href="https://doc.rust-lang.org/std/future/trait.Future.html">'Future'</a> trait. A future represents a deferred computation. That is, a computation that will be ready at some point in the future.</p>
+<p>We'll talk a lot about futures in this guide, but it's easiest to get started without worrying too much about them. We'll mention them quite a bit in the next few sections, but we won't really define them or use them directly until later. One important aspect of futures is that they can be combined to make new, 'bigger' futures (we'll talk a lot more about <em>how</em> they can be combined later).</p>
+<p>I've used the term 'async task' quite a bit in an informal way in the previous chapter and this one. I've used the term to mean a logical sequence of execution; analogous to a thread but managed within a program rather than externally by the OS. It is often useful to think in terms of tasks, however, Rust itself has no concept of a task and the term is used to mean different things! It is confusing! To make it worse, runtimes do have a concept of a task and different runtimes have slightly different concepts of tasks.</p>
+<p>From here on in, I'm going to try to be precise about the terminology around tasks. When I use just 'task' I mean the abstract concept of a sequence of computation that may occur concurrently with other tasks. I'll use 'async task' to mean exactly the same thing, but in contrast to a task which is implemented as an OS thread. I'll use 'runtime's task' to mean whatever kind of task a runtime imagines, and 'tokio task' (or some other specific runtime) to mean Tokio's idea of a task.</p>
+<p>An async task in Rust is just a future (usually a 'big' future made by combining many others). In other words, a task is a future which is executed. However, there are times when a future is 'executed' without being a runtime's task. This kind of a future is intuitively a <em>task</em> but not a <em>runtime's task</em>. I'll spell this out more when we get to an example of it.</p>
+<h2 id="async-functions"><a class="header" href="#async-functions">Async functions</a></h2>
+<p>The <code>async</code> keyword is a modifier on function declarations. E.g., we can write <code>pub async fn send_to_server(...)</code>. An async function is simply a function declared using the <code>async</code> keyword, and what that means is that it is a function which can be executed asynchronously, in other words the caller <em>can choose not to</em> wait for the function to complete before doing something else.</p>
+<p>In more mechanical terms, when an async function is called, the body is not executed as it would be for a regular function. Instead the function body and its arguments are packaged into a future which is returned in lieu of a real result. The caller can then decide what to do with that future (if the caller wants the result 'straight away', then it will <code>await</code> the future, see the next section).</p>
+<p>Within an async function, code is executed in the usual, sequential way<sup class="footnote-reference" id="fr-preempt-1"><a href="#footnote-preempt">1</a></sup>, being async makes no difference. You can call synchronous functions from async functions, and execution proceeds as usual. One extra thing you can do within an async function is use <code>await</code> to await other async functions (or futures), which <em>may</em> cause yielding of control so that another task can execute.</p>
+<h2 id="await"><a class="header" href="#await"><code>await</code></a></h2>
+<p>We stated above that a future is a computation that will be ready at some point in the future. To get the result of that computation, we use the <code>await</code> keyword. If the result is ready immediately or can be computed without waiting, then <code>await</code> simply does that computation to produce the result. However, if the result is not ready, then <code>await</code> hands control over to the scheduler so that another task can proceed (this is cooperative multitasking mentioned in the previous chapter).</p>
+<p>The syntax for using await is <code>some_future.await</code>, i.e., it is a postfix keyword used with the <code>.</code> operator. That means it can be used ergonomically in chains of method calls and field accesses.</p>
+<p>Consider the following functions:</p>
+<pre><pre class="playground"><code class="language-rust norun"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// An async function, but it doesn't need to wait for anything.
+async fn add(a: u32, b: u32) -&gt; u32 {
+  a + b
+}
+
+async fn wait_to_add(a: u32, b: u32) -&gt; u32 {
+  sleep(1000).await;
+  a + b
+}
+<span class="boring">}</span></code></pre></pre>
+<p>If we call <code>add(15, 3).await</code> then it will return immediately with the result <code>18</code>. If we call <code>wait_to_add(15, 3).await</code>, we will eventually get the same answer, but while we wait another task will get an opportunity to run.</p>
+<p>In this silly example, the call to <code>sleep</code> is a stand-in for doing some long-running task where we have to wait for the result. This is usually an IO operation where the result is data read from an external source or confirmation that writing to an external destination succeeded. Reading looks something like <code>let data = read(...).await?</code>. In this case <code>await</code> will cause the current task to wait while the read happens. The task will resume once reading is completed (other tasks could get some work done while the reading task waits). The result of reading could be data successfully read or an error (handled by the <code>?</code>).</p>
+<p>Note that if we call <code>add</code> or <code>wait_to_add</code> or <code>read</code> without using <code>.await</code> we won't get any answer!</p>
+<p>What?</p>
+<p>Calling an async function returns a future, it doesn't immediately execute the code in the function. Furthermore, a future does not do any work until it is awaited<sup class="footnote-reference" id="fr-poll-1"><a href="#footnote-poll">2</a></sup>. This is in contrast to some other languages where an async function returns a future which begins executing immediately.</p>
+<p>This is an important point about async programming in Rust. After a while it will be second nature, but it often trips up beginners, especially those who have experience with async programming in other languages.</p>
+<p>An important intuition about futures in Rust is that they are inert objects. To get any work done they must be driven forward by an external force (usually an async runtime).</p>
+<p>We've described <code>await</code> quite operationally (it runs a future, producing a result), but we talked in the previous chapter about async tasks and concurrency, how does <code>await</code> fit into that mental model? First, let's consider pure sequential code: logically, calling a function simply executes the code in the function (with some assignment of variables). In other words, the current task continues executing the next 'chunk' of code which is defined by the function. Similarly, in an async context, calling a non-async function simply continues execution with that function. Calling an async function finds the code to run, but doesn't run it. <code>await</code> is an operator which continues execution of the current task, or if the current task can't continue right now, gives another task an opportunity to continue.</p>
+<p><code>await</code> can only be used inside an async context, for now that means inside an async function (we'll see more kinds of async contexts later). To understand why, remember that <code>await</code> might hand over control to the runtime so that another task can execute. There is only a runtime to hand control to in an async context. For now, you can imagine the runtime like a global variable which is only accessible in async functions, we'll explain later how it really works.</p>
+<p>Finally, for one more perspective on <code>await</code>: we mentioned earlier that futures can be combined together to make 'bigger' futures. <code>async</code> functions are one way to define a future, and <code>await</code> is one way to combine futures. Using <code>await</code> on a future combines that future into the future produced by the async function it's used inside. We'll talk in more detail about this perspective and other ways to combine futures later.</p>
+<h2 id="some-asyncawait-examples"><a class="header" href="#some-asyncawait-examples">Some async/await examples</a></h2>
+<p>Let's start by revisiting our 'hello, world!' example:</p>
+<pre><pre class="playground"><code class="language-rust edition2021">// Define an async function.
+async fn say_hello() {
+    println!("hello, world!");
+}
+
+#[tokio::main] // Boilerplate which lets us write `async fn main`, we'll explain it later.
+async fn main() {
+    // Call an async function and await its result.
+    say_hello().await;
+}</code></pre></pre>
+<p>You should now recognise the boilerplate around <code>main</code>. It's for initializing the Tokio runtime and creating an initial task to run the async <code>main</code> function.</p>
+<p><code>say_hello</code> is an async function, when we call it, we have to follow the call with <code>.await</code> to run it as part of the current task. Note that if you remove the <code>.await</code>, then running the program does nothing! Calling <code>say_hello</code> returns a future, but it is never executed so <code>println</code> is never called (the compiler will warn you, at least).</p>
+<p>Here's a slightly more realistic example, taken from the <a href="https://tokio.rs/tokio/tutorial/hello-tokio">Tokio tutorial</a>.</p>
+<pre><pre class="playground"><code class="language-rust norun">#[tokio::main]
+async fn main() -&gt; Result&lt;()&gt; {
+    // Open a connection to the mini-redis address.
+    let mut client = client::connect("127.0.0.1:6379").await?;
+
+    // Set the key "hello" with value "world"
+    client.set("hello", "world".into()).await?;
+
+    // Get key "hello"
+    let result = client.get("hello").await?;
+
+    println!("got value from the server; result={:?}", result);
+
+    Ok(())
+}</code></pre></pre>
+<p>The code is a bit more interesting, but we're essentially doing the same thing - calling async functions and then awaiting to execute the result. This time we're using <code>?</code> for error handling - it works just like in synchronous Rust.</p>
+<p>For all the talk so far about concurrency, parallelism, and asynchrony, both these examples are 100% sequential. Just calling and awaiting async functions does not introduce any concurrency unless there are other tasks to schedule while the awaiting task is waiting. To prove this to ourselves, lets look at another simple (but contrived) example:</p>
+<pre><pre class="playground"><code class="language-rust edition2021">use std::io::{stdout, Write};
+use tokio::time::{sleep, Duration};
+
+async fn say_hello() {
+    print!("hello, ");
+    // Flush stdout so we see the effect of the above `print` immediately.
+    stdout().flush().unwrap();
+}
+
+async fn say_world() {
+    println!("world!");
+}
+
+#[tokio::main]
+async fn main() {
+    say_hello().await;
+    // An async sleep function, puts the current task to sleep for 1s.
+    sleep(Duration::from_millis(1000)).await;
+    say_world().await;
+}</code></pre></pre>
+<p>Between printing "hello" and "world", we put the current task to sleep<sup class="footnote-reference" id="fr-async-sleep-1"><a href="#footnote-async-sleep">3</a></sup> for one second. Observe what happens when we run the program: it prints "hello", does nothing for one second, then prints "world". That is because executing a single task is purely sequential. If we had some concurrency, then that one second nap would be an excellent opportunity to get some other work done, like printing "world". We'll see how to do that in the next section.</p>
+<h2 id="spawning-tasks"><a class="header" href="#spawning-tasks">Spawning tasks</a></h2>
+<p>We've talked about async and await as a way to run code in an async task. And we've said that <code>await</code> can put the current task to sleep while it waits for IO or some other event. When that happens, another task can run, but how do those other tasks come about? Just like we use <code>std::thread::spawn</code> to spawn a new task, we can use <a href="https://docs.rs/tokio/latest/tokio/task/fn.spawn.html"><code>tokio::spawn</code></a> to spawn a new async task. Note that <code>spawn</code> is a function of Tokio, the runtime, not from Rust's standard library, because tasks are purely a runtime concept.</p>
+<p>Here's a tiny example of running an async function on a separate task by using <code>spawn</code>:</p>
+<pre><pre class="playground"><code class="language-rust edition2021">use tokio::{spawn, time::{sleep, Duration}};
+
+async fn say_hello() {
+    // Wait for a while before printing to make it a more interesting race.
+    sleep(Duration::from_millis(100)).await;
+    println!("hello");
+}
+
+async fn say_world() {
+    sleep(Duration::from_millis(100)).await;
+    println!("world!");
+}
+
+#[tokio::main]
+async fn main() {
+    spawn(say_hello());
+    spawn(say_world());
+    // Wait for a while to give the tasks time to run.
+    sleep(Duration::from_millis(1000)).await;
+}</code></pre></pre>
+<p>Similar to the last example, we have two functions printing "hello" and "world!". But this time we run them concurrently (and in parallel) rather than sequentially. If you run the program a few times you should see the strings printing in both orders - sometimes "hello" first, sometimes "world!" first. A classic concurrent race!</p>
+<p>Let's dive into what is happening here. There are three concepts in play: futures, tasks, and threads. The <code>spawn</code> function takes a future (which remember can be made up of many smaller futures) and runs it as a new Tokio task. Tasks are the concept which the Tokio runtime schedules and manages (not individual futures). Tokio (in its default configuration) is a multi-threaded runtime which means that when we spawn a new task, that task may be run on a different OS thread from the task it was spawned from (it may be run on the same thread, or it may start on one thread and then be moved to another later on).</p>
+<p>So, when a future is spawned as a task it runs <em>concurrently</em> with the task it was spawned from and any other tasks. It may also run in parallel to those tasks if it is scheduled on a different thread.</p>
+<p>To summarise, when we write two statements following each other in Rust, they are executed sequentially (whether in async code or not). When we write <code>await</code>, that does not change the concurrency of sequential statements. E.g., <code>foo(); bar();</code> is strictly sequential - <code>foo</code> is called and afterwards, <code>bar</code> is called. That is true whether <code>foo</code> and <code>bar</code> are async functions or not. <code>foo().await; bar().await;</code> is also strictly sequential, <code>foo</code> is fully evaluated and then <code>bar</code> is fully evaluated. In both cases another thread might be interleaved with the sequential execution and in the second case, another async task might be interleaved at the await points, but the two statements are executed sequentially <em>with respect to each other</em> in both cases.</p>
+<p>If we use either <code>thread::spawn</code> or <code>tokio::spawn</code> we introduce concurrency and potentially parallelism, in the first case between threads and in the second between tasks.</p>
+<p>Later in the guide we'll see cases where we execute futures concurrently, but never in parallel.</p>
+<h3 id="joining-tasks"><a class="header" href="#joining-tasks">Joining tasks</a></h3>
+<p>If we want to get the result of executing a spawned task, then the spawning task can wait for it to finish and use the result, this is called <em>joining</em> the tasks (analogous to <a href="https://doc.rust-lang.org/std/thread/struct.JoinHandle.html#method.join">joining</a> threads, and the APIs for joining are similar).</p>
+<p>When a task is spawned, the spawn function returns a <a href="https://docs.rs/tokio/latest/tokio/task/struct.JoinHandle.html"><code>JoinHandle</code></a>. If you just want the task to do it's own thing executing, the <code>JoinHandle</code> can be discarded (dropping the <code>JoinHandle</code> does not affect the spawned task). But if you want the spawning task to wait for the spawned task to complete and then use the result, you can <code>await</code> the <code>JoinHandle</code> to do so.</p>
+<p>For example, let's revisit our 'Hello, world!' example one more time:</p>
+<pre><pre class="playground"><code class="language-rust edition2021">use tokio::{spawn, time::{sleep, Duration}};
+
+async fn say_hello() {
+    // Wait for a while before printing to make it a more interesting race.
+    sleep(Duration::from_millis(100)).await;
+    println!("hello");
+}
+
+async fn say_world() {
+    sleep(Duration::from_millis(100)).await;
+    println!("world");
+}
+
+#[tokio::main]
+async fn main() {
+    let handle1 = spawn(say_hello());
+    let handle2 = spawn(say_world());
+    
+    let _ = handle1.await;
+    let _ = handle2.await;
+
+    println!("!");
+}</code></pre></pre>
+<p>The code is similar to last time, but instead of just calling <code>spawn</code>, we save the returned <code>JoinHandle</code>s and later <code>await</code> them. Since we're waiting for those tasks to complete before we exit the <code>main</code> function, we no longer need the <code>sleep</code> in <code>main</code>.</p>
+<p>The two spawned tasks are still executing concurrently. If you run the program a few times you should see both orderings. However, the <code>await</code>ed join handles are a limit on the concurrency: the final exclamation mark ('!') will <em>always</em> be printed last (you could experiment with moving <code>println!("!");</code> relative to the <code>await</code>s. You'll probably need to change with the sleep times too to get observable effects).</p>
+<p>If we immediately <code>await</code>ed the <code>JoinHandle</code> of the first <code>spawn</code> rather than saved it and later <code>await</code>ed (i.e., written <code>spawn(say_hello()).await;</code>), then we'd have spawned another task to run the 'hello' future, but the spawning task would have waited for it to finish before doing anything else. In other words, there is no possible concurrency! You almost never want to do this (because why bother with the spawn? Just write the sequential code).</p>
+<h3 id="joinhandle"><a class="header" href="#joinhandle"><code>JoinHandle</code></a></h3>
+<p>We'll quickly look at <code>JoinHandle</code> in a little more depth. The fact that we can <code>await</code> a <code>JoinHandle</code> is a clue that a <code>JoinHandle</code> is itself a future. <code>spawn</code> is not an <code>async</code> function, it's a regular function that returns a future (<code>JoinHandle</code>). It does some work (to schedule the task) before returning the future (unlike an async future), which is why we don't <em>need</em> to <code>await</code> <code>spawn</code>. Awaiting a <code>JoinHandle</code> waits for the spawned task to complete and then returns the result. In the above example, there was no result, we just waited for the task to complete. <code>JoinHandle</code> is a generic type and it's type parameter is the type returned by the spawned task. In the above example, the type would be <code>JoinHandle&lt;()&gt;</code>, a future that results in a <code>String</code> would produce a <code>JoinHandle</code> with type <code>JoinHandle&lt;String&gt;</code>.</p>
+<p><code>await</code>ing a <code>JoinHandle</code> returns a <code>Result</code> (which is why we used <code>let _ = ...</code> in the above example, it avoids a warning about an unused <code>Result</code>). If the spawned task completed successfully, then the task's result will be in the <code>Ok</code> variant. If the task panicked or was aborted (a form of <a href="../part-reference/cancellation.html">cancellation</a>), then the result will be an <code>Err</code> containing a <a href="https://docs.rs/tokio/latest/tokio/task/struct.JoinError.html"><code>JoinError</code> docs</a>. If you are not using cancellation via <code>abort</code> in your project, then <code>unwrapping</code> the result of <code>JoinHandle.await</code> is a reasonable approach, since that is effectively propagating a panic from the spawned task to the spawning task.</p>
+<hr>
+<ol class="footnote-definition"><li id="footnote-preempt">
+<p>like any other thread, the thread the async function is running on may be pre-empted by the operating system and paused so another thread can get some work done. However, from the function's point of view this is not observable without inspecting data which may have been modified by other threads (and which could have been modified by another thread executing in parallel without the current thread being paused). <a href="#fr-preempt-1">↩</a></p>
+</li>
+<li id="footnote-poll">
+<p>Or polled, which is a lower-level operation than <code>await</code> and happens behind the scenes when using <code>await</code>. We'll talk about polling later when we talk about futures in detail. <a href="#fr-poll-1">↩</a></p>
+</li>
+<li id="footnote-async-sleep">
+<p>Note that we're using an async sleep function here, if we were to use <a href="https://doc.rust-lang.org/std/thread/fn.sleep.html"><code>sleep</code></a> from std we'd put the whole thread to sleep. That wouldn't make any difference in this toy example but in a real program it would mean other tasks could not be scheduled on that thread during that time. That is very bad. <a href="#fr-async-sleep-1">↩</a></p>
+</li>
+</ol>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../part-guide/concurrency.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../part-guide/more-async-await.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../part-guide/concurrency.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../part-guide/more-async-await.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

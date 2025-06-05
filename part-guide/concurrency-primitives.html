@@ -1,0 +1,359 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Composing futures concurrently - Asynchronous Programming in Rust</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Asynchronous Programming in Rust</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rust-lang/async-book" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="composing-futures-concurrently"><a class="header" href="#composing-futures-concurrently">Composing futures concurrently</a></h1>
+<p>In this chapter we're going to cover more ways in which futures can be composed. In particular, some new ways in which futures can be executed concurrently (but not in parallel). Superficially, the new functions/macros we introduce in this chapter are pretty simple. However, the underlying concepts can be pretty subtle. We'll start with a recap on futures, concurrency, and parallelism, but you might also want to revisit the earlier section comparing <a href="concurrency.html#concurrency-and-parallelism">concurrency with parallelism</a>.</p>
+<p>A futures is a deferred computation. A future can be progressed by using <code>await</code>, which hands over control to the runtime, causing the current task to wait for the result of the computation. If <code>a</code> and <code>b</code> are futures, then they can be sequentially composed (that is, combined to make a future which executes <code>a</code> to completion and then <code>b</code> to completion) by <code>await</code>ing one then the other: <code>async { a.await; b.await}</code>.</p>
+<p>We have also seen parallel composition of futures using <code>spawn</code>: <code>async { let a = spawn(a); let b = spawn(b); (a.await, b.await)}</code> runs the two futures in parallel. Note that the <code>await</code>s in the tuple are not awaiting the futures themselves, but are awaiting <code>JoinHandle</code>s to get the results of the futures when they complete.</p>
+<p>In this chapter we introduce two ways to compose futures concurrently without parallelism: <code>join</code> and <code>select</code>/<code>race</code>. In both cases, the futures run concurrently by time-slicing; each of the composed futures takes turns to execute a little bit before the next gets a turn. This is done <em>without involving the async runtime</em> (and therefore without multiple OS threads and without any potential for parallelism). The composing construct interleaves the futures locally. You can think of these constructs being like mini-executors which execute their component futures within a single async task.</p>
+<p>The fundamental difference between join and select/race is how they handle futures completing their work: a join finishes when all futures finish, a select/race finishes when one future finishes (all the others are cancelled). There are also variations of both for handling errors.</p>
+<p>These constructs (or similar concepts) are often used with streams, we'll touch on this below, but we'll talk more about that in the <a href="streams.html">streams chapter</a>.</p>
+<p>If you want parallelism (or you don't explicitly not want parallelism), spawning tasks is often a simpler alternative to these composition constructs. Spawning tasks is usually less error-prone, more general, and performance is more predictable. On the other hand, spawning is inherently less <a href="../part-reference/structured.html">structured</a>, which can make lifecycle and resource management harder to reason about.</p>
+<p>It's worth considering the performance issue in a little more depth. The potential performance problem with concurrent composition is the fairness of time sharing. If you have 100 tasks in your program, then typically the optimal way to share resources is for each task to get 1% of the processor time (or if the tasks are all waiting, then for each to have the same chance of being woken up). If you spawn 100 tasks, then this is usually what happens (roughly). However, if you spawn two tasks and join 99 futures on one of those tasks, then the scheduler will only know about two tasks and one task will get 50% of the time and the 99 futures will each get 0.5%.</p>
+<p>Usually the distribution of tasks is not so biased, and very often we use join/select/etc. for things like timeouts where this behaviour is actually desirable. But it is worth considering to ensure that your program has the performance characteristics you want.</p>
+<h2 id="join"><a class="header" href="#join">Join</a></h2>
+<p>Tokio's <a href="https://docs.rs/tokio/latest/tokio/macro.join.html"><code>join</code> macro</a> takes a list of futures and runs them all to completion concurrently (returning all the results as a tuple). It returns when all the futures have completed. The futures are always executed on the same thread (concurrently and not in parallel).</p>
+<p>Here's a simple example:</p>
+<pre><pre class="playground"><code class="language-rust norun">async fn main() {
+  let (result_1, result_2) = join!(do_a_thing(), do_a_thing());
+  // Use `result_1` and `result_2`.
+}</code></pre></pre>
+<p>Here, the two executions of <code>do_a_thing</code> happen concurrently, and the results are ready when they are both done. Notice that we don't <code>await</code> to get the results. <code>join!</code> implicitly awaits it's futures and produces a value. It does not create a future. You do still need to use it within an async context (e.g., from within an async function).</p>
+<p>Although you can't see it in the example above, <code>join!</code> takes expressions which evaluate to futures<sup class="footnote-reference" id="fr-into-1"><a href="#footnote-into">1</a></sup>. <code>join</code> does not create an async context in it's body and you shouldn't <code>await</code> the futures passed to <code>join</code> (otherwise they'll be evaluated before the joined futures).</p>
+<p>Because all the futures are executed on the same thread, if any future blocks the thread, then none of them can make progress. If using a mutex or other lock, this can easily lead to deadlock if one future is waiting for a lock held by another future.</p>
+<p>[<code>join</code>] does not care about the result of the futures. In particular, if a future is cancelled or returns an error, it does not affect the others - they continue to execute. If you want 'fail fast' behaviour, use <a href="https://docs.rs/tokio/latest/tokio/macro.try_join.html"><code>try_join</code></a>. <code>try_join</code> works similarly to <code>join</code>, however, if any future returns an <code>Err</code>, then all the other futures are cancelled and <code>try_join</code> returns the error immediately.</p>
+<p>Back in the earlier chapter on <a href="async-await.html">async/await</a>, we used the word 'join' to talk about joining spawned tasks. As the name suggests, joining futures and tasks is related: joining means we execute multiple futures concurrently and wait for the result before continuing. The syntax is different: using a <code>JoinHandle</code> vs the <code>join</code> macro, but the idea is similar. The key difference is that when joining tasks, the tasks execute concurrently and in parallel, whereas using <code>join!</code>, the futures execute concurrently but not in parallel. Furthermore, spawned tasks are scheduled on the runtime's scheduler, whereas with <code>join!</code> the futures are 'scheduled' locally (on the same task and within the temporal scope of the macro's execution). Another difference is that if a spawned task panics, the panic is caught by the runtime, but if a future in <code>join</code> panics, then the whole task panics.</p>
+<h3 id="alternatives"><a class="header" href="#alternatives">Alternatives</a></h3>
+<p>Running futures concurrently and collecting their results is a common requirement. You should probably use <code>spawn</code> and <code>JoinHandle</code>s unless you have a good reason not to (i.e., you explicitly do not want parallelism, and even then you might prefer to use <a href="https://docs.rs/tokio/latest/tokio/task/fn.spawn_local.html"><code>spawn_local</code></a>). The <a href="https://docs.rs/tokio/latest/tokio/task/struct.JoinSet.html"><code>JoinSet</code></a> abstraction manages such spawned tasks in a way similar to <code>join!</code>.</p>
+<p>Most runtimes (and <a href="https://docs.rs/futures/latest/futures/macro.join.html">futures.rs</a>) have an equivalent to Tokio's <code>join</code> macro and they mostly behave the same way. There are also <code>join</code> functions, which are similar to the macro but a little less flexible. E.g., futures.rs has <a href="https://docs.rs/futures/latest/futures/future/fn.join.html"><code>join</code></a> for joining two futures, <a href="https://docs.rs/futures/latest/futures/future/fn.join3.html"><code>join3</code></a>, <a href="https://docs.rs/futures/latest/futures/future/fn.join4.html"><code>join4</code></a>, and <a href="https://docs.rs/futures/latest/futures/future/fn.join5.html"><code>join5</code></a> for joining the obvious number of futures, and <a href="https://docs.rs/futures/latest/futures/future/fn.join_all.html">join_all</a> for joining a collection of futures (as well as <code>try_</code> variations of each of these).</p>
+<p><a href="https://docs.rs/futures-concurrency/latest">Futures-concurrency</a> also provides functionality for join (and try_join). In the futures-concurrency style, these operations are trait methods on groups of futures such as tuples, <code>Vec</code>s, or arrays. E.g., to join two futures, you would write <code>(fut1, fut2).join().await</code> (note that <code>await</code> is explicit here).</p>
+<p>If the set of futures you wish to join together varies dynamically (e.g., new futures are created as input comes in over the network), or you want the results as they complete rather than when all the futures have completed, then you'll need to use streams and the <a href="https://docs.rs/futures/latest/futures/stream/struct.FuturesUnordered.html"><code>FuturesUnordered</code></a> or <a href="https://docs.rs/futures/latest/futures/stream/struct.FuturesOrdered.html"><code>FuturesOrdered</code></a> functionality. We'll cover these in the <a href="streams.html">streams</a> chapter.</p>
+<h2 id="raceselect"><a class="header" href="#raceselect">Race/select</a></h2>
+<p>The counterpart to joining futures is racing them (aka selecting on them). With race/select the futures are executed concurrently, but rather than waiting for all the futures to complete, we only wait for the first one to complete and then cancel the others. Although this sounds similar to joining, it is significantly more interesting (and sometimes error-prone) because now we have to reason about cancellation.</p>
+<p>Here's an example using Tokio's <a href="https://docs.rs/tokio/latest/tokio/macro.select.html"><code>select</code></a> macro:</p>
+<pre><pre class="playground"><code class="language-rust norun">async fn main() {
+  select! {
+    result = do_a_thing() =&gt; {
+      println!("computation completed and returned {result});
+    }
+    _ = timeout() =&gt; {
+      println!("computation timed-out");
+    }
+  }
+}</code></pre></pre>
+<p>You'll notice things are already more interesting than with the <code>join</code> macro because we handle the results of the futures within the <code>select</code> macro. It looks a bit like a <code>match</code> expression, but with <code>select</code>, all branches are run concurrently and the body of the branch which finishes first is executed with its result (the other branches are not executed and the futures are cancelled by <code>drop</code>ping). In the example, <code>do_a_thing</code> and <code>timeout</code> execute concurrently and the first to complete will have it's block executed (i.e., only one <code>println</code> will run), the other future will be cancelled. As with the <code>join</code> macro, awaiting the futures is implicit.</p>
+<p>Tokio's <code>select</code> macro supports a bunch of features:</p>
+<ul>
+<li>pattern matching: the syntax on the left of <code>=</code> on each branch can be a pattern and the block is only executed if the result of the future matches the pattern. If the pattern does not match, then the future is no longer polled (but other futures are). This can be useful for futures which optionally return a value, e.g., <code>Some(x) = do_a_thing() =&gt; { ... }</code>.</li>
+<li><code>if</code> guards: each branch may have an <code>if</code> guard. When the <code>select</code> macro runs, after evaluating each expression to produce a future, the <code>if</code> guard is evaluated and the future is only polled if the guard is true. E.g., <code>x = = do_a_thing() if false =&gt; { ... }</code> will never be polled. Note that the <code>if</code> guard is not re-evaluated during polling, only when the macro is initialized.</li>
+<li><code>else</code> branch: <code>select</code> can have an <code>else</code> branch <code>else =&gt; { ... }</code>, this is executed if all the futures have stopped and none of the blocks have been executed. If this happens without an <code>else</code> branch, then <code>select</code> will panic.</li>
+</ul>
+<p>The value of the <code>select!</code> macro is the value of the executed branch (just like <code>match</code>), so all branches must have the same type. E.g., if we wanted to use the result of the above example outside of the <code>select</code>, we'd write it like</p>
+<pre><pre class="playground"><code class="language-rust norun">async fn main() {
+  let result = select! {
+    result = do_a_thing() =&gt; {
+      Some(result)
+    }
+    _ = timeout() =&gt; {
+      None
+    }
+  };
+
+  // Use `result`
+}</code></pre></pre>
+<p>As with <code>join!</code>, <code>select!</code> does not treat <code>Result</code>s in any special way (other than the pattern matching mentioned previously) and if a branch completes with an error, then all other branches will be cancelled and the error will be used as the result of select (in the same way as if the branch has completed successfully).</p>
+<p>The <code>select</code> macro intrinsically uses cancellation, so if you're trying to avoid cancellation in your program, you must avoid <code>select!</code>. In fact, <code>select</code> is often the primary source of cancellation in an async program. As discussed <a href="../part-reference/cancellation.html">elsewhere</a>, cancellation has many subtle issues which can lead to bugs. In particular, note that <code>select</code> cancels futures by simply dropping them. This will not notify the future being dropped or trigger any cancellation tokens, etc.</p>
+<p><code>select!</code> is often used in a loop to handle streams or other sequences of futures. This adds an extra layer of complexity and opportunities for bugs. In the simple case that we create a new, independent future on each iteration of the loop, things are not much more complicated. However, this is rarely what is needed. Generally we want to preserve some state between iterations. It is common to use <code>select</code> in a loop with streams, where each iteration of the loop handles one result from the stream. E.g.:</p>
+<pre><pre class="playground"><code class="language-rust norun">async fn main() {
+  let mut stream = ...;
+
+  loop {
+    select! {
+      result = stream.next() =&gt; {
+        match result {
+          Some(x) =&gt; println!("received: {x}"),
+          None =&gt; break,
+        }
+      }
+      _ = timeout() =&gt; {
+        println!("time out!");
+        break;
+      }
+    }
+  }
+}</code></pre></pre>
+<p>In this example, we read values from <code>stream</code> and print them until there are none left or waiting for a result times out. What happens to any remaining data in the stream in the timeout case depends on the implementation of the stream (it might be lost! Or duplicated!). This is an example of why behaviour in the face of cancellation can be important (and tricky).</p>
+<p>We may want to reuse a future, not just a stream, across iterations. For example, we may want to race against a timeout future where the timeout applies to all iterations rather than applying a new timeout for each iteration. This is possible by creating the future outside of the loop and referencing it:</p>
+<pre><pre class="playground"><code class="language-rust norun">async fn main() {
+  let mut stream = ...;
+  let mut timeout = timeout();
+
+  loop {
+    select! {
+      result = stream.next() =&gt; {
+        match result {
+          Some(x) =&gt; println!("received: {x}"),
+          None =&gt; break,
+        }
+      }
+      // Create a reference to `timeout` rather than moving it.
+      _ = &amp;mut timeout =&gt; {
+        println!("time out!");
+        break;
+      }
+    }
+  }
+}</code></pre></pre>
+<p>There are a couple of important details when using <code>select!</code> in a loop with futures or streams created outside of the <code>select!</code>. These are a fundamental consequence of how <code>select</code> works, so I'll introduce them by stepping through the details of <code>select</code>, using <code>timeout</code> in the last example as an example.</p>
+<ul>
+<li><code>timeout</code> is created outside of the loop and initialised with some time to count down.</li>
+<li>On each iteration of the loop, <code>select</code> creates a reference to <code>timeout</code>, but does not change its state.</li>
+<li>As <code>select</code> executes, it polls <code>timeout</code> which will return <code>Pending</code> while there is time left and <code>Ready</code> when the time elapses, at which point its block is executed.</li>
+</ul>
+<p>In the above example, when <code>timeout</code> is ready, we <code>break</code> out of the loop. But what if we didn't do that? In that case, <code>select</code> would simply poll <code>timeout</code> again, which the <code>Future</code> <a href="https://doc.rust-lang.org/std/future/trait.Future.html#tymethod.poll">docs</a> say should not happen! <code>select</code> can't help this, it doesn't have any state (between iterations) to decide if <code>timeout</code> should be polled. Depending on how <code>timeout</code> is written, this might cause a panic, a logic error, or some kind of crash.</p>
+<p>You can prevent this kind of bug in several ways:</p>
+<ul>
+<li>Use a <a href="futures.html#fusing">fused</a> <a href="https://docs.rs/futures/latest/futures/future/trait.FutureExt.html#method.fuse">future</a> or <a href="https://docs.rs/futures/latest/futures/stream/trait.StreamExt.html#method.fuse">stream</a> so that re-polling is safe.</li>
+<li>Ensure that your code is structured so that futures are never re-polled, e.g., by breaking out of the loop (as in the previous example), or by using an <code>if</code> guard.</li>
+</ul>
+<p>Now, lets consider the type of <code>&amp;mut timeout</code>. Lets assume that <code>timeout()</code> returns a type which implements <code>Future</code>, which might be an anonymous type from an async function, or it might be a named type like <code>Timeout</code>. Lets assume the latter because it makes the examples easier (but the logic applies in either case). Given that <code>Timeout</code> implents <code>Future</code>, will <code>&amp;mut Timeout</code> implement <code>Future</code>? Not necessarily! There is a <a href="https://doc.rust-lang.org/std/future/trait.Future.html#impl-Future-for-%26mut+F">blanket <code>impl</code></a> which makes this true, but only if <code>Timeout</code> implements <code>Unpin</code>. That is not the case for all futures, so often you'll get a type error writing code like the last example. Such an error is easily fixed though by using the <code>pin</code> macro, e.g., <code>let mut timeout = pin!(timeout());</code></p>
+<p>Cancellation with <code>select</code> in a loop is a rich source of subtle bugs. These usually happen where a future contains some state involving some data but not the data itself. When the future is dropped by cancellation, that state is lost but the underlying data is not updated. This can lead to data being lost or processed multiple times.</p>
+<h3 id="alternatives-1"><a class="header" href="#alternatives-1">Alternatives</a></h3>
+<p>Futures.rs has its own <a href="https://docs.rs/futures/latest/futures/macro.select.html"><code>select</code> macro</a> and futures-concurrency has a <a href="https://docs.rs/futures-concurrency/latest/futures_concurrency/future/trait.Race.html">Race trait</a> which are alternatives to Tokio's <code>select</code> macro. These both have the same core semantics of concurrently racing multiple futures, processing the result of the first and cancelling the others, but they have different syntax and vary in the details.</p>
+<p>Futures.rs' <code>select</code> is superficially similar to Tokio's; to summarize the differences, in the futures.rs version:</p>
+<ul>
+<li>Futures must always be fused (enforced by type-checking).</li>
+<li><code>select</code> has <code>default</code> and <code>complete</code> branches, rather than an <code>else</code> branch.</li>
+<li><code>select</code> does not support <code>if</code> guards.</li>
+</ul>
+<p>Futures-concurrency's <code>Race</code> has a very different syntax, similar to it's version of <code>join</code>, e.g., <code>(future_a, future_b).race().await</code> (it works on <code>Vec</code>s and arrays as well as tuples). The syntax is less flexible than the macros, but fits in nicely with most async code. Note that if you use <code>race</code> within a loop, you can still have the same issues as with <code>select</code>.</p>
+<p>As with <code>join</code>, spawning tasks and letting them execute in parallel is often a good alternative to using <code>select</code>. However, cancelling the remaining tasks after the first completes requires some extra work. This can be done using channels or a cancellation token. In either case, cancellation requires some action by the task being cancelled which means the task can do some tidying up or other graceful shutdown.</p>
+<p>A common use for <code>select</code> (especially inside a loop) is working with streams. There are stream combinator methods which can replace some uses of select. For example, <a href="https://docs.rs/futures-concurrency/latest/futures_concurrency/stream/trait.Merge.html"><code>merge</code></a> in futures-concurrency is a good alternative to merge multiple streams together.</p>
+<h2 id="final-words"><a class="header" href="#final-words">Final words</a></h2>
+<p>In this section we've talked about two ways to run groups of futures concurrently. Joining futures means waiting for them all to finish; selecting (aka racing) futures means waiting for the first to finish. In contrast to spawning tasks, these compositions make no use of parallelism.</p>
+<p>Both <code>join</code> and <code>select</code> operate on sets of futures which are known in advance (often when writing the program, rather than at runtime). Sometimes, the futures to be composed are not known in advance - futures must be added to the set of composed futures as they are being executed. For this we need <a href="streams.html">streams</a> which have their own composition operations.</p>
+<p>It's worth reiterating that although these composition operators are powerful and expressive, it is often easier and more appropriate to use tasks and spawning: parallelism is often desirable, you're less likely to have bugs around cancellation or blocking, and resource allocation is usually fairer (or at least simpler) and more predictable.</p>
+<hr>
+<ol class="footnote-definition"><li id="footnote-into">
+<p>The expressions must have a type which implements <code>IntoFuture</code>. The expression is evaluated and converted to a future by the macro. I.e., they don't actually have to evaluate to a future, but rather something which can be converted into a future, but this is a pretty minor distinction. The expressions themselves are evaluated sequentially before any of the resulting futures are executed. <a href="#fr-into-1">↩</a></p>
+</li>
+</ol>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../part-guide/io.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../part-guide/sync.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../part-guide/io.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../part-guide/sync.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
