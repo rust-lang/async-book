@@ -7,6 +7,7 @@
 - sleep
 - interval
 - timeout
+  - special future vs select/race
 
 ## Signal handling
 

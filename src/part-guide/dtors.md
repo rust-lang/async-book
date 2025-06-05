@@ -33,6 +33,7 @@
 - Don't use async for cleanup and don't worry too much
 - async clean up method + dtor bomb (i.e., separate clean-up from destruction)
 - centralise/out-source clean-up in a separate task or thread or supervisor object/process
+- https://tokio.rs/tokio/topics/shutdown
 
 ## Why no async Drop (yet)
 

@@ -14,7 +14,7 @@
 - [Async and await](part-guide/async-await.md)
 - [More async/await topics](part-guide/more-async-await.md)
 - [IO and issues with blocking](part-guide/io.md)
-- [Concurrency primitives](part-guide/concurrency-primitives.md)
+- [Composing futures concurrently](part-guide/concurrency-primitives.md)
 - [Channels, locking, and synchronization](part-guide/sync.md)
 - [Tools for async programming](part-guide/tools.md)
 - [Destruction and clean-up](part-guide/dtors.md)
@@ -31,13 +31,13 @@
 - [async in sync, sync in async]()
 - [Async IO: readiness vs completion, and io_uring]()
 - [Design patterns]()
-- [Cancellation]() (cancellation safety)
+- [Cancellation and cancellation safety](part-reference/cancellation.md) (cancellation safety)
 - [Starvation]()
 - [Pinning]()
 - [Async and FFI]()
 - [Comparing async programming in Rust to other languages]()
 - [The implementation of async/await in rustc]()
-- [Structured concurrency?]()
+- [Structured concurrency](part-reference/structured.md)
 
 
 # Old chapters
