@@ -52,7 +52,7 @@
 
 - [Parallelism](../part-guide/concurrency.md#concurrency-and-parallelism)
   - [c.f., concurrency](../part-guide/concurrency.md#concurrency-and-parallelism)
-
+- [Pinning, `Pin`](../part-reference/pinning.md)
 
 
 - [Reactor](../part-guide/async-await.md#the-runtime)
@@ -74,3 +74,7 @@
 - Traits
   - [async](../part-guide/more-async-await.md#async-traits)
   - `Future`
+
+
+
+- [`Unpin`](../part-reference/pinning.md)

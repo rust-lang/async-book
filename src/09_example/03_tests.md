@@ -40,7 +40,7 @@ can just return `Poll::Ready`.
 ```
 
 Lastly, our mock will need to implement `Unpin`, signifying that its location in memory can safely be moved.
-For more information on pinning and the `Unpin` trait, see the [section on pinning](../04_pinning/01_chapter.md).
+For more information on pinning and the `Unpin` trait, see the section on pinning.
 ```rust,ignore
 {{#include ../../examples/09_05_final_tcp_server/src/main.rs:unpin}}
 ```
