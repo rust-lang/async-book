@@ -1,6 +1,6 @@
 [book]
 title = "Asynchronous Programming in Rust"
-authors = ["Taylor Cramer"]
+authors = ["Taylor Cramer", "Nicholas Cameron", "Open source contributors"]
 
 [build]
 create-missing = false
@@ -12,3 +12,4 @@ site-url = "/async-book/"
 [output.linkcheck]
 follow-web-links = true
 traverse-parent-directories = false
+exclude = [ 'blog\.cloudflare\.com' ]
