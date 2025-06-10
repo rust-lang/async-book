@@ -67,7 +67,7 @@ Here's an example using Tokio's [`select`](https://docs.rs/tokio/latest/tokio/ma
 async fn main() {
   select! {
     result = do_a_thing() => {
-      println!("computation completed and returned {result});
+      println!("computation completed and returned {result}");
     }
     _ = timeout() => {
       println!("computation timed-out");
