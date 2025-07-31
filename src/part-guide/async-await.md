@@ -78,13 +78,15 @@ The syntax for using await is `some_future.await`, i.e., it is a postfix keyword
 Consider the following functions:
 
 ```rust,norun
+use tokio::time::{sleep, Duration};
+
 // An async function, but it doesn't need to wait for anything.
 async fn add(a: u32, b: u32) -> u32 {
   a + b
 }
 
 async fn wait_to_add(a: u32, b: u32) -> u32 {
-  sleep(1000).await;
+  sleep(Duration::from_millis(1000)).await;
   a + b
 }
 ```
