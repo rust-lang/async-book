@@ -24,7 +24,7 @@ Blocking and cancellation are important to keep in mind when programming with as
 
 We say a thread (note we're talking about OS threads here, not async tasks) is blocked when it can't make any progress. That's usually because it is waiting for the OS to complete a task on its behalf (usually I/O). Importantly, while a thread is blocked, the OS knows not to schedule it so that other threads can make progress. This is fine in a multithreaded program because it lets other threads make progress while the blocked thread is waiting. However, in an async program, there are other tasks which should be scheduled on the same OS thread, but the OS doesn't know about those and keeps the whole thread waiting. This means that rather than the single task waiting for its I/O to complete (which is fine), many tasks have to wait (which is not fine).
 
-We'll talk soon about non-blocking/async I/O. For now, just know that non-blocking I/O is I/O which the async runtime knows about and so will only the current task will wait, the thread will not be blocked. It is very important to only use non-blocking I/O from an async task, never blocking I/O (which is the only kind provided in Rust's standard library).
+We'll talk soon about non-blocking/async I/O. For now, just know that non-blocking I/O is I/O which the async runtime knows about and so only the current task will wait, the thread will not be blocked. It is very important to only use non-blocking I/O from an async task, never blocking I/O (which is the only kind provided in Rust's standard library).
 
 ### Blocking computation
 
@@ -71,7 +71,7 @@ We'll be coming back to cancellation and cancellation safety a few times in this
 
 ## Async blocks
 
-A regular block (`{ ... }`) groups code together in the source and creates a scope of encapsulation for names. At runtime, the block is executed in order and evaluates to the value of its last expression (or the unit type (`()`) if there is no trailing expression).
+A regular block (`{ ... }`) groups code together in the source and creates a scope of encapsulation for names. At runtime, the block is executed in order and evaluates to the value of its last expression (or the unit type `()` if there is no trailing expression).
 
 Similarly to async functions, an async block is a deferred version of a regular block. An async block scopes code and names together, but at runtime it is not immediately executed and evaluates to a future. To execute the block and obtain the result, it must be `await`ed. E.g.:
 
@@ -115,7 +115,7 @@ loop {
 }
 ```
 
-To implement `break` you would need to test the value of the block (a common idiom is to use [`ControlFlow`](https://doc.rust-lang.org/std/ops/enum.ControlFlow.html) for the value of the block, which also allows use of `?`).
+To implement `break` you would need to test the value of the block (a common idiom is to use [`ControlFlow`](https://doc.rust-lang.org/std/ops/enum.ControlFlow.html) for the return value of the block, which also allows use of `?`).
 
 Likewise, `?` inside an async block will terminate execution of the future in the presence of an error, causing the `await`ed block to take the value of the error, but won't exit the surrounding function (like `?` in a regular block would). You'll need another `?` after `await` for that:
 
