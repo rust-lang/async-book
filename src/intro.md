@@ -48,4 +48,4 @@ Async Rust is being actively worked on. If you want to follow development, you c
 Rust is an open source project. If you'd like to contribute to development of async Rust, start at the [contributing docs](https://github.com/rust-lang/rust/blob/master/CONTRIBUTING.md) in the main Rust repo.
 
 
-[^blocking]: This is actually a bad example because `println` is *blocking IO* and it is generally a bad idea to do blocking IO in async functions. We'll explain what blocking IO is in [chapter TODO]() and why you shouldn't do blocking IO in an async function in [chapter TODO]().
+[^blocking]: This is actually a bad example because `println` is *blocking IO* and it is generally a bad idea to do blocking IO in async functions. We'll explain what blocking IO is in [chapter TODO](https://rust-lang.github.io/async-book/part-guide/io.html) and why you shouldn't do blocking IO in an async function in [chapter TODO]().
