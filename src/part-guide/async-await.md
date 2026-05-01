@@ -59,7 +59,7 @@ From here on in, I'm going to try to be precise about the terminology around tas
 An async task in Rust is just a future (usually a 'big' future made by combining many others). In other words, a task is a future which is executed. However, there are times when a future is 'executed' without being a runtime's task. This kind of a future is intuitively a *task* but not a *runtime's task*. I'll spell this out more when we get to an example of it.
 
 
-## Async functions 
+## Async functions
 
 The `async` keyword is a modifier on function declarations. E.g., we can write `pub async fn send_to_server(...)`. An async function is simply a function declared using the `async` keyword, and what that means is that it is a function which can be executed asynchronously, in other words the caller *can choose not to* wait for the function to complete before doing something else.
 
@@ -73,9 +73,28 @@ Within an async function, code is executed in the usual, sequential way[^preempt
 
 We stated above that a future is a computation that will be ready at some point in the future. To get the result of that computation, we use the `await` keyword. If the result is ready immediately or can be computed without waiting, then `await` simply does that computation to produce the result. However, if the result is not ready, then `await` hands control over to the scheduler so that another task can proceed (this is cooperative multitasking mentioned in the previous chapter).
 
-The syntax for using await is `some_future.await`, i.e., it is a postfix keyword used with the `.` operator. That means it can be used ergonomically in chains of method calls and field accesses.
+If you're coming from Python or JavaScript, you may be used to placing `await` before an expression. This is also called a _prefix_ operator. For example:
 
-Consider the following functions:
+```python
+async def do_work():
+    await asyncio.sleep(1)
+```
+
+In Rust, the syntax for await is `some_future.await`, i.e., it is a _postfix_ keyword used with the `.` operator:
+
+```rust,norun
+async fn do_work() {
+    tokio::time::sleep(Duration::from_secs(1)).await;
+}
+```
+
+That means it can be used ergonomically in chains of method calls and field accesses.
+
+Suppose you're calling an async function that makes a network request, and you'd like to access the status code once the response has returned. In languages that use the _prefix_ style, you would have to go back to the beginning and prepend `await` to the `fetch()` call. Then, to access the status code, you would need to wrap the whole expression in parentheses, like `(await fetch()).status_code`. In Rust, you can simply write `fetch().await.status_code`.
+
+Extrapolate that to multiple chained method calls and field accesses involving `await`, and you would end up with something like `(await (await fetch()).json()).data`, which at first glance makes it extremely difficult to tell which expression is being awaited. In Rust, the equivalent is much more readable: `fetch().await.json().await.data`.
+
+Now that we've covered await syntax, let's look at how `async` and `await` actually behave. Consider the following functions:
 
 ```rust,norun
 // An async function, but it doesn't need to wait for anything.
