@@ -124,6 +124,35 @@ Because tasks spawned with `spawn_blocking` cannot be aborted, it is intended fo
 
 If you need to run a lot of tasks, you'll probably need some kind of thread pool or work scheduler. If you keep spawning threads and have many more than there are cores available, you'll end up sacrificing throughput. [Rayon](https://github.com/rayon-rs/rayon) is a popular choice which makes it easy to run and manage parallel tasks. You might get better performance with something which is more specific to your workload and/or has some knowledge of the tasks being run.
 
+Here is an example of calculating [dot product](https://en.wikipedia.org/wiki/Dot_product) between two large vectors using Rayon together with Tokio. It utilizes [`tokio::oneshot::channel`](https://docs.rs/tokio/latest/tokio/sync/oneshot/fn.channel.html) to communicate results between a task spawned by Rayon and the current task in Tokio. 
+
+```rust,norun
+#[tokio::main]
+async fn main() {
+    let a = (1..=1024 * 1024).collect();
+    let b = (1..=1024 * 1024).collect();
+    println!("{}", compute_dot_product(a, b).await);
+}
+
+async fn compute_dot_product(a: Vec<u64>, b: Vec<u64>) -> u64 {
+    assert_eq!(a.len(), b.len(), "a and b must have the same length");
+
+    let (send, recv) = tokio::sync::oneshot::channel();
+
+    // Spawn a task on rayon to calculate the dot product.
+    rayon::spawn(move || {
+        let mut result = 0;
+        for (a, b) in a.iter().zip(b) {
+            result += a * b;
+        }
+        // Send the result back to Tokio.
+        let _ = send.send(result);
+    });
+
+    recv.await.expect("Panic in rayon::spawn")
+}
+```
+
 You can use a separate instances of the async runtime for latency-sensitive tasks and for long-running tasks. This is suitable for CPU-bound tasks, but you still shouldn't use blocking IO, even on the runtime for long-running tasks. For CPU-bound tasks, this is a good solution in that it is the only one which supports the long-running tasks be async tasks. It is also flexible (since the runtimes can be configured to be optimal for the kind of task they're running; indeed, it is necessary to put some effort into runtime configuration to get optimal performance) and lets you benefit from using mature, well-engineered sub-systems like Tokio. You can even use two different async runtimes. In any case, the runtimes must be run on different threads.
 
 On the other hand, you do need to do a bit more thinking: you must ensure that you are running tasks on the right runtime (which can be harder than it sounds) and communication between tasks can be complicated. We'll discuss synchronisation between sync and async contexts next, but it can be even trickier between multiple async runtimes. Each runtime is it's own little universe of tasks and the schedulers are totally independent. Tokio channels and locks *can* be used from different runtimes (even non-Tokio ones), but other runtimes' primitives may not work in this way.
