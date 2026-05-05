@@ -103,7 +103,7 @@ There are essentially three solutions for running long-running or blocking tasks
 
 In Tokio, you can use [`spawn_blocking`](https://docs.rs/tokio/latest/tokio/task/fn.spawn_blocking.html) to spawn a task which might block. This works like [`spawn`](https://docs.rs/tokio/latest/tokio/task/fn.spawn.html) for spawning a task, but runs the task in a separate thread pool which is optimized for tasks which might block (the task will likely run on it's own thread). Note that this runs regular synchronous code, not an async task. That means that the task can't be cancelled (even though its `JoinHandle` has an `abort` method). Other runtimes provide similar functionality.
 
-This example uses `spawn_blocking` to perform blocking I/O by calling a synchronous filesystem function from the standard library. Note that `tokio::fs` also exists and provides asynchronous filesystem APIs; however, under the hood it too uses blocking operations wrapped in `spawn_blocking`. This is because on most operating systems, file operations are inherently blocking.
+This example uses `spawn_blocking` to perform blocking I/O by calling a synchronous filesystem function from the standard library. Note that [`tokio::fs`](https://docs.rs/tokio/latest/tokio/fs/index.html) also exists and provides asynchronous filesystem APIs; however, under the hood it too uses blocking operations wrapped in `spawn_blocking`. This is because on most operating systems, file operations are inherently blocking.
 
 ```rust,norun
 use tokio;
@@ -153,7 +153,49 @@ async fn compute_dot_product(a: Vec<u64>, b: Vec<u64>) -> u64 {
 }
 ```
 
-You can use a separate instances of the async runtime for latency-sensitive tasks and for long-running tasks. This is suitable for CPU-bound tasks, but you still shouldn't use blocking IO, even on the runtime for long-running tasks. For CPU-bound tasks, this is a good solution in that it is the only one which supports the long-running tasks be async tasks. It is also flexible (since the runtimes can be configured to be optimal for the kind of task they're running; indeed, it is necessary to put some effort into runtime configuration to get optimal performance) and lets you benefit from using mature, well-engineered sub-systems like Tokio. You can even use two different async runtimes. In any case, the runtimes must be run on different threads.
+You can use a separate instance of the async runtime for latency-sensitive tasks and for long-running tasks. This is suitable for CPU-bound tasks, but you still shouldn't use blocking IO, even on the runtime for long-running tasks. For CPU-bound tasks, this is a good solution in that it is the only one which supports the long-running tasks be async tasks. It is also flexible (since the runtimes can be configured to be optimal for the kind of task they're running; indeed, it is necessary to put some effort into runtime configuration to get optimal performance) and lets you benefit from using mature, well-engineered sub-systems like Tokio. You can even use two different async runtimes. In any case, the runtimes must be run on different threads.
+
+This example demonstrates running two separate Tokio runtimes on different threads. The main runtime handles `fetch_document`, while, a dedicated thread runs its own runtime to execute `index_documents`.
+
+```rust
+use std::time::Duration;
+
+#[tokio::main]
+async fn main() {
+    // Spawn a dedicated thread with its own runtime for CPU-bound indexing
+    let indexer = std::thread::spawn(|| {
+        index_documents();
+    });
+
+    // Meanwhile, the main runtime handles latency-sensitive work
+    let doc = query("why is the sky blue?").await;
+    println!("Fetched document: {doc}");
+
+    let another_doc = query("why is the sun hot?").await;
+    println!("Fetched document: {another_doc}");
+
+    indexer.join().unwrap();
+}
+
+async fn query(q: &str) -> String {
+    tokio::time::sleep(Duration::from_millis(500)).await;
+    "42".to_string()
+}
+
+fn index_documents() {
+    let rt = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+        .unwrap();
+
+    rt.block_on(async {
+        for i in 0..3 {
+            tokio::time::sleep(Duration::from_secs(1)).await;
+            println!("Indexing document {i}");
+        }
+    });
+}
+```
 
 On the other hand, you do need to do a bit more thinking: you must ensure that you are running tasks on the right runtime (which can be harder than it sounds) and communication between tasks can be complicated. We'll discuss synchronisation between sync and async contexts next, but it can be even trickier between multiple async runtimes. Each runtime is it's own little universe of tasks and the schedulers are totally independent. Tokio channels and locks *can* be used from different runtimes (even non-Tokio ones), but other runtimes' primitives may not work in this way.
 
