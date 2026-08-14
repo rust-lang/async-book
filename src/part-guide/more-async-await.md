@@ -65,7 +65,7 @@ async fn some_function(input: Option<Input>) {
 
 An example of how this can go wrong is if an async function reads data into an internal buffer, then awaits the next datum. If reading the data is destructive (i.e., cannot be re-read from the original source) and the async function is canceled, then the internal buffer will be dropped, and the data in it will be lost. It is important to consider how a future and any data it touches will be impacted by canceling the future, restarting the future, or starting a new future which touches the same data.
 
-We'll be coming back to cancellation and cancellation safety a few times in this guide, and there is a whole [chapter]() on the topic in the reference section.
+We'll be coming back to cancellation and cancellation safety a few times in this guide, and there is a whole [chapter](https://rust-lang.github.io/async-book/part-reference/cancellation.html) on the topic in the reference section.
 
 [^cfThreads]: It is interesting to compare cancellation in async programming with canceling threads. Canceling a thread is possible (e.g., using `pthread_cancel` in C, there is no direct way to do this in Rust), but it is almost always a very, very bad idea since the thread being canceled can terminate anywhere. In contrast, canceling an async task can only happen at an await point. As a consequence, it is very rare to cancel an OS thread without terminating the whole process and so as a programmer, you generally don't worry about this happening. In async Rust however, cancellation is definitely something which *can* happen. We'll be discussing how to deal with that as we go along.
 
