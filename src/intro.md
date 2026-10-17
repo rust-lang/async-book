@@ -43,7 +43,7 @@ The async features of Rust have been in development for a while, but it is not a
 
 Currently, working with async iterators (also known as streams) is where most users find some rough parts. Some uses of async in traits are not yet well-supported. There is not a good solution for async destruction.
 
-Async Rust is being actively worked on. If you want to follow development, you can check out the Async Working Group's [home page](https://rust-lang.github.io/wg-async/meetings.html) which includes their [roadmap](https://rust-lang.github.io/wg-async/vision/roadmap.html). Or you could read the async [project goal](https://github.com/rust-lang/rust-project-goals/issues/105) within the Rust Project.
+Async Rust is being actively worked on. If you want to follow development, you can check out the Async Working Group's [home page](https://rust-lang.github.io/wg-async/meetings.html) which includes their [roadmap](https://rust-lang.github.io/wg-async/vision/roadmap.html). Or you could read the async [project goal](https://github.com/rust-lang/goals/issues/105) within the Rust Project.
 
 Rust is an open source project. If you'd like to contribute to development of async Rust, start at the [contributing docs](https://github.com/rust-lang/rust/blob/master/CONTRIBUTING.md) in the main Rust repo.
 
