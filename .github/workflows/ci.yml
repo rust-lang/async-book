@@ -15,11 +15,11 @@ jobs:
       - name: Install Rust
         run: rustup update stable && rustup default stable
       - name: Install mdbook
-        uses: taiki-e/install-action@v2
+        uses: taiki-e/install-action@8cca0918f8471c33515202b73f56ab27f2bed283 # v2.87.29
         with:
           tool: mdbook
       - name: Install mdbook-linkcheck2
-        uses: taiki-e/install-action@v2
+        uses: taiki-e/install-action@8cca0918f8471c33515202b73f56ab27f2bed283 # v2.87.29
         with:
           tool: mdbook-linkcheck2
           fallback: cargo-install
