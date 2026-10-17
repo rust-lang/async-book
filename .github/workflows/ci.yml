@@ -40,7 +40,7 @@ jobs:
     needs: test  # the `test` job uploads the pages artifact
     if: github.event_name == 'push' && github.ref == 'refs/heads/master' && github.repository_owner == 'rust-lang'
     permissions:
-      pages: write
+      pages: write # Required by `actions/deploy-pages` to deploy to Pages
       id-token: write
     environment:
       name: github-pages
