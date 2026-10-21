@@ -39,5 +39,5 @@
 
 - Note this is advanced section and not necessary to read
 - Why async Drop is hard
-- Possible solutions and there issues
+- Possible solutions and their issues
 - Current status
