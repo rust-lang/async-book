@@ -181,7 +181,7 @@ impl Drop for Type {
         // again after being dropped.
         inner_drop(unsafe { Pin::new_unchecked(self)});
 
-        fn inner_drop(this: Pin<&mut Self>) {
+        fn inner_drop(this: Pin<&mut Type>) {
             // Actual drop code goes here.
         }
     }
